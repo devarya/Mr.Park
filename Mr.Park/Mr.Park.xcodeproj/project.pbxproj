@@ -548,6 +548,8 @@
 				CE8BB1A719B495CE00A685D4 /* MPParkingDetailViewController.m */,
 				CE77F13419B59439006EF077 /* MPAddTimerViewController.h */,
 				CE77F13519B59439006EF077 /* MPAddTimerViewController.m */,
+				0A89D7C819B6485500ABCB79 /* MPCustomAnnotation.h */,
+				0A89D7C919B6485500ABCB79 /* MPCustomAnnotation.m */,
 			);
 			name = Map;
 			sourceTree = "<group>";
@@ -700,6 +702,7 @@
 				CE417F8219B446D00080F25D /* ASINetworkQueue.m in Sources */,
 				CEB67E9D19B5BEF900A40190 /* MPFavoritesViewController.m in Sources */,
 				CE8BB1AC19B49BB700A685D4 /* MPSettingViewController.m in Sources */,
+				0A89D7CA19B6485500ABCB79 /* MPCustomAnnotation.m in Sources */,
 				CE417F6219B446C20080F25D /* NSString+SBJSON.m in Sources */,
 				CE417F6619B446C20080F25D /* SBJsonWriter.m in Sources */,
 				CE417F7D19B446D00080F25D /* ASIDataDecompressor.m in Sources */,

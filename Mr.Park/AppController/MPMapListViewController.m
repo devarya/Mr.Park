@@ -8,6 +8,7 @@
 
 #import "MPMapListViewController.h"
 
+
 @interface MPMapListViewController ()
 
 @end
@@ -75,8 +76,12 @@
 		dispatch_once(&centerMapFirstTime, ^{
 			[self.map_View setCenterCoordinate:userLocation.coordinate animated:YES];
 		});
-        for(tempTable* tpObj in tempTableArray) {
-            CustomAnnotation *pin = [[CustomAnnotation alloc] initWithTitle:tpObj.streetName Subtitle:tpObj.fullAddress Location:CLLocationCoordinate2DMake([tpObj.lat doubleValue], [tpObj.lon doubleValue])];
+//        for(tempTable* tpObj in tempTableArray) {
+//            MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:tpObj.streetName Subtitle:tpObj.fullAddress Location:CLLocationCoordinate2DMake([tpObj.lat doubleValue], [tpObj.lon doubleValue])];
+//            [map_View addAnnotation:pin];
+//        }
+        for(int i = 0; i < 3; i++) {
+            MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:@"aaa" Subtitle:@"bbb" Location:CLLocationCoordinate2DMake(33.8503432, -117.738511)];
             [map_View addAnnotation:pin];
         }
     }
@@ -84,7 +89,7 @@
 
 - (MKAnnotationView *) mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
     //[HUD hide];
-    if([annotation isKindOfClass:[CustomAnnotation class]]) {
+    if([annotation isKindOfClass:[MPCustomAnnotation class]]) {
         MKPinAnnotationView *newAnnotation = [[MKPinAnnotationView alloc]     initWithAnnotation:annotation reuseIdentifier:@"CustomAnnotation"];
         CLLocationCoordinate2D temp = [annotation coordinate];
         newAnnotation.canShowCallout = YES;
@@ -112,14 +117,38 @@
     
 }
 
+- (void) mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
+    
+    MPParkingDetailViewController *dvc = [[MPParkingDetailViewController alloc] initWithNibName:@"MPParkingDetailViewController" bundle:nil];
+    self.destCoordinate = [[view annotation] coordinate];
+    destLatitude = destCoodinate.latitude;
+    destLongitude = destCoodinate.longitude;
+    [self getDestInformationWithLatitude:[NSString stringWithFormat:@"%lf",destLatitude] Longitude:[NSString stringWithFormat:@"%lf",destLongitude]];
+    [self.navigationController pushViewController:dvc animated:YES];
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Storyboard" bundle:nil];
+    UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"detailViewController"];
+    [self presentViewController:vc animated:YES completion:NULL];
+    
+}
+
 - (NSString *) getParkingTypeLatitude: (NSString *)lat Longitude: (NSString *) lon {
-    for(tempTable* tpObj in tempTableArray) {
-        if([tpObj.lat isEqual: lat] && [tpObj.lon  isEqual: lon]) {
-            parkingType = tpObj.parkingID;
-            break;
-        }
-    }
+//    for(tempTable* tpObj in tempTableArray) {
+//        if([tpObj.lat isEqual: lat] && [tpObj.lon  isEqual: lon]) {
+//            parkingType = tpObj.parkingID;
+//            break;
+//        }
+//    }
     return parkingType;
+}
+
+- (void) getDestInformationWithLatitude: (NSString *)lat Longitude: (NSString *) lon {
+//    for(tempTable* tpObj in tempTableArray) {
+//        if([tpObj.lat isEqual: lat] && [tpObj.lon  isEqual: lon]) {
+//            destStreetName = tpObj.streetName;
+//            destAddress = tpObj.fullAddress;
+//            break;
+//        }
+//    }
 }
 
 #pragma mark - IB_ACTION

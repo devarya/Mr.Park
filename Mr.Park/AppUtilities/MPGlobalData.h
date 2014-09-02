@@ -28,6 +28,14 @@ NSString *currentSecond;
 NSDate *now;
 NSString *strDate;
 NSString *strTime;
+NSMutableArray *ary_ptfp;
+NSMutableArray *ary_ptfps;
+NSMutableArray *ary_ptlt;
+NSMutableArray *ary_ptmp;
+NSMutableArray *ary_ptmps;
+double destLatitude;
+double destLongitude;
+NSString *parkingType;
 
 AddressDB *addressHolder;
 Parking *parkingHolder;

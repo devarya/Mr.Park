@@ -11,7 +11,9 @@
 #import "MPFeedBackViewController.h"
 #import "MPSettingViewController.h"
 #import "MPShareViewController.h"
+#import "MPParkingDetailViewController.h"
 #import "MPGlobalData.h"
+#import "MPCustomAnnotation.h"
 
 @interface MPMapListViewController : MPBottomBarViewController<UITableViewDataSource,UITableViewDelegate>{
     
@@ -35,6 +37,7 @@
 }
 @property (nonatomic, retain) IBOutlet MKMapView *map_View;
 @property (nonatomic, retain) CLGeocoder *geocoder;
+@property (nonatomic) CLLocationCoordinate2D destCoordinate;
 -(IBAction)btnReminderDidClicked:(id)sender;
 -(IBAction)btnSwitchToMapAndList:(id)sender;
 
