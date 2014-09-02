@@ -13,6 +13,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    //[self checkUpdate];
+    
     UITextField *txtField = [[UITextField alloc]initWithFrame:CGRectMake(0, 0, 0, 0)];
     [txtField becomeFirstResponder];
     [self.window addSubview:txtField];
@@ -67,4 +69,45 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+-(void)checkUpdate{
+    NSMutableDictionary *updateDic = [NSMutableDictionary new];
+    if (!mrParkDB)
+    {
+        NSString*path = [[MPDBIntraction databaseInteractionManager] getDatabasePathFromName:DBname];
+        mrParkDB = [[FMDatabase alloc] initWithPath:path];
+    }
+    NSString *query;
+    query = [NSString stringWithFormat:@"Select * from updateTable"];
+    @try
+    {
+        [mrParkDB open];
+        if ([mrParkDB executeQuery:query])
+        {
+            FMResultSet *dataArr = [mrParkDB executeQuery:query];
+            updateArray = [NSMutableArray new];
+            while ([dataArr next]){
+                [updateDic setValue:[dataArr stringForColumn:@"updated_at"] forKey:[dataArr stringForColumn:@"tableName"]];
+            }
+        }
+        else
+        {
+            NSLog(@"error in insertation");
+        }
+        [mrParkDB close];
+    }
+    @catch (NSException *e)
+    {
+        NSLog(@"%@",e);
+    }
+    
+    
+    NSMutableDictionary * parkingInfo = [NSMutableDictionary new];
+    [[MPRestIntraction sharedManager] requestParkingCall:parkingInfo withUpdate:[updateDic valueForKey: @"parkingTable"]];
+    NSMutableDictionary * regionInfo = [NSMutableDictionary new];
+    [[MPRestIntraction sharedManager] requestRegionCall:regionInfo withUpdate:[updateDic valueForKey: @"regionTable"]];
+    NSMutableDictionary * holidayInfo = [NSMutableDictionary new];
+    [[MPRestIntraction sharedManager] requestHolidayCall:holidayInfo withUpdate:[updateDic valueForKey: @"holidayTable"]];
+    NSMutableDictionary *info= [NSMutableDictionary new];
+    [[MPRestIntraction sharedManager] requestAddressControlCall:info];
+}
 @end

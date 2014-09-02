@@ -37,6 +37,7 @@ double destLatitude;
 double destLongitude;
 NSString *parkingType;
 
+FMDatabase *mrParkDB;
 AddressDB *addressHolder;
 Parking *parkingHolder;
 AddressUpdateControl *adUCHolder;

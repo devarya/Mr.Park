@@ -10,6 +10,7 @@
 #import "ASIFormDataRequest.h"
 #import "JSON.h"
 #import "MPGlobalData.h"
+#import "MPDBIntraction.h"
 
 @class MPRestIntraction;
 MPRestIntraction *restIntraction;
@@ -18,5 +19,15 @@ MPRestIntraction *restIntraction;
     NSURL * urlMain;
 }
 +(id)sharedManager;
+
+- (void)requestRegionCall:(NSMutableDictionary*) info withUpdate: (NSString*) time;
+
+- (void)requestHolidayCall:(NSMutableDictionary*) info withUpdate: (NSString*) time;
+
+- (void)requestParkingCall:(NSMutableDictionary*) info withUpdate: (NSString*) time;
+
+- (void)requestAddressControlCall:(NSMutableDictionary*) info;
+
+- (void)requestAddressCall:(NSMutableDictionary*) info andRegionID:(NSNumber*) region_id adUpdateTime: (NSString*) time;
 
 @end
