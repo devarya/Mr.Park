@@ -12,7 +12,6 @@
 		CE417F0F19B436D80080F25D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE417F0E19B436D80080F25D /* UIKit.framework */; };
 		CE417F1519B436D80080F25D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CE417F1319B436D80080F25D /* InfoPlist.strings */; };
 		CE417F1719B436D80080F25D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CE417F1619B436D80080F25D /* main.m */; };
-		CE417F1E19B436D80080F25D /* Main_Iphone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE417F1C19B436D80080F25D /* Main_Iphone.storyboard */; };
 		CE417F2319B436D80080F25D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE417F2219B436D80080F25D /* Images.xcassets */; };
 		CE417F2A19B436D80080F25D /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE417F2919B436D80080F25D /* XCTest.framework */; };
 		CE417F2B19B436D80080F25D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE417F0A19B436D80080F25D /* Foundation.framework */; };
@@ -60,6 +59,7 @@
 		CE86433F19B5F1A600B7D713 /* MPGlobalFunction.m in Sources */ = {isa = PBXBuildFile; fileRef = CE86433E19B5F1A600B7D713 /* MPGlobalFunction.m */; };
 		CE86434219B5F27200B7D713 /* MPDBIntraction.m in Sources */ = {isa = PBXBuildFile; fileRef = CE86434119B5F27200B7D713 /* MPDBIntraction.m */; };
 		CE86434519B6013E00B7D713 /* MPAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CE86434419B6013E00B7D713 /* MPAppDelegate.m */; };
+		CE86434719B602D900B7D713 /* Main_Iphone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE86434619B602D900B7D713 /* Main_Iphone.storyboard */; };
 		CE8BB1A819B495CE00A685D4 /* MPParkingDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8BB1A719B495CE00A685D4 /* MPParkingDetailViewController.m */; };
 		CE8BB1AC19B49BB700A685D4 /* MPSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8BB1AB19B49BB700A685D4 /* MPSettingViewController.m */; };
 		CE8BB1AF19B49BFB00A685D4 /* MPShareViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8BB1AE19B49BFB00A685D4 /* MPShareViewController.m */; };
@@ -88,7 +88,6 @@
 		CE417F1419B436D80080F25D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		CE417F1619B436D80080F25D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		CE417F1819B436D80080F25D /* Mr.Park-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Mr.Park-Prefix.pch"; sourceTree = "<group>"; };
-		CE417F1D19B436D80080F25D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_Iphone.storyboard; sourceTree = "<group>"; };
 		CE417F2219B436D80080F25D /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = ../Mr.Park/Images.xcassets; sourceTree = "<group>"; };
 		CE417F2819B436D80080F25D /* Mr.ParkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Mr.ParkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE417F2919B436D80080F25D /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -172,6 +171,7 @@
 		CE86434119B5F27200B7D713 /* MPDBIntraction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPDBIntraction.m; sourceTree = "<group>"; };
 		CE86434319B6013E00B7D713 /* MPAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPAppDelegate.h; sourceTree = "<group>"; };
 		CE86434419B6013E00B7D713 /* MPAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPAppDelegate.m; sourceTree = "<group>"; };
+		CE86434619B602D900B7D713 /* Main_Iphone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main_Iphone.storyboard; sourceTree = "<group>"; };
 		CE8BB1A619B495CE00A685D4 /* MPParkingDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPParkingDetailViewController.h; sourceTree = "<group>"; };
 		CE8BB1A719B495CE00A685D4 /* MPParkingDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPParkingDetailViewController.m; sourceTree = "<group>"; };
 		CE8BB1AA19B49BB700A685D4 /* MPSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPSettingViewController.h; sourceTree = "<group>"; };
@@ -333,7 +333,7 @@
 		CE417F4319B4378A0080F25D /* AppUI */ = {
 			isa = PBXGroup;
 			children = (
-				CE417F1C19B436D80080F25D /* Main_Iphone.storyboard */,
+				CE86434619B602D900B7D713 /* Main_Iphone.storyboard */,
 			);
 			name = AppUI;
 			path = AppController/AppUI;
@@ -601,13 +601,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE86434719B602D900B7D713 /* Main_Iphone.storyboard in Resources */,
 				CE77F15419B59BDE006EF077 /* 120*120@2x.png in Resources */,
 				CE77F15319B59BDE006EF077 /* 80*80@2x.png in Resources */,
 				CE77F15219B59BDE006EF077 /* 58*58@2x.png in Resources */,
 				CE417F9F19B478AF0080F25D /* MPBottomBarViewController.xib in Resources */,
 				CE417F2319B436D80080F25D /* Images.xcassets in Resources */,
 				CE417F1519B436D80080F25D /* InfoPlist.strings in Resources */,
-				CE417F1E19B436D80080F25D /* Main_Iphone.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -692,15 +692,6 @@
 				CE417F1419B436D80080F25D /* en */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		CE417F1C19B436D80080F25D /* Main_Iphone.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				CE417F1D19B436D80080F25D /* Base */,
-			);
-			name = Main_Iphone.storyboard;
-			path = ../../Mr.Park;
 			sourceTree = "<group>";
 		};
 		CE417F3219B436D80080F25D /* InfoPlist.strings */ = {
