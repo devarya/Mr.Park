@@ -24,6 +24,9 @@ NSMutableArray *ary_ptfps;
 NSMutableArray *ary_ptlt;
 NSMutableArray *ary_ptmp;
 NSMutableArray *ary_ptmps;
+double destLatitude;
+double destLongitude;
+NSString *parkingType;
 
 @interface MPGlobalData : NSObject
 

@@ -121,8 +121,8 @@
     
     MPParkingDetailViewController *dvc = [[MPParkingDetailViewController alloc] initWithNibName:@"MPParkingDetailViewController" bundle:nil];
     self.destCoordinate = [[view annotation] coordinate];
-    destLatitude = destCoordinate.latitude;
-    destLongitude = destCoordinate.longitude;
+    destLatitude = destCoodinate.latitude;
+    destLongitude = destCoodinate.longitude;
     [self getDestInformationWithLatitude:[NSString stringWithFormat:@"%lf",destLatitude] Longitude:[NSString stringWithFormat:@"%lf",destLongitude]];
     [self.navigationController pushViewController:dvc animated:YES];
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Storyboard" bundle:nil];
@@ -132,23 +132,23 @@
 }
 
 - (NSString *) getParkingTypeLatitude: (NSString *)lat Longitude: (NSString *) lon {
-    for(tempTable* tpObj in tempTableArray) {
-        if([tpObj.lat isEqual: lat] && [tpObj.lon  isEqual: lon]) {
-            parkingType = tpObj.parkingID;
-            break;
-        }
-    }
+//    for(tempTable* tpObj in tempTableArray) {
+//        if([tpObj.lat isEqual: lat] && [tpObj.lon  isEqual: lon]) {
+//            parkingType = tpObj.parkingID;
+//            break;
+//        }
+//    }
     return parkingType;
 }
 
 - (void) getDestInformationWithLatitude: (NSString *)lat Longitude: (NSString *) lon {
-    for(tempTable* tpObj in tempTableArray) {
-        if([tpObj.lat isEqual: lat] && [tpObj.lon  isEqual: lon]) {
-            destStreetName = tpObj.streetName;
-            destAddress = tpObj.fullAddress;
-            break;
-        }
-    }
+//    for(tempTable* tpObj in tempTableArray) {
+//        if([tpObj.lat isEqual: lat] && [tpObj.lon  isEqual: lon]) {
+//            destStreetName = tpObj.streetName;
+//            destAddress = tpObj.fullAddress;
+//            break;
+//        }
+//    }
 }
 
 #pragma mark - IB_ACTION
