@@ -12,7 +12,6 @@
 		CE417F0F19B436D80080F25D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE417F0E19B436D80080F25D /* UIKit.framework */; };
 		CE417F1519B436D80080F25D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CE417F1319B436D80080F25D /* InfoPlist.strings */; };
 		CE417F1719B436D80080F25D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CE417F1619B436D80080F25D /* main.m */; };
-		CE417F1B19B436D80080F25D /* MPAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CE417F1A19B436D80080F25D /* MPAppDelegate.m */; };
 		CE417F1E19B436D80080F25D /* Main_Iphone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE417F1C19B436D80080F25D /* Main_Iphone.storyboard */; };
 		CE417F2319B436D80080F25D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE417F2219B436D80080F25D /* Images.xcassets */; };
 		CE417F2A19B436D80080F25D /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE417F2919B436D80080F25D /* XCTest.framework */; };
@@ -60,6 +59,7 @@
 		CE77F15419B59BDE006EF077 /* 120*120@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CE77F15119B59BDE006EF077 /* 120*120@2x.png */; };
 		CE86433F19B5F1A600B7D713 /* MPGlobalFunction.m in Sources */ = {isa = PBXBuildFile; fileRef = CE86433E19B5F1A600B7D713 /* MPGlobalFunction.m */; };
 		CE86434219B5F27200B7D713 /* MPDBIntraction.m in Sources */ = {isa = PBXBuildFile; fileRef = CE86434119B5F27200B7D713 /* MPDBIntraction.m */; };
+		CE86434519B6013E00B7D713 /* MPAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CE86434419B6013E00B7D713 /* MPAppDelegate.m */; };
 		CE8BB1A819B495CE00A685D4 /* MPParkingDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8BB1A719B495CE00A685D4 /* MPParkingDetailViewController.m */; };
 		CE8BB1AC19B49BB700A685D4 /* MPSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8BB1AB19B49BB700A685D4 /* MPSettingViewController.m */; };
 		CE8BB1AF19B49BFB00A685D4 /* MPShareViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE8BB1AE19B49BFB00A685D4 /* MPShareViewController.m */; };
@@ -88,8 +88,6 @@
 		CE417F1419B436D80080F25D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		CE417F1619B436D80080F25D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		CE417F1819B436D80080F25D /* Mr.Park-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Mr.Park-Prefix.pch"; sourceTree = "<group>"; };
-		CE417F1919B436D80080F25D /* MPAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MPAppDelegate.h; path = ../Mr.Park/MPAppDelegate.h; sourceTree = "<group>"; };
-		CE417F1A19B436D80080F25D /* MPAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = MPAppDelegate.m; path = ../Mr.Park/MPAppDelegate.m; sourceTree = "<group>"; };
 		CE417F1D19B436D80080F25D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_Iphone.storyboard; sourceTree = "<group>"; };
 		CE417F2219B436D80080F25D /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = ../Mr.Park/Images.xcassets; sourceTree = "<group>"; };
 		CE417F2819B436D80080F25D /* Mr.ParkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Mr.ParkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -172,6 +170,8 @@
 		CE86433E19B5F1A600B7D713 /* MPGlobalFunction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPGlobalFunction.m; sourceTree = "<group>"; };
 		CE86434019B5F27200B7D713 /* MPDBIntraction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPDBIntraction.h; sourceTree = "<group>"; };
 		CE86434119B5F27200B7D713 /* MPDBIntraction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPDBIntraction.m; sourceTree = "<group>"; };
+		CE86434319B6013E00B7D713 /* MPAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPAppDelegate.h; sourceTree = "<group>"; };
+		CE86434419B6013E00B7D713 /* MPAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPAppDelegate.m; sourceTree = "<group>"; };
 		CE8BB1A619B495CE00A685D4 /* MPParkingDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPParkingDetailViewController.h; sourceTree = "<group>"; };
 		CE8BB1A719B495CE00A685D4 /* MPParkingDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPParkingDetailViewController.m; sourceTree = "<group>"; };
 		CE8BB1AA19B49BB700A685D4 /* MPSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPSettingViewController.h; sourceTree = "<group>"; };
@@ -305,8 +305,8 @@
 		CE417F3F19B437320080F25D /* AppDelegate */ = {
 			isa = PBXGroup;
 			children = (
-				CE417F1919B436D80080F25D /* MPAppDelegate.h */,
-				CE417F1A19B436D80080F25D /* MPAppDelegate.m */,
+				CE86434319B6013E00B7D713 /* MPAppDelegate.h */,
+				CE86434419B6013E00B7D713 /* MPAppDelegate.m */,
 			);
 			path = AppDelegate;
 			sourceTree = "<group>";
@@ -659,11 +659,11 @@
 				CE417F8019B446D00080F25D /* ASIHTTPRequest.m in Sources */,
 				CE417FA919B47F020080F25D /* MPMapListViewController.m in Sources */,
 				CE77F13619B59439006EF077 /* MPAddTimerViewController.m in Sources */,
-				CE417F1B19B436D80080F25D /* MPAppDelegate.m in Sources */,
 				CE417F6319B446C20080F25D /* SBJSON.m in Sources */,
 				CE8BB1A819B495CE00A685D4 /* MPParkingDetailViewController.m in Sources */,
 				CE417F8519B446DF0080F25D /* Reachability.m in Sources */,
 				CEB67EA719B5D00A00A40190 /* MPLegalViewController.m in Sources */,
+				CE86434519B6013E00B7D713 /* MPAppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
