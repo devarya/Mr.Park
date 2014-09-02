@@ -9,12 +9,13 @@
 #import <Foundation/Foundation.h>
 #import "ASIFormDataRequest.h"
 #import "JSON.h"
+#import "MPGlobalData.h"
 
 @class MPRestIntraction;
 MPRestIntraction *restIntraction;
 @interface MPRestIntraction : NSObject{
     
-    
+    NSURL * urlMain;
 }
 +(id)sharedManager;
 

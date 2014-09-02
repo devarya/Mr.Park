@@ -17,4 +17,5 @@
 #define URL_MAIN @"http://122.176.45.15:8080/mrpark/api/"
 
 
-
+//Messages
+#define MESSAGE_NOT_RESPOND @"Server not responding"

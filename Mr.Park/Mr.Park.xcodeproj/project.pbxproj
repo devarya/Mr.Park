@@ -8,6 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		0A89D7C719B63EB100ABCB79 /* MPGlobalData.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A89D7C619B63EB100ABCB79 /* MPGlobalData.m */; };
+		0AEE7D3A19B64A7D005882D1 /* AddressDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AEE7D2D19B64A7D005882D1 /* AddressDB.m */; };
+		0AEE7D3B19B64A7D005882D1 /* AddressUpdateControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AEE7D2F19B64A7D005882D1 /* AddressUpdateControl.m */; };
+		0AEE7D3C19B64A7D005882D1 /* HolidayTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AEE7D3119B64A7D005882D1 /* HolidayTable.m */; };
+		0AEE7D3D19B64A7D005882D1 /* Parking.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AEE7D3319B64A7D005882D1 /* Parking.m */; };
+		0AEE7D3E19B64A7D005882D1 /* Region.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AEE7D3519B64A7D005882D1 /* Region.m */; };
+		0AEE7D3F19B64A7D005882D1 /* tempTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AEE7D3719B64A7D005882D1 /* tempTable.m */; };
+		0AEE7D4019B64A7D005882D1 /* UpdateTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AEE7D3919B64A7D005882D1 /* UpdateTable.m */; };
+		0AEE7D4219B64B67005882D1 /* MrParkDataBase.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 0AEE7D4119B64B67005882D1 /* MrParkDataBase.sqlite */; };
 		CE417F0B19B436D80080F25D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE417F0A19B436D80080F25D /* Foundation.framework */; };
 		CE417F0D19B436D80080F25D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE417F0C19B436D80080F25D /* CoreGraphics.framework */; };
 		CE417F0F19B436D80080F25D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE417F0E19B436D80080F25D /* UIKit.framework */; };
@@ -83,6 +91,21 @@
 /* Begin PBXFileReference section */
 		0A89D7C519B63EB100ABCB79 /* MPGlobalData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPGlobalData.h; sourceTree = "<group>"; };
 		0A89D7C619B63EB100ABCB79 /* MPGlobalData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPGlobalData.m; sourceTree = "<group>"; };
+		0AEE7D2C19B64A7D005882D1 /* AddressDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressDB.h; sourceTree = "<group>"; };
+		0AEE7D2D19B64A7D005882D1 /* AddressDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddressDB.m; sourceTree = "<group>"; };
+		0AEE7D2E19B64A7D005882D1 /* AddressUpdateControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressUpdateControl.h; sourceTree = "<group>"; };
+		0AEE7D2F19B64A7D005882D1 /* AddressUpdateControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddressUpdateControl.m; sourceTree = "<group>"; };
+		0AEE7D3019B64A7D005882D1 /* HolidayTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HolidayTable.h; sourceTree = "<group>"; };
+		0AEE7D3119B64A7D005882D1 /* HolidayTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HolidayTable.m; sourceTree = "<group>"; };
+		0AEE7D3219B64A7D005882D1 /* Parking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Parking.h; sourceTree = "<group>"; };
+		0AEE7D3319B64A7D005882D1 /* Parking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Parking.m; sourceTree = "<group>"; };
+		0AEE7D3419B64A7D005882D1 /* Region.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Region.h; sourceTree = "<group>"; };
+		0AEE7D3519B64A7D005882D1 /* Region.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Region.m; sourceTree = "<group>"; };
+		0AEE7D3619B64A7D005882D1 /* tempTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tempTable.h; sourceTree = "<group>"; };
+		0AEE7D3719B64A7D005882D1 /* tempTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = tempTable.m; sourceTree = "<group>"; };
+		0AEE7D3819B64A7D005882D1 /* UpdateTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdateTable.h; sourceTree = "<group>"; };
+		0AEE7D3919B64A7D005882D1 /* UpdateTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdateTable.m; sourceTree = "<group>"; };
+		0AEE7D4119B64B67005882D1 /* MrParkDataBase.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = MrParkDataBase.sqlite; sourceTree = "<group>"; };
 		CE417F0719B436D80080F25D /* Mr.Park.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mr.Park.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE417F0A19B436D80080F25D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		CE417F0C19B436D80080F25D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -317,6 +340,7 @@
 		CE417F4119B437540080F25D /* AppDB */ = {
 			isa = PBXGroup;
 			children = (
+				0AEE7D4119B64B67005882D1 /* MrParkDataBase.sqlite */,
 				CE86434019B5F27200B7D713 /* MPDBIntraction.h */,
 				CE86434119B5F27200B7D713 /* MPDBIntraction.m */,
 			);
@@ -345,6 +369,20 @@
 		CE417F4419B437AA0080F25D /* AppModel */ = {
 			isa = PBXGroup;
 			children = (
+				0AEE7D2C19B64A7D005882D1 /* AddressDB.h */,
+				0AEE7D2D19B64A7D005882D1 /* AddressDB.m */,
+				0AEE7D2E19B64A7D005882D1 /* AddressUpdateControl.h */,
+				0AEE7D2F19B64A7D005882D1 /* AddressUpdateControl.m */,
+				0AEE7D3019B64A7D005882D1 /* HolidayTable.h */,
+				0AEE7D3119B64A7D005882D1 /* HolidayTable.m */,
+				0AEE7D3219B64A7D005882D1 /* Parking.h */,
+				0AEE7D3319B64A7D005882D1 /* Parking.m */,
+				0AEE7D3419B64A7D005882D1 /* Region.h */,
+				0AEE7D3519B64A7D005882D1 /* Region.m */,
+				0AEE7D3619B64A7D005882D1 /* tempTable.h */,
+				0AEE7D3719B64A7D005882D1 /* tempTable.m */,
+				0AEE7D3819B64A7D005882D1 /* UpdateTable.h */,
+				0AEE7D3919B64A7D005882D1 /* UpdateTable.m */,
 			);
 			path = AppModel;
 			sourceTree = "<group>";
@@ -613,6 +651,7 @@
 				CE417F9F19B478AF0080F25D /* MPBottomBarViewController.xib in Resources */,
 				CE417F2319B436D80080F25D /* Images.xcassets in Resources */,
 				CE417F1519B436D80080F25D /* InfoPlist.strings in Resources */,
+				0AEE7D4219B64B67005882D1 /* MrParkDataBase.sqlite in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -634,13 +673,16 @@
 				CEB67EA119B5CFE900A40190 /* MPNotificationViewController.m in Sources */,
 				CE417F7C19B446D00080F25D /* ASIDataCompressor.m in Sources */,
 				CE417F9419B46E010080F25D /* MPFeedBackViewController.m in Sources */,
+				0AEE7D3E19B64A7D005882D1 /* Region.m in Sources */,
 				CE417F6519B446C20080F25D /* SBJsonParser.m in Sources */,
 				CE417F8819B446F00080F25D /* AryaHUD.m in Sources */,
 				CE77F14619B59B27006EF077 /* FMDatabasePool.m in Sources */,
 				CE77F14719B59B27006EF077 /* FMDatabaseQueue.m in Sources */,
+				0AEE7D3C19B64A7D005882D1 /* HolidayTable.m in Sources */,
 				CE86433F19B5F1A600B7D713 /* MPGlobalFunction.m in Sources */,
 				CE417F7F19B446D00080F25D /* ASIFormDataRequest.m in Sources */,
 				CE417F7E19B446D00080F25D /* ASIDownloadCache.m in Sources */,
+				0AEE7D3B19B64A7D005882D1 /* AddressUpdateControl.m in Sources */,
 				CE417F9E19B478AF0080F25D /* MPBottomBarViewController.m in Sources */,
 				CE77F13919B599E7006EF077 /* MPRestIntraction.m in Sources */,
 				CE417F1719B436D80080F25D /* main.m in Sources */,
@@ -649,6 +691,7 @@
 				CE86434219B5F27200B7D713 /* MPDBIntraction.m in Sources */,
 				CE8BB1AF19B49BFB00A685D4 /* MPShareViewController.m in Sources */,
 				CE417F6119B446C20080F25D /* NSObject+SBJSON.m in Sources */,
+				0AEE7D3A19B64A7D005882D1 /* AddressDB.m in Sources */,
 				CE77F14D19B59B77006EF077 /* Validate.m in Sources */,
 				CEB67EA419B5CFF800A40190 /* MPProfileViewController.m in Sources */,
 				CE77F14419B59B27006EF077 /* FMDatabase.m in Sources */,
@@ -663,9 +706,12 @@
 				CE77F14519B59B27006EF077 /* FMDatabaseAdditions.m in Sources */,
 				CE417F8119B446D00080F25D /* ASIInputStream.m in Sources */,
 				CE417F8019B446D00080F25D /* ASIHTTPRequest.m in Sources */,
+				0AEE7D3D19B64A7D005882D1 /* Parking.m in Sources */,
 				CE417FA919B47F020080F25D /* MPMapListViewController.m in Sources */,
 				CE77F13619B59439006EF077 /* MPAddTimerViewController.m in Sources */,
+				0AEE7D4019B64A7D005882D1 /* UpdateTable.m in Sources */,
 				CE417F6319B446C20080F25D /* SBJSON.m in Sources */,
+				0AEE7D3F19B64A7D005882D1 /* tempTable.m in Sources */,
 				CE8BB1A819B495CE00A685D4 /* MPParkingDetailViewController.m in Sources */,
 				CE417F8519B446DF0080F25D /* Reachability.m in Sources */,
 				CEB67EA719B5D00A00A40190 /* MPLegalViewController.m in Sources */,
