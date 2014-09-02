@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0A89D7C719B63EB100ABCB79 /* MPGlobalData.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A89D7C619B63EB100ABCB79 /* MPGlobalData.m */; };
+		0A89D7CA19B6485500ABCB79 /* MPCustomAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A89D7C919B6485500ABCB79 /* MPCustomAnnotation.m */; };
 		CE417F0B19B436D80080F25D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE417F0A19B436D80080F25D /* Foundation.framework */; };
 		CE417F0D19B436D80080F25D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE417F0C19B436D80080F25D /* CoreGraphics.framework */; };
 		CE417F0F19B436D80080F25D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE417F0E19B436D80080F25D /* UIKit.framework */; };
@@ -83,6 +84,8 @@
 /* Begin PBXFileReference section */
 		0A89D7C519B63EB100ABCB79 /* MPGlobalData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPGlobalData.h; sourceTree = "<group>"; };
 		0A89D7C619B63EB100ABCB79 /* MPGlobalData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPGlobalData.m; sourceTree = "<group>"; };
+		0A89D7C819B6485500ABCB79 /* MPCustomAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPCustomAnnotation.h; sourceTree = "<group>"; };
+		0A89D7C919B6485500ABCB79 /* MPCustomAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPCustomAnnotation.m; sourceTree = "<group>"; };
 		CE417F0719B436D80080F25D /* Mr.Park.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mr.Park.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE417F0A19B436D80080F25D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		CE417F0C19B436D80080F25D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -510,6 +513,8 @@
 				CE8BB1A719B495CE00A685D4 /* MPParkingDetailViewController.m */,
 				CE77F13419B59439006EF077 /* MPAddTimerViewController.h */,
 				CE77F13519B59439006EF077 /* MPAddTimerViewController.m */,
+				0A89D7C819B6485500ABCB79 /* MPCustomAnnotation.h */,
+				0A89D7C919B6485500ABCB79 /* MPCustomAnnotation.m */,
 			);
 			name = Map;
 			sourceTree = "<group>";
@@ -657,6 +662,7 @@
 				CE417F8219B446D00080F25D /* ASINetworkQueue.m in Sources */,
 				CEB67E9D19B5BEF900A40190 /* MPFavoritesViewController.m in Sources */,
 				CE8BB1AC19B49BB700A685D4 /* MPSettingViewController.m in Sources */,
+				0A89D7CA19B6485500ABCB79 /* MPCustomAnnotation.m in Sources */,
 				CE417F6219B446C20080F25D /* NSString+SBJSON.m in Sources */,
 				CE417F6619B446C20080F25D /* SBJsonWriter.m in Sources */,
 				CE417F7D19B446D00080F25D /* ASIDataDecompressor.m in Sources */,

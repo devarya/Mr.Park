@@ -11,7 +11,9 @@
 #import "MPFeedBackViewController.h"
 #import "MPSettingViewController.h"
 #import "MPShareViewController.h"
+#import "MPParkingDetailViewController.h"
 #import "MPGlobalData.h"
+#import "MPCustomAnnotation.h"
 
 @interface MPMapListViewController : MPBottomBarViewController<UITableViewDataSource,UITableViewDelegate>{
     

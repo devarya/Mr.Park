@@ -199,7 +199,7 @@
         <!--Parking Detail View Controller-->
         <scene sceneID="Oaw-mM-z1Q">
             <objects>
-                <viewController id="ITB-QE-0ud" customClass="MPParkingDetailViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="detailViewController" id="ITB-QE-0ud" customClass="MPParkingDetailViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ta0-Lu-ME6">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
