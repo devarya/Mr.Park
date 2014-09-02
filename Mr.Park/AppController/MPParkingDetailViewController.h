@@ -11,7 +11,7 @@
 #import "MPFeedBackViewController.h"
 #import "MPSettingViewController.h"
 
-@interface MPParkingDetailViewController : MPMapListViewController{
+@interface MPParkingDetailViewController : MPMapListViewController<UITableViewDataSource,UITableViewDelegate>{
     
 }
 
