@@ -117,6 +117,12 @@
 }
 
 - (IBAction)btn_remindMe:(id)sender {
+    NSString *timeLabel = l_dateAndTime.text;
+    if ([timeLabel isEqualToString:@""]) {
+        UIAlertView *errorAlert =[[UIAlertView alloc]initWithTitle:@"Remind Time" message:@"Please Select Remind Time" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [errorAlert show];
+    }
+    else{
     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Parking Reminder" message:@"Alarm has added to the Notification." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
     [alert show];
     
@@ -125,21 +131,26 @@
     dateFormatter.timeZone = [NSTimeZone defaultTimeZone];
     dateFormatter.timeStyle = NSDateFormatterShortStyle;
     dateFormatter.dateStyle = NSDateFormatterShortStyle;
-    
+//        NSDate *pickerDate = [self->pv_dateAndTime date];
+//        
+//        localNotification.fireDate = pickerDate;
+//        localNotification.alertBody = self->tv_remindNote.text;
+//        localNotification.alertAction = @"Show me the item";
+//        localNotification.timeZone = [NSTimeZone defaultTimeZone];
+        localNotification.applicationIconBadgeNumber = [[UIApplication sharedApplication] applicationIconBadgeNumber] + 1;
     NSString *dateTimeString = [dateFormatter stringFromDate:pv_dateAndTime.date];
-    
     NSLog(@"Set Alarm: %@", dateTimeString);
-    
-    [self schedulLocalNotificationWithDate:pv_dateAndTime.date];
-    
-    [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
-    
-    // Request to reload table view data
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadData" object:self];
-    
-    // Dismiss the view controller
-    [self dismissViewControllerAnimated:YES completion:nil];
-
+        
+        [self schedulLocalNotificationWithDate:pv_dateAndTime.date];
+        
+//        [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+        
+        // Request to reload table view data
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadData" object:self];
+        
+        // Dismiss the view controller
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
