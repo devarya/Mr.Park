@@ -197,8 +197,15 @@
         [containerView addSubview:infoView];
     }
 }
-
 - (IBAction)btn_FreeParking:(id)sender {
+}
+- (IBAction)btn_FreeParkingStructure:(id)sender {
+}
+- (IBAction)btn_LimitParking:(id)sender {
+}
+- (IBAction)btn_MeterParking:(id)sender {
+}
+- (IBAction)btn_MeterParkingStructure:(id)sender{
 }
 -(void)performCubeAnimation:(NSString*)animType animSubType:(NSString*)animSubType{
     
