@@ -103,11 +103,6 @@
             MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:tpObj.streetName Subtitle:tpObj.fullAddress Location:CLLocationCoordinate2DMake([tpObj.lat doubleValue], [tpObj.lon doubleValue])];
             [map_View addAnnotation:pin];
         }
-        //        for(int i = 0; i < 3; i++) {
-        //            MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:@"aaa" Subtitle:@"bbb" Location:CLLocationCoordinate2DMake(33.8503432, -117.728511)];
-        //            [map_View addAnnotation:pin];
-        //        }
-        //    }
     }
     NSString * regionArr = [self checkCurrentRegion];
     NSArray *part = [regionArr componentsSeparatedByString:@", "];
@@ -151,7 +146,7 @@
     destLongitude = destCoodinate.longitude;
     [self getDestInformationWithLatitude:[NSString stringWithFormat:@"%lf",destLatitude] Longitude:[NSString stringWithFormat:@"%lf",destLongitude]];
     [self.navigationController pushViewController:dvc animated:YES];
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Storyboard" bundle:nil];
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main_Iphone" bundle:nil];
     UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"detailViewController"];
     [self presentViewController:vc animated:YES completion:NULL];
     
