@@ -27,6 +27,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     self.map_View.delegate = self;
     [self createTempDB];
     MPBottomBarViewController *vc_bottomBar = [[MPBottomBarViewController alloc] initWithNibName:@"MPBottomBarViewController" bundle:nil];
@@ -44,6 +45,10 @@
     
     [self.map_View setShowsUserLocation:YES];
     
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.dateFormat=@"EEEE";
+    NSString * dayString = [[dateFormatter stringFromDate:now] capitalizedString];
+    weekday = dayString;
     
     ary_ptfp = [NSMutableArray new];
     ary_ptfps = [NSMutableArray new];

@@ -114,6 +114,7 @@
     NSMutableDictionary *info= [NSMutableDictionary new];
     [[MPRestIntraction sharedManager] requestAddressControlCall:info];
 }
+
 - (void) getCurrentDateAndTime {
     now = [NSDate date]; // format is 2011-02-28 09:57:49 +0000
     NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
