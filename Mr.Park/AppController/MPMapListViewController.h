@@ -24,7 +24,6 @@
     IBOutlet UIView *infoView;
     
     IBOutlet MKMapView *map_View;
-    IBOutlet UITableView *tbl_View;
     IBOutlet UIButton *btnToggleMapList;
     IBOutlet UISearchBar *searchBar;
     BOOL isMapView;
@@ -45,6 +44,7 @@
 }
 @property (nonatomic, retain) IBOutlet MKMapView *map_View;
 @property (nonatomic, retain) CLGeocoder *geocoder;
+@property (weak, nonatomic) IBOutlet UITableView *tbl_View;
 @property (nonatomic) CLLocationCoordinate2D destCoordinate;
 -(IBAction)btnReminderDidClicked:(id)sender;
 -(IBAction)btnSwitchToMapAndList:(id)sender;

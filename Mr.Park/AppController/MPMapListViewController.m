@@ -14,7 +14,7 @@
 @end
 
 @implementation MPMapListViewController
-@synthesize map_View, geocoder;
+@synthesize map_View, geocoder, tbl_View;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -213,6 +213,8 @@
             [map_View addAnnotation:pin];
         }
     }
+    countList = 1;
+    [tbl_View reloadData];
 }
 - (IBAction)btn_FreeParkingStructure:(id)sender {
     [self.map_View removeAnnotations:[self.map_View annotations]];
@@ -222,6 +224,8 @@
             [map_View addAnnotation:pin];
         }
     }
+    countList = 2;
+    [tbl_View reloadData];
 }
 - (IBAction)btn_LimitParking:(id)sender {
     [self.map_View removeAnnotations:[self.map_View annotations]];
@@ -231,6 +235,8 @@
             [map_View addAnnotation:pin];
         }
     }
+    countList = 3;
+    [tbl_View reloadData];
 }
 - (IBAction)btn_MeterParking:(id)sender {
     [self.map_View removeAnnotations:[self.map_View annotations]];
@@ -240,6 +246,8 @@
             [map_View addAnnotation:pin];
         }
     }
+    countList = 4;
+    [tbl_View reloadData];
 }
 - (IBAction)btn_MeterParkingStructure:(id)sender{
     [self.map_View removeAnnotations:[self.map_View annotations]];
@@ -249,6 +257,8 @@
             [map_View addAnnotation:pin];
         }
     }
+    countList = 5;
+    [tbl_View reloadData];
 }
 -(void)performCubeAnimation:(NSString*)animType animSubType:(NSString*)animSubType{
     
@@ -269,8 +279,8 @@
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if(countList == 1)
-        return [ary_ptfp count];
+    if(countList == 1){
+        return [ary_ptfp count];}
     else if(countList == 2)
         return [ary_ptfps count];
     else if(countList == 3)
@@ -285,6 +295,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if(countList == 1) {
+        NSLog(@"111");
         NSString *identifier = nil;
         tempTable *temp =[ary_ptfp objectAtIndex:indexPath.row];
         NSString *streetName = temp.streetName;
@@ -297,8 +308,8 @@
             identifier = @"cellLight";
         }
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-        if([temp.parkingID isEqual:@"1"]) {
-            cell.imageView.image = [UIImage imageNamed:@"ic_fp@2x.png"];
+        if([temp.parkingType isEqual:@"Free parking"]) {
+            cell.imageView.image = [UIImage imageNamed:@"fp"];
             UILabel *cellLabel;
             cellLabel = (UILabel *)[cell viewWithTag:1];
             cellLabel.text = streetName;
@@ -347,8 +358,8 @@
             identifier = @"cellLight";
         }
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-        if([temp.parkingID isEqual:@"3"]) {
-            cell.imageView.image = [UIImage imageNamed:@"ic_lt@2x.png"];
+        if([temp.parkingType isEqual:@"Limited time parking"]) {
+            cell.imageView.image = [UIImage imageNamed:@"lt"];
             UILabel *cellLabel;
             cellLabel = (UILabel *)[cell viewWithTag:1];
             cellLabel.text = streetName;
@@ -372,8 +383,8 @@
             identifier = @"cellLight";
         }
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-        if([temp.parkingID isEqual:@"4"]) {
-            cell.imageView.image = [UIImage imageNamed:@"ic_mp@2x.png"];
+        if([temp.parkingType isEqual:@"Metered parking"]) {
+            cell.imageView.image = [UIImage imageNamed:@"mp"];
             UILabel *cellLabel;
             cellLabel = (UILabel *)[cell viewWithTag:1];
             cellLabel.text = streetName;
@@ -397,8 +408,8 @@
             identifier = @"cellLight";
         }
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-        if([temp.parkingID isEqual:@"5"]) {
-            cell.imageView.image = [UIImage imageNamed:@"ic_mps@2x.png"];
+        if([temp.parkingType isEqual:@"Metered parking structure"]) {
+            cell.imageView.image = [UIImage imageNamed:@"mps"];
             UILabel *cellLabel;
             cellLabel = (UILabel *)[cell viewWithTag:1];
             cellLabel.text = streetName;
@@ -422,16 +433,16 @@
             identifier = @"cellLight";
         }
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-        if([temp.parkingID isEqual:@"1"])
-            cell.imageView.image = [UIImage imageNamed:@"ic_fp@2x.png"];
-        else if([temp.parkingID isEqual:@"2"])
-            cell.imageView.image = [UIImage imageNamed:@"ic_fps@2x.png"];
-        else if([temp.parkingID isEqual:@"3"])
-            cell.imageView.image = [UIImage imageNamed:@"ic_lt@2x.png"];
-        else if([temp.parkingID isEqual:@"4"])
-            cell.imageView.image = [UIImage imageNamed:@"ic_mp@2x.png"];
-        else if([temp.parkingID isEqual:@"5"])
-            cell.imageView.image = [UIImage imageNamed:@"ic_mps@2x.png"];
+        if([temp.parkingType isEqual:@"Free parking"])
+            cell.imageView.image = [UIImage imageNamed:@"fp"];
+        else if([temp.parkingType isEqual:@"Free parking structure"])
+            cell.imageView.image = [UIImage imageNamed:@"fps"];
+        else if([temp.parkingType isEqual:@"Limited time parking"])
+            cell.imageView.image = [UIImage imageNamed:@"lt"];
+        else if([temp.parkingType isEqual:@"Metered parking"])
+            cell.imageView.image = [UIImage imageNamed:@"mp"];
+        else if([temp.parkingType isEqual:@"Metered parking structure"])
+            cell.imageView.image = [UIImage imageNamed:@"mps"];
         UILabel *cellLabel;
         cellLabel = (UILabel *)[cell viewWithTag:1];
         cellLabel.text = streetName;
