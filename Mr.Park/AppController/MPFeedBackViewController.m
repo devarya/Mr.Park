@@ -70,4 +70,10 @@
     [self presentViewController:vc_share animated:YES completion:NULL];
     
 }
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    [self->tv_message resignFirstResponder];
+    [self->tx_email resignFirstResponder];
+
+}
+
 @end

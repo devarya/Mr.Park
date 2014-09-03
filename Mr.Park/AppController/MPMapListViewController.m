@@ -189,6 +189,7 @@
         [map_View removeFromSuperview];
         
         [containerView addSubview:tbl_View];
+        [containerView addSubview:infoView];
     }else{
         isMapView = YES;
         [btnToggleMapList setImage:[UIImage imageNamed:@"list.png"] forState:UIControlStateNormal];
@@ -196,7 +197,18 @@
         [tbl_View removeFromSuperview];
         
         [containerView addSubview:map_View];
+        [containerView addSubview:infoView];
     }
+}
+- (IBAction)btn_FreeParking:(id)sender {
+}
+- (IBAction)btn_FreeParkingStructure:(id)sender {
+}
+- (IBAction)btn_LimitParking:(id)sender {
+}
+- (IBAction)btn_MeterParking:(id)sender {
+}
+- (IBAction)btn_MeterParkingStructure:(id)sender{
 }
 -(void)performCubeAnimation:(NSString*)animType animSubType:(NSString*)animSubType{
     

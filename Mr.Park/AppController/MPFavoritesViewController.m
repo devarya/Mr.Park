@@ -26,7 +26,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    _aryaInfo2014 = [[NSMutableArray alloc]initWithObjects:@"Rashmi",
+                @"Aditi",@"Rajeshs",@"Zac",@"Sean",@"Brian", nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -43,7 +44,7 @@
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     
-    return 3;
+    return _aryaInfo2014.count;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
@@ -58,7 +59,7 @@
                 reuseIdentifier:cellIdentifier];
     }
     
-    cell.textLabel.text = @"testing Mr.Park";
+    cell.textLabel.text = [_aryaInfo2014 objectAtIndex:indexPath.row];
     
     return cell;
 }
@@ -68,5 +69,11 @@
 -(IBAction)btnBackDidClicked:(id)sender{
     
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (IBAction)btnDelete:(id)sender {
+    
+//    [numbers removeObjectAtIndex:indexPath.row];
+//    [favoritesTableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimation];
 }
 @end
