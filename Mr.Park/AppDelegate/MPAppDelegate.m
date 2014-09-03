@@ -32,7 +32,12 @@
     [rootViewCtr.view addSubview:launchView];
     self.window.rootViewController = rootViewCtr;
     [self performSelector:@selector(startMP) withObject:nil afterDelay:3];
-
+    
+    UILocalNotification *locationNotification = [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
+    if (locationNotification) {
+        // Set icon badge number to zero
+        application.applicationIconBadgeNumber = 0;
+    }
     return YES;
 }
 -(void)startMP{
@@ -133,5 +138,23 @@
     currentSecond = [arr_time objectAtIndex:2];
     currentMinute = [arr_time objectAtIndex:1];
     currentHour = [arr_time objectAtIndex:0];
+}
+
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
+{
+    UIApplicationState state = [application applicationState];
+    if (state == UIApplicationStateActive) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Reminder"
+                                                        message:notification.alertBody
+                                                       delegate:self cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
+    
+    // Request to reload table view data
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadData" object:self];
+    
+    // Set icon badge number to zero
+    application.applicationIconBadgeNumber = 0;
 }
 @end

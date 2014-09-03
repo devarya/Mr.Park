@@ -44,14 +44,30 @@
 - (void)schedulLocalNotificationWithDate:(NSDate *)firedate{
     UILocalNotification *notification = [[UILocalNotification alloc]init];
     
-    notification.fireDate = firedate;
+    notification.fireDate = [NSDate dateWithTimeIntervalSinceNow:60];;
     notification.alertBody = tv_remindNote.text;
     notification.soundName = @"7f_in-a-hurry-song.mp3";
     //    notification.soundName = @"alarm-clock-bell.caf";
     
     [[UIApplication sharedApplication] scheduleLocalNotification:notification];
 }
-
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
+{
+    UIApplicationState state = [application applicationState];
+    if (state == UIApplicationStateActive) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Reminder"
+                                                        message:notification.alertBody
+                                                       delegate:self cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
+    
+    // Request to reload table view data
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadData" object:self];
+    
+    // Set icon badge number to zero
+    application.applicationIconBadgeNumber = 0;
+}
 #pragma mark - IB_ACTION
 
 -(IBAction)btnBackDidClicked:(id)sender{
@@ -104,6 +120,7 @@
     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Parking Reminder" message:@"Alarm has added to the Notification." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
     [alert show];
     
+    UILocalNotification* localNotification = [[UILocalNotification alloc] init];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
     dateFormatter.timeZone = [NSTimeZone defaultTimeZone];
     dateFormatter.timeStyle = NSDateFormatterShortStyle;
@@ -114,8 +131,21 @@
     NSLog(@"Set Alarm: %@", dateTimeString);
     
     [self schedulLocalNotificationWithDate:pv_dateAndTime.date];
-}
+    
+    [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+    
+    // Request to reload table view data
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadData" object:self];
+    
+    // Dismiss the view controller
+    [self dismissViewControllerAnimated:YES completion:nil];
 
+}
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [self->tv_remindNote resignFirstResponder];
+    return NO;
+}
 
 
 @end
