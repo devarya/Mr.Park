@@ -186,6 +186,7 @@
         [map_View removeFromSuperview];
         
         [containerView addSubview:tbl_View];
+        [containerView addSubview:infoView];
     }else{
         isMapView = YES;
         [btnToggleMapList setImage:[UIImage imageNamed:@"list.png"] forState:UIControlStateNormal];
@@ -193,7 +194,11 @@
         [tbl_View removeFromSuperview];
         
         [containerView addSubview:map_View];
+        [containerView addSubview:infoView];
     }
+}
+
+- (IBAction)btn_FreeParking:(id)sender {
 }
 -(void)performCubeAnimation:(NSString*)animType animSubType:(NSString*)animSubType{
     
@@ -265,6 +270,10 @@
     currentSecond = [arr_time objectAtIndex:2];
     currentMinute = [arr_time objectAtIndex:1];
     currentHour = [arr_time objectAtIndex:0];
+}
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    [self->searchBar resignFirstResponder];
+    
 }
 
 @end

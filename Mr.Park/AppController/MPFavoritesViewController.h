@@ -10,7 +10,9 @@
 #import "MPSettingViewController.h"
 
 @interface MPFavoritesViewController : MPSettingViewController<UITableViewDelegate,UITableViewDataSource>{
-    
+    IBOutlet UITableView *favoritesTableView;
 }
+- (IBAction)btnDelete:(id)sender;
+@property (strong, nonatomic) NSMutableArray *aryaInfo2014;
 
 @end
