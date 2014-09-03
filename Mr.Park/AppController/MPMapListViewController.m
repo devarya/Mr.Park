@@ -44,29 +44,26 @@
     
     [self.map_View setShowsUserLocation:YES];
     
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    dateFormatter.dateFormat=@"EEEE";
-    NSString * dayString = [[dateFormatter stringFromDate:now] capitalizedString];
-    weekday = dayString;
+    
     ary_ptfp = [NSMutableArray new];
     ary_ptfps = [NSMutableArray new];
     ary_ptlt = [NSMutableArray new];
     ary_ptmp = [NSMutableArray new];
     ary_ptmps = [NSMutableArray new];
     for(tempTable* tpObj in tempTableArray) {
-        if([tpObj.parkingID isEqual:@"1"]) {
+        if([tpObj.parkingID isEqual:@"Free parking"]) {
             [ary_ptfp addObject:tpObj];
         }
-        if([tpObj.parkingID isEqual:@"2"]) {
+        if([tpObj.parkingID isEqual:@"Free parking structure"]) {
             [ary_ptfps addObject:tpObj];
         }
-        if([tpObj.parkingID isEqual:@"3"]) {
+        if([tpObj.parkingID isEqual:@"Limited time parking"]) {
             [ary_ptlt addObject:tpObj];
         }
-        if([tpObj.parkingID isEqual:@"4"]) {
+        if([tpObj.parkingID isEqual:@"Metered parking"]) {
             [ary_ptmp addObject:tpObj];
         }
-        if([tpObj.parkingID isEqual:@"5"]) {
+        if([tpObj.parkingID isEqual:@"Metered parking structure"]) {
             [ary_ptmps addObject:tpObj];
         }
     }
@@ -98,7 +95,6 @@
 			[self.map_View setCenterCoordinate:userLocation.coordinate animated:YES];
 		});
         for(tempTable* tpObj in tempTableArray) {
-            NSLog(@"%@", tpObj.streetName);
             MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:tpObj.streetName Subtitle:tpObj.fullAddress Location:CLLocationCoordinate2DMake([tpObj.lat doubleValue], [tpObj.lon doubleValue])];
             [map_View addAnnotation:pin];
         }
@@ -329,43 +325,62 @@
     }
     for (tempTable *tp in tempTableArray) {
         if([self isHolidayWithCurrentDate:strDate]) {
-            NSLog(@"holiday");
-            tp.parkingType = @"Free Parking";
+            tp.parkingType = @"Free parking";
         }
         else {
-            NSArray *arr_type = [tp.parkingID componentsSeparatedByString:@","];
-            for (int i =0; i<arr_type.count; i++) {
-                bool isDefaultDay = false;
-                NSString *part = arr_type[i];
-                [self getParkingFromDatabase:[part intValue]];
+            NSString *str_type = [tp.parkingID componentsSeparatedByString:@","][0];
+            [self getParkingFromDatabase:[str_type intValue]];
+            if([self isSwappingWithHour:currentHour andMinute:currentMinute andParkingType:str_type]) {
+                tp.parkingType = @"No Parking";
+            }
+            else {
+                BOOL isDefaultDay = false;
                 NSArray *arr_days = [parkingHolder.str_parking_default_days componentsSeparatedByString:@","];
                 for(NSString *day in arr_days) {
-                    if([weekday isEqual:day])
+                    if([weekday isEqual:day]) {
                         isDefaultDay = true;
-                    
+                        break;
+                    }
                 }
                 if (isDefaultDay) {
-                    if([currentHour integerValue] > [[parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][0] integerValue] && [currentHour integerValue] > [[parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][0] integerValue]) {
-                        if([currentHour integerValue] > [[parkingHolder.str_parking_restrict_time_start componentsSeparatedByString:@":"][0] integerValue] && [currentHour integerValue] > [[parkingHolder.str_parking_restrict_time_end componentsSeparatedByString:@":"][0] integerValue]) {
+                    double d_start =[[parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][0] integerValue]*60 + [[parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][0] integerValue];
+                    
+                    double d_end =[[parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][0] integerValue]*60 + [[parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][0] integerValue];
+                    
+                    double r_start =[[parkingHolder.str_parking_restrict_time_start componentsSeparatedByString:@":"][0] integerValue]*60 + [[parkingHolder.str_parking_restrict_time_start componentsSeparatedByString:@":"][0] integerValue];
+                    
+                    double r_end =[[parkingHolder.str_parking_restrict_time_end componentsSeparatedByString:@":"][0] integerValue]*60 + [[parkingHolder.str_parking_restrict_time_end componentsSeparatedByString:@":"][0] integerValue];
+                    
+                    if(([currentHour integerValue]*60+[currentMinute integerValue])> d_start && ([currentHour integerValue]*60+[currentMinute integerValue]) < d_end) {
+                        if(([currentHour integerValue]*60+[currentMinute integerValue]) > r_start && ([currentHour integerValue]*60+[currentMinute integerValue]) < r_end) {
                             tp.parkingType = @"No Parking";
-                            break;
                         }
                         else {
                             tp.parkingType = parkingHolder.str_parking_type;
-                            break;
                         }
                     }
-                    else
-                        tp.parkingType = @"No Parking";
+                    else {
+                        tp.parkingType = @"Free parking";
+                    }
                 }
-                else
-                    tp.parkingType = @"Free parking";
             }
         }
     }
-    
+
 }
 
+- (BOOL) isSwappingWithHour:(NSString *) currentHour andMinute:(NSString *) currentMinute andParkingType: (NSString *) parkingType {
+    double c_time =[currentHour integerValue]*60 + [currentMinute integerValue];
+    [self getParkingFromDatabase:[parkingType intValue]];
+    
+    double s_start =[[parkingHolder.str_parking_sweeping_time_start componentsSeparatedByString:@":"][0] integerValue]*60 + [[parkingHolder.str_parking_sweeping_time_start componentsSeparatedByString:@":"][0] integerValue];
+    
+    double s_end =[[parkingHolder.str_parking_sweeping_time_end componentsSeparatedByString:@":"][0] integerValue]*60 + [[parkingHolder.str_parking_sweeping_time_end componentsSeparatedByString:@":"][0] integerValue];
+    if(c_time > s_start && c_time < s_end)
+        return true;
+    else
+        return false;
+}
 
 - (void)getAddressFromDatabase{
     if (!mrParkDB)

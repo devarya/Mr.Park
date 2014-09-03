@@ -15,6 +15,10 @@
 {
     [self getCurrentDateAndTime];
     [self checkUpdate];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.dateFormat=@"EEEE";
+    NSString * dayString = [[dateFormatter stringFromDate:now] capitalizedString];
+    weekday = dayString;
     UITextField *txtField = [[UITextField alloc]initWithFrame:CGRectMake(0, 0, 0, 0)];
     [txtField becomeFirstResponder];
     [self.window addSubview:txtField];
