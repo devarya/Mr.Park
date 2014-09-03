@@ -111,7 +111,6 @@
     }
     NSString * regionArr = [self checkCurrentRegion];
     NSArray *part = [regionArr componentsSeparatedByString:@", "];
-    NSLog(@"part %d", part.count);
 }
 - (MKAnnotationView *) mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
     //[HUD hide];
@@ -570,36 +569,43 @@
     cp.lat = [NSString stringWithFormat:@"%f", currentCoodinate.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", currentCoodinate.longitude];
     [point_arr addObject:cp];
-    
-    CLLocationCoordinate2D neCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude - 0.02, currentCoodinate.longitude + 0.02);
+    cp = [CoordinatePoint new];
+    CLLocationCoordinate2D neCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude - mileInCoordinate, currentCoodinate.longitude + mileInCoordinate);
     cp.lat = [NSString stringWithFormat:@"%f", neCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", neCoord.longitude];
     [point_arr addObject:cp];
-    CLLocationCoordinate2D swCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude - 0.02, currentCoodinate.longitude + 0.02);
+    cp = [CoordinatePoint new];
+    CLLocationCoordinate2D swCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude - mileInCoordinate, currentCoodinate.longitude + mileInCoordinate);
     cp.lat = [NSString stringWithFormat:@"%f", swCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", swCoord.longitude];
     [point_arr addObject:cp];
-    CLLocationCoordinate2D nwCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude + 0.02, currentCoodinate.longitude + 0.02);
+    cp = [CoordinatePoint new];
+    CLLocationCoordinate2D nwCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude + mileInCoordinate, currentCoodinate.longitude + mileInCoordinate);
     cp.lat = [NSString stringWithFormat:@"%f", nwCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", nwCoord.longitude];
     [point_arr addObject:cp];
-    CLLocationCoordinate2D seCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude - 0.02, currentCoodinate.longitude - 0.02);
+    cp = [CoordinatePoint new];
+    CLLocationCoordinate2D seCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude - mileInCoordinate, currentCoodinate.longitude - mileInCoordinate);
     cp.lat = [NSString stringWithFormat:@"%f", seCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", seCoord.longitude];
     [point_arr addObject:cp];
-    CLLocationCoordinate2D sCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude - 0.02, currentCoodinate.longitude);
+    cp = [CoordinatePoint new];
+    CLLocationCoordinate2D sCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude - mileInCoordinate, currentCoodinate.longitude);
     cp.lat = [NSString stringWithFormat:@"%f", sCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", sCoord.longitude];
     [point_arr addObject:cp];
-    CLLocationCoordinate2D eCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude, currentCoodinate.longitude - 0.02);
+    cp = [CoordinatePoint new];
+    CLLocationCoordinate2D eCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude, currentCoodinate.longitude - mileInCoordinate);
     cp.lat = [NSString stringWithFormat:@"%f", eCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", eCoord.longitude];
     [point_arr addObject:cp];
-    CLLocationCoordinate2D nCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude + 0.02, currentCoodinate.longitude);
+    cp = [CoordinatePoint new];
+    CLLocationCoordinate2D nCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude + mileInCoordinate, currentCoodinate.longitude);
     cp.lat = [NSString stringWithFormat:@"%f", nCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", nCoord.longitude];
     [point_arr addObject:cp];
-    CLLocationCoordinate2D wCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude, currentCoodinate.longitude + 0.02);
+    cp = [CoordinatePoint new];
+    CLLocationCoordinate2D wCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude, currentCoodinate.longitude + mileInCoordinate);
     cp.lat = [NSString stringWithFormat:@"%f", wCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", wCoord.longitude];
     [point_arr addObject:cp];
@@ -615,10 +621,12 @@
              if ([region_arr rangeOfString:pm.subAdministrativeArea].location == NSNotFound) {
                  [region_arr appendString:pm.subAdministrativeArea];
                  [region_arr appendString:@", "];
-                 NSLog(@"%@", pm.subAdministrativeArea);
+                 //NSLog(@"%@", pm.subAdministrativeArea);
+                 NSLog(@"%@", region_arr);
              }
          }];
     }
+    
     return region_arr;
 }
 
