@@ -70,11 +70,6 @@
 {
     [self.tv_myTableView reloadData];
 }
-//-(void)refreshTable
-//{
-//    arrEditNotification=[[PCDBIntraction sharedManager] selectReminderList];
-//    [tblEditReminder reloadData];
-//}
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Navigation logic may go here. Create and push another view controller.
