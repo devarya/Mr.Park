@@ -276,4 +276,234 @@
     
 }
 
+
+-(void)createTempDB{
+    
+    
+    //    NSString* currentTime = strTime;
+    //    NSString* currentDay = weekday;
+    if (!mrParkDB)
+    {
+        NSString*path = [[MPDBIntraction databaseInteractionManager] getDatabasePathFromName:DBname];
+        mrParkDB = [[FMDatabase alloc] initWithPath:path];
+    }
+    
+    NSString *query;
+    
+    query = [NSString stringWithFormat:@"Select * FROM addressTable where address_id < 21"];
+    
+    @try
+    {
+        [mrParkDB open];
+        if ([mrParkDB executeQuery:query])
+        {
+            FMResultSet *dataArr = [mrParkDB executeQuery:query];
+            tempTableArray = [NSMutableArray new];
+            while([dataArr next]){
+                tempTable * tempObj = [tempTable new];
+                tempObj.addressID = [dataArr stringForColumn:@"address_id"];
+                tempObj.lat = [dataArr stringForColumn:@"houseLat"];
+                tempObj.lon = [dataArr stringForColumn:@"houseLong"];
+                tempObj.parkingID = [dataArr stringForColumn:@"parking_ids"];
+                tempObj.fullAddress  = [dataArr stringForColumn:@"houseFullAddress"];
+                tempObj.streetName = [dataArr stringForColumn:@"streetName"];
+                [tempTableArray addObject:tempObj];
+            }
+        }
+        else
+        {
+            NSLog(@"error in select from address to create temp table");
+        }
+        [mrParkDB close];
+    }
+    @catch (NSException *e)
+    {
+        NSLog(@"%@",e);
+    }
+    for (tempTable *tp in tempTableArray) {
+        NSArray *arr_type = [tp.parkingID componentsSeparatedByString:@","];
+        for (int i =0; i<arr_type.count; i++) {
+            NSString *part = arr_type[i];
+            [self getParkingFromDatabase:[part intValue]];
+            if ([parkingHolder.str_parking_default_days rangeOfString:weekday].location != NSNotFound) {
+                tp.parkingID = part;
+                break;
+            }
+        }
+    }
+    
+}
+
+
+- (void)getAddressFromDatabase{
+    if (!mrParkDB)
+    {
+        NSString*path = [[MPDBIntraction databaseInteractionManager] getDatabasePathFromName:DBname];
+        mrParkDB = [[FMDatabase alloc] initWithPath:path];
+    }
+    
+    NSString *query;
+    
+    query = [NSString stringWithFormat:@"Select * FROM addressTable where houseLat = \"%lf\" AND houseLong = \"%lf\"", destLatitude, destLatitude];
+    
+    @try
+    {
+        [mrParkDB open];
+        if ([mrParkDB executeQuery:query])
+        {
+            FMResultSet *dataArr = [mrParkDB executeQuery:query];
+            [dataArr next];
+            addressHolder = [AddressDB new];
+            
+            addressHolder.str_addId = [NSNumber numberWithInt:[dataArr intForColumn:@"address_id"]];
+            addressHolder.str_cityName = [dataArr stringForColumn:@"city_name"];
+            addressHolder.str_createdId = [dataArr stringForColumn:@"created_at"];
+            addressHolder.str_houseFullAddress = [dataArr stringForColumn:@"houseFullAddress"];
+            addressHolder.str_houseLat = [dataArr stringForColumn:@"houseLat"];
+            addressHolder.str_houseLong = [dataArr stringForColumn:@"houseLong"];
+            addressHolder.str_houseNo = [dataArr stringForColumn:@"houseNo"];
+            addressHolder.str_houseSide = [dataArr stringForColumn:@"houseSide"];
+            addressHolder.str_regionName = [dataArr stringForColumn:@"regionName"];
+            addressHolder.str_stateName = [dataArr stringForColumn:@"stateName"];
+            addressHolder.str_status = [dataArr stringForColumn:@"status"];
+            addressHolder.str_streetName = [dataArr stringForColumn:@"streetName"];
+            addressHolder.str_updatedAt = [dataArr stringForColumn:@"updateAt"];
+            addressHolder.str_parking_ids = [dataArr stringForColumn:@"parking_ids"];
+            
+        }
+        else
+        {
+            NSLog(@"error in address table retrieving data");
+        }
+        [mrParkDB close];
+    }
+    @catch (NSException *e)
+    {
+        NSLog(@"%@",e);
+    }
+}
+
+- (void)getParkingFromDatabase:(int) parkingID{
+    if (!mrParkDB)
+    {
+        NSString*path = [[MPDBIntraction databaseInteractionManager] getDatabasePathFromName:DBname];
+        mrParkDB = [[FMDatabase alloc] initWithPath:path];
+    }
+    
+    NSString *query;
+    
+    query = [NSString stringWithFormat:@"Select * FROM parkingTable where id  = \"%d\"", parkingID];
+    
+    @try
+    {
+        [mrParkDB open];
+        if ([mrParkDB executeQuery:query])
+        {
+            FMResultSet *dataArr = [mrParkDB executeQuery:query];
+            [dataArr next];
+            parkingHolder = [Parking new];
+            parkingHolder.str_id = [NSNumber numberWithInt:[dataArr intForColumn:@"id"]];
+            parkingHolder.str_parking_type = [dataArr stringForColumn:@"parking_type"];
+            parkingHolder.str_parking_free_limit = [NSNumber numberWithInt:[dataArr intForColumn:@"parking_limit"]];
+            parkingHolder.str_parking_default_time_start = [dataArr stringForColumn:@"parking_default_time_start"];
+            parkingHolder.str_parking_default_time_end = [dataArr stringForColumn:@"parking_default_time_end"];
+            parkingHolder.str_parking_default_days = [dataArr stringForColumn:@"parking_default_days"];
+            parkingHolder.str_parking_restrict_time_start = [dataArr stringForColumn:@"parking_restrict_time_start"];
+            parkingHolder.str_parking_restrict_time_end = [dataArr stringForColumn:@"parking_restrict_time_end"];
+            parkingHolder.str_parking_sweeping_time_start = [dataArr stringForColumn:@"parking_sweeping_time_start"];
+            parkingHolder.str_parking_sweeping_time_end = [dataArr stringForColumn:@"parking_sweeping_time_end"];
+            parkingHolder.str_notes = [dataArr stringForColumn:@"notes"];
+            parkingHolder.str_update_at = [dataArr stringForColumn:@"update_at"];
+        }
+        else
+        {
+            NSLog(@"error in parking table retrieving data");
+        }
+        [mrParkDB close];
+    }
+    @catch (NSException *e)
+    {
+        NSLog(@"%@",e);
+    }
+}
+
+//- (void) getRegionFromDatabase{
+//    if (!mrParkDB)
+//    {
+//        NSString*path = [[MPDBIntraction databaseInteractionManager] getDatabasePathFromName:DBname];
+//        mrParkDB = [[FMDatabase alloc] initWithPath:path];
+//    }
+//    
+//    NSString *query;
+//    
+//    query = [NSString stringWithFormat:@"Select * FROM regionTable"];
+//    
+//    @try
+//    {
+//        [mrParkDB open];
+//        if ([mrParkDB executeQuery:query])
+//        {
+//            FMResultSet *dataArr = [mrParkDB executeQuery:query];
+//            
+//            while([dataArr next])
+//            {
+//                Region *data = [Region new];
+//                data.str_region_id = [NSNumber numberWithInt:[dataArr intForColumn:@"region_id"]];
+//                data.str_state_id = [NSNumber numberWithInt: [dataArr intForColumn:@"state_id"]];
+//                data.str_region_name = [dataArr stringForColumn:@"region_name"];
+//                [arr_regionFromDB addObject:data];
+//            }
+//        }
+//        else
+//        {
+//            NSLog(@"error in region table retrieving data");
+//        }
+//        [mrParkDB close];
+//    }
+//    @catch (NSException *e)
+//    {
+//        NSLog(@"%@",e);
+//    }
+//}
+
+- (BOOL) isHolidayWithCurrentDate:(NSString*) date{
+    if (!mrParkDB)
+    {
+        NSString*path = [[MPDBIntraction databaseInteractionManager] getDatabasePathFromName:DBname];
+        mrParkDB = [[FMDatabase alloc] initWithPath:path];
+    }
+    
+    NSString *query;
+    
+    query = [NSString stringWithFormat:@"Select count(*) AS count  FROM holidayTable where date = \"%@\"", date];
+    
+    @try
+    {
+        [mrParkDB open];
+        if ([mrParkDB executeQuery:query])
+        {
+            FMResultSet *dataArr = [mrParkDB executeQuery:query];
+            
+            [dataArr next];
+            int count = [[dataArr stringForColumn:@"count"] intValue];
+            if (count>=1) {
+                return YES;
+            }
+            else{
+                return NO;
+            }
+        }
+        else
+        {
+            NSLog(@"error in holiday table retrieving data");
+        }
+        [mrParkDB close];
+    }
+    @catch (NSException *e)
+    {
+        NSLog(@"%@",e);
+    }
+}
+
+
 @end
