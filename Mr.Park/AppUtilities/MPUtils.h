@@ -7,12 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ICAlertView.h"
 
-@interface ICUtils : NSObject
+
+@interface MPUtils : NSObject
 +(BOOL)isConnectedToInternet;
 +(BOOL)isConnectedToHost;
-+(ICAlertView*)showAlert:(NSString*)msg;
-+(ICAlertView*)showAlert:(NSString*)msg delegate:(id)delegate btnOk:(NSString*)btnOk btnCancel:(NSString*)btnCancel;
-+(BOOL)isFileExists:(NSString*)name;
 @end

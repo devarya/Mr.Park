@@ -625,4 +625,10 @@
     return region_arr;
 }
 
+-(void)chechLocalDBforReigon: (NSString*) region_arr{
+    
+    
+    
+}
+
 @end
