@@ -17,6 +17,7 @@
 #import "Region.h"
 #import "tempTable.h"
 #import "UpdateTable.h"
+#import "CoordinatePoint.h"
 
 NSString *weekday;
 NSString *currentYear;

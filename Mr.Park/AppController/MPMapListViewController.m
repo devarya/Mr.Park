@@ -74,19 +74,19 @@
     MKCoordinateRegion zoomRegion = MKCoordinateRegionMakeWithDistance(currentCoodinate, 2000, 2000);
     [self.map_View setRegion:zoomRegion animated:NO];
     currentLocation = userLocation.location;
-    [geocoder reverseGeocodeLocation:currentLocation completionHandler:^(NSArray *placemarks, NSError *error) {
-        NSLog(@"Found placemarks: %@, error: %@", placemarks, error);
-        if (placemarks != nil && placemarks.count > 0) {
-            placemark = [placemarks objectAtIndex:0];
-            currentAddress = [NSString stringWithFormat:@"%@ %@, %@, %@ %@, %@",
-                              placemark.subThoroughfare, placemark.thoroughfare,
-                              placemark.locality, placemark.administrativeArea,
-                              placemark.postalCode, placemark.country];
-        }
-        else {
-            NSLog(@"%@", error.debugDescription);
-        }
-    } ];
+//    [geocoder reverseGeocodeLocation:currentLocation completionHandler:^(NSArray *placemarks, NSError *error) {
+//        NSLog(@"Found placemarks: %@, error: %@", placemarks, error);
+//        if (placemarks != nil && placemarks.count > 0) {
+//            placemark = [placemarks objectAtIndex:0];
+//            currentAddress = [NSString stringWithFormat:@"%@ %@, %@, %@ %@, %@",
+//                              placemark.subThoroughfare, placemark.thoroughfare,
+//                              placemark.locality, placemark.administrativeArea,
+//                              placemark.postalCode, placemark.country];
+//        }
+//        else {
+//            NSLog(@"%@", error.debugDescription);
+//        }
+//    } ];
     // Center the map the first time we get a real location change.
 	static dispatch_once_t centerMapFirstTime;
     
@@ -104,6 +104,9 @@
         //        }
         //    }
     }
+    NSString * regionArr = [self checkCurrentRegion];
+    NSArray *part = [regionArr componentsSeparatedByString:@", "];
+    NSLog(@"part %d", part.count);
 }
 - (MKAnnotationView *) mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
     //[HUD hide];
@@ -552,5 +555,66 @@
     }
 }
 
+-(NSString* )checkCurrentRegion{
+    
+    NSMutableString * region_arr = [NSMutableString new];
+    NSMutableArray * point_arr = [NSMutableArray new];
+    
+    CoordinatePoint * cp = [CoordinatePoint new];
+    
+    cp.lat = [NSString stringWithFormat:@"%f", currentCoodinate.latitude];
+    cp.lon = [NSString stringWithFormat:@"%f", currentCoodinate.longitude];
+    [point_arr addObject:cp];
+    
+    CLLocationCoordinate2D neCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude - 0.02, currentCoodinate.longitude + 0.02);
+    cp.lat = [NSString stringWithFormat:@"%f", neCoord.latitude];
+    cp.lon = [NSString stringWithFormat:@"%f", neCoord.longitude];
+    [point_arr addObject:cp];
+    CLLocationCoordinate2D swCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude - 0.02, currentCoodinate.longitude + 0.02);
+    cp.lat = [NSString stringWithFormat:@"%f", swCoord.latitude];
+    cp.lon = [NSString stringWithFormat:@"%f", swCoord.longitude];
+    [point_arr addObject:cp];
+    CLLocationCoordinate2D nwCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude + 0.02, currentCoodinate.longitude + 0.02);
+    cp.lat = [NSString stringWithFormat:@"%f", nwCoord.latitude];
+    cp.lon = [NSString stringWithFormat:@"%f", nwCoord.longitude];
+    [point_arr addObject:cp];
+    CLLocationCoordinate2D seCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude - 0.02, currentCoodinate.longitude - 0.02);
+    cp.lat = [NSString stringWithFormat:@"%f", seCoord.latitude];
+    cp.lon = [NSString stringWithFormat:@"%f", seCoord.longitude];
+    [point_arr addObject:cp];
+    CLLocationCoordinate2D sCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude - 0.02, currentCoodinate.longitude);
+    cp.lat = [NSString stringWithFormat:@"%f", sCoord.latitude];
+    cp.lon = [NSString stringWithFormat:@"%f", sCoord.longitude];
+    [point_arr addObject:cp];
+    CLLocationCoordinate2D eCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude, currentCoodinate.longitude - 0.02);
+    cp.lat = [NSString stringWithFormat:@"%f", eCoord.latitude];
+    cp.lon = [NSString stringWithFormat:@"%f", eCoord.longitude];
+    [point_arr addObject:cp];
+    CLLocationCoordinate2D nCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude + 0.02, currentCoodinate.longitude);
+    cp.lat = [NSString stringWithFormat:@"%f", nCoord.latitude];
+    cp.lon = [NSString stringWithFormat:@"%f", nCoord.longitude];
+    [point_arr addObject:cp];
+    CLLocationCoordinate2D wCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude, currentCoodinate.longitude + 0.02);
+    cp.lat = [NSString stringWithFormat:@"%f", wCoord.latitude];
+    cp.lon = [NSString stringWithFormat:@"%f", wCoord.longitude];
+    [point_arr addObject:cp];
+    
+    CLGeocoder *ceo;
+    CLLocation *loc;
+    for (CoordinatePoint *point in point_arr) {
+        ceo = [[CLGeocoder alloc]init];
+        loc = [[CLLocation alloc]initWithLatitude:[point.lat doubleValue] longitude:[point.lon doubleValue]];
+        [ceo reverseGeocodeLocation: loc completionHandler:
+         ^(NSArray *placemarks, NSError *error) {
+             CLPlacemark *pm = [placemarks objectAtIndex:0];
+             if ([region_arr rangeOfString:pm.subAdministrativeArea].location == NSNotFound) {
+                 [region_arr appendString:pm.subAdministrativeArea];
+                 [region_arr appendString:@", "];
+                 NSLog(@"%@", pm.subAdministrativeArea);
+             }
+         }];
+    }
+    return region_arr;
+}
 
 @end
