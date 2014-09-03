@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0A5EC79019B693ED0097E555 /* 7f_in-a-hurry-song.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0A5EC78F19B693ED0097E555 /* 7f_in-a-hurry-song.mp3 */; };
+		0A851EDF19B78850001AF7E1 /* MPUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A851EDE19B78850001AF7E1 /* MPUtils.m */; };
 		0A89D7C719B63EB100ABCB79 /* MPGlobalData.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A89D7C619B63EB100ABCB79 /* MPGlobalData.m */; };
 		0A89D7CA19B6485500ABCB79 /* MPCustomAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A89D7C919B6485500ABCB79 /* MPCustomAnnotation.m */; };
 		0AEE7D3A19B64A7D005882D1 /* AddressDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AEE7D2D19B64A7D005882D1 /* AddressDB.m */; };
@@ -93,6 +94,8 @@
 
 /* Begin PBXFileReference section */
 		0A5EC78F19B693ED0097E555 /* 7f_in-a-hurry-song.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "7f_in-a-hurry-song.mp3"; sourceTree = "<group>"; };
+		0A851EDD19B78850001AF7E1 /* MPUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPUtils.h; sourceTree = "<group>"; };
+		0A851EDE19B78850001AF7E1 /* MPUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPUtils.m; sourceTree = "<group>"; };
 		0A89D7C519B63EB100ABCB79 /* MPGlobalData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPGlobalData.h; sourceTree = "<group>"; };
 		0A89D7C619B63EB100ABCB79 /* MPGlobalData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPGlobalData.m; sourceTree = "<group>"; };
 		0A89D7C819B6485500ABCB79 /* MPCustomAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPCustomAnnotation.h; sourceTree = "<group>"; };
@@ -503,6 +506,8 @@
 		CE417FA619B47D390080F25D /* AppUtilities */ = {
 			isa = PBXGroup;
 			children = (
+				0A851EDD19B78850001AF7E1 /* MPUtils.h */,
+				0A851EDE19B78850001AF7E1 /* MPUtils.m */,
 				CE417FA319B47CC90080F25D /* MPConstant.h */,
 				CE77F14B19B59B77006EF077 /* Validate.h */,
 				CE77F14C19B59B77006EF077 /* Validate.m */,
@@ -704,6 +709,7 @@
 				CE417F6419B446C20080F25D /* SBJsonBase.m in Sources */,
 				CE86434219B5F27200B7D713 /* MPDBIntraction.m in Sources */,
 				CE8BB1AF19B49BFB00A685D4 /* MPShareViewController.m in Sources */,
+				0A851EDF19B78850001AF7E1 /* MPUtils.m in Sources */,
 				CE417F6119B446C20080F25D /* NSObject+SBJSON.m in Sources */,
 				0AEE7D3A19B64A7D005882D1 /* AddressDB.m in Sources */,
 				CE77F14D19B59B77006EF077 /* Validate.m in Sources */,

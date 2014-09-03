@@ -22,4 +22,4 @@
 
 
 
-#define mileInCoordinate 0.1
+#define mileInCoordinate 0.02
