@@ -24,22 +24,27 @@
     IBOutlet UIView *infoView;
     
     IBOutlet MKMapView *map_View;
-    IBOutlet UITableView *tbl_View;
     IBOutlet UIButton *btnToggleMapList;
     IBOutlet UISearchBar *searchBar;
     BOOL isMapView;
     
-    double currentLatitude;
-    double currentLongitude;
+    int countList;
+    
     NSString *currentAddress;
     MKPlacemark *placemark;
     CLGeocoder *geocoder;
-    CLLocation *currentLocation;
-    CLLocationCoordinate2D currentCoodinate;
-    CLLocationCoordinate2D destCoodinate;
+    
+    double d_start;
+    double d_end;
+    double r_start;
+    double r_end;
+    double c_time;
+    double s_start;
+    double s_end;
 }
 @property (nonatomic, retain) IBOutlet MKMapView *map_View;
 @property (nonatomic, retain) CLGeocoder *geocoder;
+@property (weak, nonatomic) IBOutlet UITableView *tbl_View;
 @property (nonatomic) CLLocationCoordinate2D destCoordinate;
 -(IBAction)btnReminderDidClicked:(id)sender;
 -(IBAction)btnSwitchToMapAndList:(id)sender;

@@ -14,7 +14,7 @@
 @end
 
 @implementation MPMapListViewController
-@synthesize map_View, geocoder;
+@synthesize map_View, geocoder, tbl_View;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -75,24 +75,10 @@
 }
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation{
-    currentCoodinate = [userLocation coordinate];
-    MKCoordinateRegion zoomRegion = MKCoordinateRegionMakeWithDistance(currentCoodinate, 2000, 2000);
+    currentCoordinate = [userLocation coordinate];
+    MKCoordinateRegion zoomRegion = MKCoordinateRegionMakeWithDistance(currentCoordinate, 2000, 2000);
     [self.map_View setRegion:zoomRegion animated:NO];
     currentLocation = userLocation.location;
-//    [geocoder reverseGeocodeLocation:currentLocation completionHandler:^(NSArray *placemarks, NSError *error) {
-//        NSLog(@"Found placemarks: %@, error: %@", placemarks, error);
-//        if (placemarks != nil && placemarks.count > 0) {
-//            placemark = [placemarks objectAtIndex:0];
-//            currentAddress = [NSString stringWithFormat:@"%@ %@, %@, %@ %@, %@",
-//                              placemark.subThoroughfare, placemark.thoroughfare,
-//                              placemark.locality, placemark.administrativeArea,
-//                              placemark.postalCode, placemark.country];
-//        }
-//        else {
-//            NSLog(@"%@", error.debugDescription);
-//        }
-//    } ];
-    // Center the map the first time we get a real location change.
 	static dispatch_once_t centerMapFirstTime;
     
 	if ((userLocation.coordinate.latitude != 0.0) && (userLocation.coordinate.longitude != 0.0)) {
@@ -100,13 +86,14 @@
 			[self.map_View setCenterCoordinate:userLocation.coordinate animated:NO];
 		});
         for(tempTable* tpObj in tempTableArray) {
-            MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:tpObj.streetName Subtitle:tpObj.fullAddress Location:CLLocationCoordinate2DMake([tpObj.lat doubleValue], [tpObj.lon doubleValue])];
-            [map_View addAnnotation:pin];
+            if(![tpObj.parkingType isEqual:@"No Parking"]){
+                MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:tpObj.streetName Subtitle:tpObj.fullAddress Location:CLLocationCoordinate2DMake([tpObj.lat doubleValue], [tpObj.lon doubleValue])];
+                [map_View addAnnotation:pin];
+            }
         }
     }
-//    NSString * regionArr = [self checkCurrentRegion];
-//    NSArray *part = [regionArr componentsSeparatedByString:@", "];
 }
+
 - (MKAnnotationView *) mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
     //[HUD hide];
     if([annotation isKindOfClass:[MPCustomAnnotation class]]) {
@@ -119,16 +106,17 @@
         if([[self getParkingTypeLatitude:[NSString stringWithFormat:@"%lf",temp.latitude] Longitude:[NSString stringWithFormat:@"%lf",temp.longitude]]  isEqual: @"Free parking"]) {
             newAnnotation.image = [UIImage imageNamed:@"fp"];
         }
-        if([[self getParkingTypeLatitude:[NSString stringWithFormat:@"%lf",temp.latitude] Longitude:[NSString stringWithFormat:@"%lf",temp.longitude]]  isEqual: @"Free parking structure"]) {
+        else if([[self getParkingTypeLatitude:[NSString stringWithFormat:@"%lf",temp.latitude] Longitude:[NSString stringWithFormat:@"%lf",temp.longitude]]  isEqual: @"Free parking structure"]) {
             newAnnotation.image = [UIImage imageNamed:@"fps"];
         }
-        if([[self getParkingTypeLatitude:[NSString stringWithFormat:@"%lf",temp.latitude] Longitude:[NSString stringWithFormat:@"%lf",temp.longitude]]  isEqual: @"Limited time parking"]) {
+        else if([[self getParkingTypeLatitude:[NSString stringWithFormat:@"%lf",temp.latitude] Longitude:[NSString stringWithFormat:@"%lf",temp.longitude]]  isEqual: @"Limited time parking"]) {
             newAnnotation.image = [UIImage imageNamed:@"lt"];
         }
-        if([[self getParkingTypeLatitude:[NSString stringWithFormat:@"%lf",temp.latitude] Longitude:[NSString stringWithFormat:@"%lf",temp.longitude]]  isEqual: @"Metered parking"]) {
+        else if([[self getParkingTypeLatitude:[NSString stringWithFormat:@"%lf",temp.latitude] Longitude:[NSString stringWithFormat:@"%lf",temp.longitude]]  isEqual: @"Metered parking"]) {
             newAnnotation.image = [UIImage imageNamed:@"mp"];
-        }if([[self getParkingTypeLatitude:[NSString stringWithFormat:@"%lf",temp.latitude] Longitude:[NSString stringWithFormat:@"%lf",temp.longitude]]  isEqual: @"mps"]) {
-            newAnnotation.image = [UIImage imageNamed:@"Metered parking structure"];
+        }
+        else if([[self getParkingTypeLatitude:[NSString stringWithFormat:@"%lf",temp.latitude] Longitude:[NSString stringWithFormat:@"%lf",temp.longitude]]  isEqual: @"mps"]) {
+            newAnnotation.image = [UIImage imageNamed:@"mps"];
         }
         return newAnnotation;
     }
@@ -140,9 +128,9 @@
 - (void) mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
     
     MPParkingDetailViewController *dvc = [[MPParkingDetailViewController alloc] initWithNibName:@"MPParkingDetailViewController" bundle:nil];
-    self.destCoordinate = [[view annotation] coordinate];
-    destLatitude = destCoodinate.latitude;
-    destLongitude = destCoodinate.longitude;
+    destCoordinate = [[view annotation] coordinate];
+    destLatitude = destCoordinate.latitude;
+    destLongitude = destCoordinate.longitude;
     [self getDestInformationWithLatitude:[NSString stringWithFormat:@"%lf",destLatitude] Longitude:[NSString stringWithFormat:@"%lf",destLongitude]];
     [self.navigationController pushViewController:dvc animated:YES];
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main_Iphone" bundle:nil];
@@ -218,14 +206,59 @@
     }
 }
 - (IBAction)btn_FreeParking:(id)sender {
+    [self.map_View removeAnnotations:[self.map_View annotations]];
+    for(tempTable* tpObj in tempTableArray) {
+        if([tpObj.parkingType isEqual:@"Free parking"]) {
+            MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:tpObj.streetName Subtitle:tpObj.fullAddress Location:CLLocationCoordinate2DMake([tpObj.lat doubleValue], [tpObj.lon doubleValue])];
+            [map_View addAnnotation:pin];
+        }
+    }
+    countList = 1;
+    [tbl_View reloadData];
 }
 - (IBAction)btn_FreeParkingStructure:(id)sender {
+    [self.map_View removeAnnotations:[self.map_View annotations]];
+    for(tempTable* tpObj in tempTableArray) {
+        if([tpObj.parkingType isEqual:@"Free parking structure"]) {
+            MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:tpObj.streetName Subtitle:tpObj.fullAddress Location:CLLocationCoordinate2DMake([tpObj.lat doubleValue], [tpObj.lon doubleValue])];
+            [map_View addAnnotation:pin];
+        }
+    }
+    countList = 2;
+    [tbl_View reloadData];
 }
 - (IBAction)btn_LimitParking:(id)sender {
+    [self.map_View removeAnnotations:[self.map_View annotations]];
+    for(tempTable* tpObj in tempTableArray) {
+        if([tpObj.parkingType isEqual:@"Limited time parking"]) {
+            MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:tpObj.streetName Subtitle:tpObj.fullAddress Location:CLLocationCoordinate2DMake([tpObj.lat doubleValue], [tpObj.lon doubleValue])];
+            [map_View addAnnotation:pin];
+        }
+    }
+    countList = 3;
+    [tbl_View reloadData];
 }
 - (IBAction)btn_MeterParking:(id)sender {
+    [self.map_View removeAnnotations:[self.map_View annotations]];
+    for(tempTable* tpObj in tempTableArray) {
+        if([tpObj.parkingType isEqual:@"Metered parking"]) {
+            MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:tpObj.streetName Subtitle:tpObj.fullAddress Location:CLLocationCoordinate2DMake([tpObj.lat doubleValue], [tpObj.lon doubleValue])];
+            [map_View addAnnotation:pin];
+        }
+    }
+    countList = 4;
+    [tbl_View reloadData];
 }
 - (IBAction)btn_MeterParkingStructure:(id)sender{
+    [self.map_View removeAnnotations:[self.map_View annotations]];
+    for(tempTable* tpObj in tempTableArray) {
+        if([tpObj.parkingType isEqual:@"Metered parking structure"]) {
+            MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:tpObj.streetName Subtitle:tpObj.fullAddress Location:CLLocationCoordinate2DMake([tpObj.lat doubleValue], [tpObj.lon doubleValue])];
+            [map_View addAnnotation:pin];
+        }
+    }
+    countList = 5;
+    [tbl_View reloadData];
 }
 -(void)performCubeAnimation:(NSString*)animType animSubType:(NSString*)animSubType{
     
@@ -240,33 +273,193 @@
     
 }
 
-#pragma mark TABLE_VIEW DELEGATE AND DATASOURCE
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    if(countList == 1){
+        return [ary_ptfp count];}
+    else if(countList == 2)
+        return [ary_ptfps count];
+    else if(countList == 3)
+        return [ary_ptlt count];
+    else if(countList == 4)
+        return [ary_ptmp count];
+    else if(countList == 5)
+        return [ary_ptmps count];
+    else
+        return [tempTableArray count];
+}
 
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-    return 64;
-}
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    
-    return 3;
-}
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-    NSString *cellIdentifier = @"listCell";
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    
-    if (!cell) {
-        
-        cell = [[UITableViewCell alloc]
-                initWithStyle:UITableViewCellStyleDefault
-                reuseIdentifier:cellIdentifier];
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if(countList == 1) {
+        NSLog(@"111");
+        NSString *identifier = nil;
+        tempTable *temp =[ary_ptfp objectAtIndex:indexPath.row];
+        NSString *streetName = temp.streetName;
+        NSString *address = temp.fullAddress;
+        NSString *distance = temp.lat;
+        if (indexPath.row % 2 == 0) {
+            identifier = @"cellDark";
+        }
+        else {
+            identifier = @"cellLight";
+        }
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+        if([temp.parkingType isEqual:@"Free parking"]) {
+            cell.imageView.image = [UIImage imageNamed:@"fp"];
+            UILabel *cellLabel;
+            cellLabel = (UILabel *)[cell viewWithTag:1];
+            cellLabel.text = streetName;
+            cellLabel = (UILabel *)[cell viewWithTag:2];
+            cellLabel.text = address;
+            cellLabel = (UILabel *)[cell viewWithTag:3];
+            cellLabel.text = distance;
+        }
+        return cell;
     }
-    
-    cell.textLabel.text = @"testing Mr.Park";
-    
-    return cell;
+    else if(countList == 2) {
+        NSString *identifier = nil;
+        tempTable *temp =[ary_ptfps objectAtIndex:indexPath.row];
+        NSString *streetName = temp.streetName;
+        NSString *address = temp.fullAddress;
+        NSString *distance = temp.lat;
+        if (indexPath.row % 2 == 0) {
+            identifier = @"cellDark";
+        }
+        else {
+            identifier = @"cellLight";
+        }
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+        if([temp.parkingID isEqual:@"2"]) {
+            cell.imageView.image = [UIImage imageNamed:@"ic_fps@2x.png"];
+            UILabel *cellLabel;
+            cellLabel = (UILabel *)[cell viewWithTag:1];
+            cellLabel.text = streetName;
+            cellLabel = (UILabel *)[cell viewWithTag:2];
+            cellLabel.text = address;
+            cellLabel = (UILabel *)[cell viewWithTag:3];
+            cellLabel.text = distance;
+        }
+        return cell;
+    }
+    else if(countList == 3) {
+        NSString *identifier = nil;
+        tempTable *temp =[ary_ptlt objectAtIndex:indexPath.row];
+        NSString *streetName = temp.streetName;
+        NSString *address = temp.fullAddress;
+        NSString *distance = temp.lat;
+        if (indexPath.row % 2 == 0) {
+            identifier = @"cellDark";
+        }
+        else {
+            identifier = @"cellLight";
+        }
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+        if([temp.parkingType isEqual:@"Limited time parking"]) {
+            cell.imageView.image = [UIImage imageNamed:@"lt"];
+            UILabel *cellLabel;
+            cellLabel = (UILabel *)[cell viewWithTag:1];
+            cellLabel.text = streetName;
+            cellLabel = (UILabel *)[cell viewWithTag:2];
+            cellLabel.text = address;
+            cellLabel = (UILabel *)[cell viewWithTag:3];
+            cellLabel.text = distance;
+        }
+        return cell;
+    }
+    else if(countList == 4) {
+        NSString *identifier = nil;
+        tempTable *temp =[ary_ptmp objectAtIndex:indexPath.row];
+        NSString *streetName = temp.streetName;
+        NSString *address = temp.fullAddress;
+        NSString *distance = temp.lat;
+        if (indexPath.row % 2 == 0) {
+            identifier = @"cellDark";
+        }
+        else {
+            identifier = @"cellLight";
+        }
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+        if([temp.parkingType isEqual:@"Metered parking"]) {
+            cell.imageView.image = [UIImage imageNamed:@"mp"];
+            UILabel *cellLabel;
+            cellLabel = (UILabel *)[cell viewWithTag:1];
+            cellLabel.text = streetName;
+            cellLabel = (UILabel *)[cell viewWithTag:2];
+            cellLabel.text = address;
+            cellLabel = (UILabel *)[cell viewWithTag:3];
+            cellLabel.text = distance;
+        }
+        return cell;
+    }
+    else if(countList == 5) {
+        NSString *identifier = nil;
+        tempTable *temp =[ary_ptmps objectAtIndex:indexPath.row];
+        NSString *streetName = temp.streetName;
+        NSString *address = temp.fullAddress;
+        NSString *distance = temp.lat;
+        if (indexPath.row % 2 == 0) {
+            identifier = @"cellDark";
+        }
+        else {
+            identifier = @"cellLight";
+        }
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+        if([temp.parkingType isEqual:@"Metered parking structure"]) {
+            cell.imageView.image = [UIImage imageNamed:@"mps"];
+            UILabel *cellLabel;
+            cellLabel = (UILabel *)[cell viewWithTag:1];
+            cellLabel.text = streetName;
+            cellLabel = (UILabel *)[cell viewWithTag:2];
+            cellLabel.text = address;
+            cellLabel = (UILabel *)[cell viewWithTag:3];
+            cellLabel.text = distance;
+        }
+        return cell;
+    }
+    else {
+        NSString *identifier = nil;
+        tempTable *temp =[tempTableArray objectAtIndex:indexPath.row];
+        NSString *streetName = temp.streetName;
+        NSString *address = temp.fullAddress;
+        NSString *distance = temp.lat;
+        if (indexPath.row % 2 == 0) {
+            identifier = @"cellDark";
+        }
+        else {
+            identifier = @"cellLight";
+        }
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+        if([temp.parkingType isEqual:@"Free parking"])
+            cell.imageView.image = [UIImage imageNamed:@"fp"];
+        else if([temp.parkingType isEqual:@"Free parking structure"])
+            cell.imageView.image = [UIImage imageNamed:@"fps"];
+        else if([temp.parkingType isEqual:@"Limited time parking"])
+            cell.imageView.image = [UIImage imageNamed:@"lt"];
+        else if([temp.parkingType isEqual:@"Metered parking"])
+            cell.imageView.image = [UIImage imageNamed:@"mp"];
+        else if([temp.parkingType isEqual:@"Metered parking structure"])
+            cell.imageView.image = [UIImage imageNamed:@"mps"];
+        UILabel *cellLabel;
+        cellLabel = (UILabel *)[cell viewWithTag:1];
+        cellLabel.text = streetName;
+        cellLabel = (UILabel *)[cell viewWithTag:2];
+        cellLabel.text = address;
+        cellLabel = (UILabel *)[cell viewWithTag:3];
+        cellLabel.text = distance;
+        return cell;
+    }
 }
+
+- (CGFloat)tableView:(UITableView *)tableView
+heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 70;
+}
+
+#pragma mark TABLE_VIEW DELEGATE AND DATASOURCE
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
@@ -345,13 +538,13 @@
                     }
                 }
                 if (isDefaultDay) {
-                    double d_start =[[parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][0] integerValue]*60 + [[parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][0] integerValue];
+                    d_start =[[parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][0] integerValue]*60 + [[parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][0] integerValue];
                     
-                    double d_end =[[parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][0] integerValue]*60 + [[parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][0] integerValue];
+                    d_end =[[parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][0] integerValue]*60 + [[parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][0] integerValue];
                     
-                    double r_start =[[parkingHolder.str_parking_restrict_time_start componentsSeparatedByString:@":"][0] integerValue]*60 + [[parkingHolder.str_parking_restrict_time_start componentsSeparatedByString:@":"][0] integerValue];
+                    r_start =[[parkingHolder.str_parking_restrict_time_start componentsSeparatedByString:@":"][0] integerValue]*60 + [[parkingHolder.str_parking_restrict_time_start componentsSeparatedByString:@":"][0] integerValue];
                     
-                    double r_end =[[parkingHolder.str_parking_restrict_time_end componentsSeparatedByString:@":"][0] integerValue]*60 + [[parkingHolder.str_parking_restrict_time_end componentsSeparatedByString:@":"][0] integerValue];
+                    r_end =[[parkingHolder.str_parking_restrict_time_end componentsSeparatedByString:@":"][0] integerValue]*60 + [[parkingHolder.str_parking_restrict_time_end componentsSeparatedByString:@":"][0] integerValue];
                     
                     if(([currentHour integerValue]*60+[currentMinute integerValue])> d_start && ([currentHour integerValue]*60+[currentMinute integerValue]) < d_end) {
                         if(([currentHour integerValue]*60+[currentMinute integerValue]) > r_start && ([currentHour integerValue]*60+[currentMinute integerValue]) < r_end) {
@@ -372,12 +565,12 @@
 }
 
 - (BOOL) isSwappingWithHour:(NSString *) currentHour andMinute:(NSString *) currentMinute andParkingType: (NSString *) parkingType {
-    double c_time =[currentHour integerValue]*60 + [currentMinute integerValue];
+    c_time =[currentHour integerValue]*60 + [currentMinute integerValue];
     [self getParkingFromDatabase:[parkingType intValue]];
     
-    double s_start =[[parkingHolder.str_parking_sweeping_time_start componentsSeparatedByString:@":"][0] integerValue]*60 + [[parkingHolder.str_parking_sweeping_time_start componentsSeparatedByString:@":"][0] integerValue];
+    s_start =[[parkingHolder.str_parking_sweeping_time_start componentsSeparatedByString:@":"][0] integerValue]*60 + [[parkingHolder.str_parking_sweeping_time_start componentsSeparatedByString:@":"][0] integerValue];
     
-    double s_end =[[parkingHolder.str_parking_sweeping_time_end componentsSeparatedByString:@":"][0] integerValue]*60 + [[parkingHolder.str_parking_sweeping_time_end componentsSeparatedByString:@":"][0] integerValue];
+    s_end =[[parkingHolder.str_parking_sweeping_time_end componentsSeparatedByString:@":"][0] integerValue]*60 + [[parkingHolder.str_parking_sweeping_time_end componentsSeparatedByString:@":"][0] integerValue];
     if(c_time > s_start && c_time < s_end)
         return true;
     else
@@ -561,46 +754,46 @@
     
     CoordinatePoint * cp = [CoordinatePoint new];
     
-    cp.lat = [NSString stringWithFormat:@"%f", currentCoodinate.latitude];
-    cp.lon = [NSString stringWithFormat:@"%f", currentCoodinate.longitude];
+    cp.lat = [NSString stringWithFormat:@"%f", currentCoordinate.latitude];
+    cp.lon = [NSString stringWithFormat:@"%f", currentCoordinate.longitude];
     [point_arr addObject:cp];
     cp = [CoordinatePoint new];
-    CLLocationCoordinate2D neCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude - mileInCoordinate, currentCoodinate.longitude + mileInCoordinate);
+    CLLocationCoordinate2D neCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude - mileInCoordinate, currentCoordinate.longitude + mileInCoordinate);
     cp.lat = [NSString stringWithFormat:@"%f", neCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", neCoord.longitude];
     [point_arr addObject:cp];
     cp = [CoordinatePoint new];
-    CLLocationCoordinate2D swCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude - mileInCoordinate, currentCoodinate.longitude + mileInCoordinate);
+    CLLocationCoordinate2D swCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude - mileInCoordinate, currentCoordinate.longitude + mileInCoordinate);
     cp.lat = [NSString stringWithFormat:@"%f", swCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", swCoord.longitude];
     [point_arr addObject:cp];
     cp = [CoordinatePoint new];
-    CLLocationCoordinate2D nwCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude + mileInCoordinate, currentCoodinate.longitude + mileInCoordinate);
+    CLLocationCoordinate2D nwCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude + mileInCoordinate, currentCoordinate.longitude + mileInCoordinate);
     cp.lat = [NSString stringWithFormat:@"%f", nwCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", nwCoord.longitude];
     [point_arr addObject:cp];
     cp = [CoordinatePoint new];
-    CLLocationCoordinate2D seCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude - mileInCoordinate, currentCoodinate.longitude - mileInCoordinate);
+    CLLocationCoordinate2D seCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude - mileInCoordinate, currentCoordinate.longitude - mileInCoordinate);
     cp.lat = [NSString stringWithFormat:@"%f", seCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", seCoord.longitude];
     [point_arr addObject:cp];
     cp = [CoordinatePoint new];
-    CLLocationCoordinate2D sCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude - mileInCoordinate, currentCoodinate.longitude);
+    CLLocationCoordinate2D sCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude - mileInCoordinate, currentCoordinate.longitude);
     cp.lat = [NSString stringWithFormat:@"%f", sCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", sCoord.longitude];
     [point_arr addObject:cp];
     cp = [CoordinatePoint new];
-    CLLocationCoordinate2D eCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude, currentCoodinate.longitude - mileInCoordinate);
+    CLLocationCoordinate2D eCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude, currentCoordinate.longitude - mileInCoordinate);
     cp.lat = [NSString stringWithFormat:@"%f", eCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", eCoord.longitude];
     [point_arr addObject:cp];
     cp = [CoordinatePoint new];
-    CLLocationCoordinate2D nCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude + mileInCoordinate, currentCoodinate.longitude);
+    CLLocationCoordinate2D nCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude + mileInCoordinate, currentCoordinate.longitude);
     cp.lat = [NSString stringWithFormat:@"%f", nCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", nCoord.longitude];
     [point_arr addObject:cp];
     cp = [CoordinatePoint new];
-    CLLocationCoordinate2D wCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude, currentCoodinate.longitude + mileInCoordinate);
+    CLLocationCoordinate2D wCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude, currentCoordinate.longitude + mileInCoordinate);
     cp.lat = [NSString stringWithFormat:@"%f", wCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", wCoord.longitude];
     [point_arr addObject:cp];
