@@ -72,6 +72,7 @@
             [ary_ptmps addObject:tpObj];
         }
     }
+    NSLog(@"sss");
 }
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation{
@@ -126,7 +127,6 @@
 }
 
 - (void) mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
-    
     MPParkingDetailViewController *dvc = [[MPParkingDetailViewController alloc] initWithNibName:@"MPParkingDetailViewController" bundle:nil];
     destCoordinate = [[view annotation] coordinate];
     destLatitude = destCoordinate.latitude;
@@ -134,9 +134,8 @@
     [self getDestInformationWithLatitude:[NSString stringWithFormat:@"%lf",destLatitude] Longitude:[NSString stringWithFormat:@"%lf",destLongitude]];
     [self.navigationController pushViewController:dvc animated:YES];
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main_Iphone" bundle:nil];
-    UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"detailViewController"];
+    UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"detailViewController"];
     [self presentViewController:vc animated:YES completion:NULL];
-    
 }
 
 - (NSString *) getParkingTypeLatitude: (NSString *)lat Longitude: (NSString *) lon {
@@ -156,6 +155,16 @@
             destAddress = tpObj.fullAddress;
             break;
         }
+    }
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if([[segue identifier] isEqualToString:@"showDetails"]) {
+        //DetailViewController *dtv = [segue destinationViewController];
+        NSInteger tagIndex = [(UIButton *)sender tag];
+        tempTable* tpObj = tempTableArray[tagIndex];
+        destStreetName = tpObj.streetName;
+        destAddress = tpObj.fullAddress;
     }
 }
 
@@ -476,10 +485,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 
 
 -(void)createTempDB{
-    
-    
-    //    NSString* currentTime = strTime;
-    //    NSString* currentDay = weekday;
+
     if (!mrParkDB)
     {
         NSString*path = [[MPDBIntraction databaseInteractionManager] getDatabasePathFromName:DBname];
