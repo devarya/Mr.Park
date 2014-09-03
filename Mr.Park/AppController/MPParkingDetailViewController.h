@@ -10,9 +10,13 @@
 #import "MPMapListViewController.h"
 #import "MPFeedBackViewController.h"
 #import "MPSettingViewController.h"
+#import <MapKit/MapKit.h>
 
 @interface MPParkingDetailViewController : MPBottomBarViewController<UITableViewDataSource,UITableViewDelegate>{
-    
+    IBOutlet MKMapView *map_View;
+    BOOL isMapView;
 }
+@property (nonatomic, retain) IBOutlet MKMapView *map_View;
+- (IBAction)navButton:(UIButton *)sender;
 
 @end

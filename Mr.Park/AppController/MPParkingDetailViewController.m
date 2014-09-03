@@ -26,7 +26,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    self.map_View.delegate = self;
+    isMapView = YES;
+    [self.map_View setShowsUserLocation:YES];
 }
 
 - (void)didReceiveMemoryWarning
@@ -34,6 +36,23 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+- (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation{
+    currentCoordinate = [userLocation coordinate];
+    MKCoordinateRegion zoomRegion = MKCoordinateRegionMakeWithDistance(destCoordinate, 2000, 2000);
+    [self.map_View setRegion:zoomRegion animated:NO];
+	static dispatch_once_t centerMapFirstTime;
+    
+	if ((userLocation.coordinate.latitude != 0.0) && (userLocation.coordinate.longitude != 0.0)) {
+		dispatch_once(&centerMapFirstTime, ^{
+			[self.map_View setCenterCoordinate:userLocation.coordinate animated:NO];
+		});
+        MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:@"streetName" Subtitle:@"fullAddress" Location:destCoordinate];
+        [map_View addAnnotation:pin];
+
+    }
+}
+
 
 #pragma mark - IB_ACTION
 
@@ -53,21 +72,35 @@
     return 3;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    NSString *availableTime = @"12PM - 3PM";
+    NSString *parkingType = @"Free Parking";
     
     NSString *cellIdentifier = @"detailCell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     
-    if (!cell) {
-        
-        cell = [[UITableViewCell alloc]
-                initWithStyle:UITableViewCellStyleDefault
-                reuseIdentifier:cellIdentifier];
-    }
-    
-    cell.textLabel.text = @"testing Mr.Park";
-    cell.textLabel.font = [UIFont systemFontOfSize:12.0f];
+    UILabel *cellLabel;
+    cellLabel = (UILabel *)[cell viewWithTag:1];
+    cellLabel.text = availableTime;
+    cellLabel = (UILabel *)[cell viewWithTag:2];
+    cellLabel.text = parkingType;
     return cell;
+}
+
+- (IBAction)navButton:(UIButton *)sender {
+    NSLog(@"%lf", destLatitude);
+    Class mapItemClass = [MKMapItem class];
+    if (mapItemClass && [mapItemClass respondsToSelector:@selector(openMapsWithItems:launchOptions:)]) {
+        // Create an MKMapItem to pass to the Maps app
+        //CLLocation *ad = [[CLLocation alloc] initWithLatitude:mvc.destCoordinate.latitude longitude:mvc.destCoordinate.longitude];
+        CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(destLatitude, destLongitude);
+        MKPlacemark *placemarks = [[MKPlacemark alloc] initWithCoordinate:coordinate
+                                                        addressDictionary:nil];
+        MKMapItem *mapItem = [[MKMapItem alloc] initWithPlacemark:placemarks];
+        [mapItem setName: @"terminate"];
+        // Pass the map item to the Maps app
+        [mapItem openInMapsWithLaunchOptions:nil];
+    }
 }
 
 @end

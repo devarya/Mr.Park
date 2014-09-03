@@ -29,14 +29,13 @@
     IBOutlet UISearchBar *searchBar;
     BOOL isMapView;
     
-    double currentLatitude;
-    double currentLongitude;
+    
     NSString *currentAddress;
     MKPlacemark *placemark;
     CLGeocoder *geocoder;
-    CLLocation *currentLocation;
-    CLLocationCoordinate2D currentCoodinate;
-    CLLocationCoordinate2D destCoodinate;
+    
+    
+    
 }
 @property (nonatomic, retain) IBOutlet MKMapView *map_View;
 @property (nonatomic, retain) CLGeocoder *geocoder;
