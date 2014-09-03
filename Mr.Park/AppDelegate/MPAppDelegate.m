@@ -13,7 +13,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    //[self checkUpdate];
+    [self getCurrentDateAndTime];
+    [self checkUpdate];
     
     UITextField *txtField = [[UITextField alloc]initWithFrame:CGRectMake(0, 0, 0, 0)];
     [txtField becomeFirstResponder];
@@ -109,5 +110,25 @@
     [[MPRestIntraction sharedManager] requestHolidayCall:holidayInfo withUpdate:[updateDic valueForKey: @"holidayTable"]];
     NSMutableDictionary *info= [NSMutableDictionary new];
     [[MPRestIntraction sharedManager] requestAddressControlCall:info];
+}
+
+- (void) getCurrentDateAndTime {
+    now = [NSDate date]; // format is 2011-02-28 09:57:49 +0000
+    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+    [dateFormat setDateFormat:@"yyyy-M-dd hh:mm:ss"];
+    NSString *strNow = [dateFormat stringFromDate:now];
+    NSArray *arr = [strNow componentsSeparatedByString:@" "];
+    
+    strDate = [arr objectAtIndex:0]; // strDate is 2011-02-28
+    NSArray *arr_date = [strDate componentsSeparatedByString:@"-"];
+    currentDay = [arr_date objectAtIndex:2];
+    currentMonth = [arr_date objectAtIndex:1];
+    currentYear = [arr_date objectAtIndex:0];
+    
+    strTime = [arr objectAtIndex:1]; // strTime is 09:57:49
+    NSArray *arr_time = [strTime componentsSeparatedByString:@":"];
+    currentSecond = [arr_time objectAtIndex:2];
+    currentMinute = [arr_time objectAtIndex:1];
+    currentHour = [arr_time objectAtIndex:0];
 }
 @end
