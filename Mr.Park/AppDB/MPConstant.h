@@ -19,3 +19,7 @@
 
 //Messages
 #define MESSAGE_NOT_RESPOND @"Server not responding"
+
+
+
+#define mileInCoordinate 0.1
