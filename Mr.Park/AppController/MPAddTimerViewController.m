@@ -117,6 +117,13 @@
 }
 
 - (IBAction)btn_remindMe:(id)sender {
+    NSString *timeLabel = l_dateAndTime.text;
+    NSString *noteText = tv_remindNote.text;
+    if ([timeLabel isEqualToString:@""] || [noteText isEqualToString:@""]) {
+        UIAlertView *errorAlert =[[UIAlertView alloc]initWithTitle:@"Time Reminder" message:@"Please Write Some Note OR Select Remind Time" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [errorAlert show];
+    }
+    else{
     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Parking Reminder" message:@"Alarm has added to the Notification." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
     [alert show];
     
@@ -125,21 +132,18 @@
     dateFormatter.timeZone = [NSTimeZone defaultTimeZone];
     dateFormatter.timeStyle = NSDateFormatterShortStyle;
     dateFormatter.dateStyle = NSDateFormatterShortStyle;
-    
-    NSString *dateTimeString = [dateFormatter stringFromDate:pv_dateAndTime.date];
-    
-    NSLog(@"Set Alarm: %@", dateTimeString);
-    
-    [self schedulLocalNotificationWithDate:pv_dateAndTime.date];
-    
-    [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
-    
-    // Request to reload table view data
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadData" object:self];
-    
-    // Dismiss the view controller
-    [self dismissViewControllerAnimated:YES completion:nil];
 
+        localNotification.applicationIconBadgeNumber = [[UIApplication sharedApplication] applicationIconBadgeNumber] + 1;
+    NSString *dateTimeString = [dateFormatter stringFromDate:pv_dateAndTime.date];
+    NSLog(@"Set Alarm: %@", dateTimeString);
+        
+        [self schedulLocalNotificationWithDate:pv_dateAndTime.date];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadData" object:self];
+        
+        // Dismiss the view controller
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {

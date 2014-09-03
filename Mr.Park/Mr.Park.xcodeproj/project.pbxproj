@@ -633,6 +633,13 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = arya;
 				TargetAttributes = {
+					CE417F0619B436D80080F25D = {
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 0;
+							};
+						};
+					};
 					CE417F2719B436D80080F25D = {
 						TestTargetID = CE417F0619B436D80080F25D;
 					};
