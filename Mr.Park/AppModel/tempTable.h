@@ -19,6 +19,6 @@
 @property (strong, nonatomic) NSString *stateName;
 @property (strong, nonatomic) NSString *HouseNo;
 @property (strong, nonatomic) NSString *fullAddress;
-
+@property (strong, nonatomic) NSString *parkingType;
 
 @end

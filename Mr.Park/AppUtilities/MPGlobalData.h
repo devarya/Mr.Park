@@ -17,6 +17,7 @@
 #import "Region.h"
 #import "tempTable.h"
 #import "UpdateTable.h"
+#import "CoordinatePoint.h"
 
 NSString *weekday;
 NSString *currentYear;
@@ -36,7 +37,8 @@ NSMutableArray *ary_ptmps;
 double destLatitude;
 double destLongitude;
 NSString *parkingType;
-
+NSString *destStreetName;
+NSString *destAddress;
 FMDatabase *mrParkDB;
 AddressDB *addressHolder;
 Parking *parkingHolder;
