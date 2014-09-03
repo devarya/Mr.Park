@@ -25,7 +25,7 @@
     IBOutlet MKMapView *map_View;
     IBOutlet UITableView *tbl_View;
     IBOutlet UIButton *btnToggleMapList;
-    
+    IBOutlet UISearchBar *searchBar;
     BOOL isMapView;
     
     double currentLatitude;
@@ -42,5 +42,9 @@
 @property (nonatomic) CLLocationCoordinate2D destCoordinate;
 -(IBAction)btnReminderDidClicked:(id)sender;
 -(IBAction)btnSwitchToMapAndList:(id)sender;
-
+- (IBAction)btn_FreeParking:(id)sender;
+- (IBAction)btn_FreeParkingStructure:(id)sender;
+- (IBAction)btn_LimitParking:(id)sender;
+- (IBAction)btn_MeterParking:(id)sender;
+- (IBAction)btn_MeterParkingStructure:(id)sender;
 @end

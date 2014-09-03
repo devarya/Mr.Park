@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A5EC79019B693ED0097E555 /* 7f_in-a-hurry-song.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0A5EC78F19B693ED0097E555 /* 7f_in-a-hurry-song.mp3 */; };
 		0A89D7C719B63EB100ABCB79 /* MPGlobalData.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A89D7C619B63EB100ABCB79 /* MPGlobalData.m */; };
 		0A89D7CA19B6485500ABCB79 /* MPCustomAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A89D7C919B6485500ABCB79 /* MPCustomAnnotation.m */; };
 		0AEE7D3A19B64A7D005882D1 /* AddressDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AEE7D2D19B64A7D005882D1 /* AddressDB.m */; };
@@ -90,6 +91,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0A5EC78F19B693ED0097E555 /* 7f_in-a-hurry-song.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "7f_in-a-hurry-song.mp3"; sourceTree = "<group>"; };
 		0A89D7C519B63EB100ABCB79 /* MPGlobalData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPGlobalData.h; sourceTree = "<group>"; };
 		0A89D7C619B63EB100ABCB79 /* MPGlobalData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPGlobalData.m; sourceTree = "<group>"; };
 		0A89D7C819B6485500ABCB79 /* MPCustomAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPCustomAnnotation.h; sourceTree = "<group>"; };
@@ -520,6 +522,7 @@
 		CE77F14E19B59BC4006EF077 /* AppResources */ = {
 			isa = PBXGroup;
 			children = (
+				0A5EC78F19B693ED0097E555 /* 7f_in-a-hurry-song.mp3 */,
 				CE77F14F19B59BDE006EF077 /* 58*58@2x.png */,
 				CE77F15019B59BDE006EF077 /* 80*80@2x.png */,
 				CE77F15119B59BDE006EF077 /* 120*120@2x.png */,
@@ -649,6 +652,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A5EC79019B693ED0097E555 /* 7f_in-a-hurry-song.mp3 in Resources */,
 				CE86434719B602D900B7D713 /* Main_Iphone.storyboard in Resources */,
 				CE77F15419B59BDE006EF077 /* 120*120@2x.png in Resources */,
 				CE77F15319B59BDE006EF077 /* 80*80@2x.png in Resources */,
