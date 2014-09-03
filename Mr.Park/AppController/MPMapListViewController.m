@@ -7,14 +7,14 @@
 //
 
 #import "MPMapListViewController.h"
-
+#import "tempTable.h"
 
 @interface MPMapListViewController ()
 
 @end
 
 @implementation MPMapListViewController
-@synthesize map_View;
+@synthesize map_View, geocoder;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -27,9 +27,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    [self getCurrentDateAndTime];
-    
+    self.map_View.delegate = self;
+    [self createTempDB];
     MPBottomBarViewController *vc_bottomBar = [[MPBottomBarViewController alloc] initWithNibName:@"MPBottomBarViewController" bundle:nil];
     
     if (IS_IPHONE_5) {
@@ -49,6 +48,28 @@
     dateFormatter.dateFormat=@"EEEE";
     NSString * dayString = [[dateFormatter stringFromDate:now] capitalizedString];
     weekday = dayString;
+    ary_ptfp = [NSMutableArray new];
+    ary_ptfps = [NSMutableArray new];
+    ary_ptlt = [NSMutableArray new];
+    ary_ptmp = [NSMutableArray new];
+    ary_ptmps = [NSMutableArray new];
+    for(tempTable* tpObj in tempTableArray) {
+        if([tpObj.parkingID isEqual:@"1"]) {
+            [ary_ptfp addObject:tpObj];
+        }
+        if([tpObj.parkingID isEqual:@"2"]) {
+            [ary_ptfps addObject:tpObj];
+        }
+        if([tpObj.parkingID isEqual:@"3"]) {
+            [ary_ptlt addObject:tpObj];
+        }
+        if([tpObj.parkingID isEqual:@"4"]) {
+            [ary_ptmp addObject:tpObj];
+        }
+        if([tpObj.parkingID isEqual:@"5"]) {
+            [ary_ptmps addObject:tpObj];
+        }
+    }
 }
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation{
@@ -76,39 +97,40 @@
 		dispatch_once(&centerMapFirstTime, ^{
 			[self.map_View setCenterCoordinate:userLocation.coordinate animated:YES];
 		});
-//        for(tempTable* tpObj in tempTableArray) {
-//            MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:tpObj.streetName Subtitle:tpObj.fullAddress Location:CLLocationCoordinate2DMake([tpObj.lat doubleValue], [tpObj.lon doubleValue])];
-//            [map_View addAnnotation:pin];
-//        }
-        for(int i = 0; i < 3; i++) {
-            MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:@"aaa" Subtitle:@"bbb" Location:CLLocationCoordinate2DMake(33.8503432, -117.738511)];
+        for(tempTable* tpObj in tempTableArray) {
+            NSLog(@"%@", tpObj.streetName);
+            MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:tpObj.streetName Subtitle:tpObj.fullAddress Location:CLLocationCoordinate2DMake([tpObj.lat doubleValue], [tpObj.lon doubleValue])];
             [map_View addAnnotation:pin];
         }
+        //        for(int i = 0; i < 3; i++) {
+        //            MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:@"aaa" Subtitle:@"bbb" Location:CLLocationCoordinate2DMake(33.8503432, -117.728511)];
+        //            [map_View addAnnotation:pin];
+        //        }
+        //    }
     }
 }
-
 - (MKAnnotationView *) mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
     //[HUD hide];
     if([annotation isKindOfClass:[MPCustomAnnotation class]]) {
-        MKPinAnnotationView *newAnnotation = [[MKPinAnnotationView alloc]     initWithAnnotation:annotation reuseIdentifier:@"CustomAnnotation"];
+        MKPinAnnotationView *newAnnotation = [[MKPinAnnotationView alloc]     initWithAnnotation:annotation reuseIdentifier:@"MPCustomAnnotation"];
         CLLocationCoordinate2D temp = [annotation coordinate];
         newAnnotation.canShowCallout = YES;
         newAnnotation.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-        newAnnotation.leftCalloutAccessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ic_twitter@2x.png"]];
-        //newAnnotation.image = [UIImage imageNamed:@"ic_fps@2x.png"];
-        if([[self getParkingTypeLatitude:[NSString stringWithFormat:@"%lf",temp.latitude] Longitude:[NSString stringWithFormat:@"%lf",temp.longitude]]  isEqual: @"1"]) {
-            newAnnotation.image = [UIImage imageNamed:@"ic_fp@2x.png"];
+        newAnnotation.leftCalloutAccessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"twitter"]];
+        //newAnnotation.image = [UIImage imageNamed:@"fp"];
+        if([[self getParkingTypeLatitude:[NSString stringWithFormat:@"%lf",temp.latitude] Longitude:[NSString stringWithFormat:@"%lf",temp.longitude]]  isEqual: @"Free parking"]) {
+            newAnnotation.image = [UIImage imageNamed:@"fp"];
         }
-        if([[self getParkingTypeLatitude:[NSString stringWithFormat:@"%lf",temp.latitude] Longitude:[NSString stringWithFormat:@"%lf",temp.longitude]]  isEqual: @"2"]) {
-            newAnnotation.image = [UIImage imageNamed:@"ic_fps@2x.png"];
+        if([[self getParkingTypeLatitude:[NSString stringWithFormat:@"%lf",temp.latitude] Longitude:[NSString stringWithFormat:@"%lf",temp.longitude]]  isEqual: @"Free parking structure"]) {
+            newAnnotation.image = [UIImage imageNamed:@"fps"];
         }
-        if([[self getParkingTypeLatitude:[NSString stringWithFormat:@"%lf",temp.latitude] Longitude:[NSString stringWithFormat:@"%lf",temp.longitude]]  isEqual: @"3"]) {
-            newAnnotation.image = [UIImage imageNamed:@"ic_lt@2x.png"];
+        if([[self getParkingTypeLatitude:[NSString stringWithFormat:@"%lf",temp.latitude] Longitude:[NSString stringWithFormat:@"%lf",temp.longitude]]  isEqual: @"Limited time parking"]) {
+            newAnnotation.image = [UIImage imageNamed:@"lt"];
         }
-        if([[self getParkingTypeLatitude:[NSString stringWithFormat:@"%lf",temp.latitude] Longitude:[NSString stringWithFormat:@"%lf",temp.longitude]]  isEqual: @"4"]) {
-            newAnnotation.image = [UIImage imageNamed:@"ic_mp@2x.png"];
-        }if([[self getParkingTypeLatitude:[NSString stringWithFormat:@"%lf",temp.latitude] Longitude:[NSString stringWithFormat:@"%lf",temp.longitude]]  isEqual: @"5"]) {
-            newAnnotation.image = [UIImage imageNamed:@"ic_mps@2x.png"];
+        if([[self getParkingTypeLatitude:[NSString stringWithFormat:@"%lf",temp.latitude] Longitude:[NSString stringWithFormat:@"%lf",temp.longitude]]  isEqual: @"Metered parking"]) {
+            newAnnotation.image = [UIImage imageNamed:@"mp"];
+        }if([[self getParkingTypeLatitude:[NSString stringWithFormat:@"%lf",temp.latitude] Longitude:[NSString stringWithFormat:@"%lf",temp.longitude]]  isEqual: @"mps"]) {
+            newAnnotation.image = [UIImage imageNamed:@"Metered parking structure"];
         }
         return newAnnotation;
     }
@@ -132,23 +154,23 @@
 }
 
 - (NSString *) getParkingTypeLatitude: (NSString *)lat Longitude: (NSString *) lon {
-//    for(tempTable* tpObj in tempTableArray) {
-//        if([tpObj.lat isEqual: lat] && [tpObj.lon  isEqual: lon]) {
-//            parkingType = tpObj.parkingID;
-//            break;
-//        }
-//    }
+    for(tempTable* tpObj in tempTableArray) {
+        if([tpObj.lat isEqual: lat] && [tpObj.lon  isEqual: lon]) {
+            parkingType = tpObj.parkingType;
+            break;
+        }
+    }
     return parkingType;
 }
 
 - (void) getDestInformationWithLatitude: (NSString *)lat Longitude: (NSString *) lon {
-//    for(tempTable* tpObj in tempTableArray) {
-//        if([tpObj.lat isEqual: lat] && [tpObj.lon  isEqual: lon]) {
-//            destStreetName = tpObj.streetName;
-//            destAddress = tpObj.fullAddress;
-//            break;
-//        }
-//    }
+    for(tempTable* tpObj in tempTableArray) {
+        if([tpObj.lat isEqual: lat] && [tpObj.lon  isEqual: lon]) {
+            destStreetName = tpObj.streetName;
+            destAddress = tpObj.fullAddress;
+            break;
+        }
+    }
 }
 
 #pragma mark - IB_ACTION
@@ -165,11 +187,11 @@
     [self presentViewController:vc_setting animated:YES completion:NULL];
     
 }
--(IBAction)btnShareDidClicked:(id)sender{ 
+-(IBAction)btnShareDidClicked:(id)sender{
     
     MPShareViewController *vc_share = [self.storyboard instantiateViewControllerWithIdentifier:@"share"];
     [self presentViewController:vc_share animated:YES completion:NULL];
-
+    
 }
 
 -(IBAction)btnReminderDidClicked:(id)sender{
@@ -220,8 +242,8 @@
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
-   NSString *cellIdentifier = @"listCell";
- 
+    NSString *cellIdentifier = @"listCell";
+    
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     
     if (!cell) {
@@ -247,25 +269,7 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void) getCurrentDateAndTime {
-    now = [NSDate date]; // format is 2011-02-28 09:57:49 +0000
-    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-    [dateFormat setDateFormat:@"yyyy-M-dd hh:mm:ss"];
-    NSString *strNow = [dateFormat stringFromDate:now];
-    NSArray *arr = [strNow componentsSeparatedByString:@" "];
-    
-    strDate = [arr objectAtIndex:0]; // strDate is 2011-02-28
-    NSArray *arr_date = [strDate componentsSeparatedByString:@"-"];
-    currentDay = [arr_date objectAtIndex:2];
-    currentMonth = [arr_date objectAtIndex:1];
-    currentYear = [arr_date objectAtIndex:0];
-    
-    strTime = [arr objectAtIndex:1]; // strTime is 09:57:49
-    NSArray *arr_time = [strTime componentsSeparatedByString:@":"];
-    currentSecond = [arr_time objectAtIndex:2];
-    currentMinute = [arr_time objectAtIndex:1];
-    currentHour = [arr_time objectAtIndex:0];
-}
+
 
 
 -(void)createTempDB{
@@ -312,13 +316,38 @@
         NSLog(@"%@",e);
     }
     for (tempTable *tp in tempTableArray) {
-        NSArray *arr_type = [tp.parkingID componentsSeparatedByString:@","];
-        for (int i =0; i<arr_type.count; i++) {
-            NSString *part = arr_type[i];
-            [self getParkingFromDatabase:[part intValue]];
-            if ([parkingHolder.str_parking_default_days rangeOfString:weekday].location != NSNotFound) {
-                tp.parkingID = part;
-                break;
+        if([self isHolidayWithCurrentDate:strDate]) {
+            NSLog(@"holiday");
+            tp.parkingType = @"Free Parking";
+        }
+        else {
+            NSArray *arr_type = [tp.parkingID componentsSeparatedByString:@","];
+            for (int i =0; i<arr_type.count; i++) {
+                bool isDefaultDay = false;
+                NSString *part = arr_type[i];
+                [self getParkingFromDatabase:[part intValue]];
+                NSArray *arr_days = [parkingHolder.str_parking_default_days componentsSeparatedByString:@","];
+                for(NSString *day in arr_days) {
+                    if([weekday isEqual:day])
+                        isDefaultDay = true;
+                    
+                }
+                if (isDefaultDay) {
+                    if([currentHour integerValue] > [[parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][0] integerValue] && [currentHour integerValue] > [[parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][0] integerValue]) {
+                        if([currentHour integerValue] > [[parkingHolder.str_parking_restrict_time_start componentsSeparatedByString:@":"][0] integerValue] && [currentHour integerValue] > [[parkingHolder.str_parking_restrict_time_end componentsSeparatedByString:@":"][0] integerValue]) {
+                            tp.parkingType = @"No Parking";
+                            break;
+                        }
+                        else {
+                            tp.parkingType = parkingHolder.str_parking_type;
+                            break;
+                        }
+                    }
+                    else
+                        tp.parkingType = @"No Parking";
+                }
+                else
+                    tp.parkingType = @"Free parking";
             }
         }
     }
@@ -424,18 +453,18 @@
 //        NSString*path = [[MPDBIntraction databaseInteractionManager] getDatabasePathFromName:DBname];
 //        mrParkDB = [[FMDatabase alloc] initWithPath:path];
 //    }
-//    
+//
 //    NSString *query;
-//    
+//
 //    query = [NSString stringWithFormat:@"Select * FROM regionTable"];
-//    
+//
 //    @try
 //    {
 //        [mrParkDB open];
 //        if ([mrParkDB executeQuery:query])
 //        {
 //            FMResultSet *dataArr = [mrParkDB executeQuery:query];
-//            
+//
 //            while([dataArr next])
 //            {
 //                Region *data = [Region new];
