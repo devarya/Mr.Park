@@ -28,7 +28,11 @@
     [super viewDidLoad];
     self.map_View.delegate = self;
     isMapView = YES;
-    [self.map_View setShowsUserLocation:YES];
+    MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:@"streetName" Subtitle:@"fullAddress" Location:destCoordinate];
+    [map_View addAnnotation:pin];
+    MKCoordinateRegion zoomRegion = MKCoordinateRegionMakeWithDistance(destCoordinate, 2000, 2000);
+    [self.map_View setRegion:zoomRegion animated:YES];
+    [self.map_View setCenterCoordinate:destCoordinate animated:YES];
 }
 
 - (void)didReceiveMemoryWarning
@@ -36,23 +40,6 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-- (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation{
-    currentCoordinate = [userLocation coordinate];
-    MKCoordinateRegion zoomRegion = MKCoordinateRegionMakeWithDistance(destCoordinate, 2000, 2000);
-    [self.map_View setRegion:zoomRegion animated:NO];
-	static dispatch_once_t centerMapFirstTime;
-    
-	if ((userLocation.coordinate.latitude != 0.0) && (userLocation.coordinate.longitude != 0.0)) {
-		dispatch_once(&centerMapFirstTime, ^{
-			[self.map_View setCenterCoordinate:userLocation.coordinate animated:NO];
-		});
-        MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:@"streetName" Subtitle:@"fullAddress" Location:destCoordinate];
-        [map_View addAnnotation:pin];
-
-    }
-}
-
 
 #pragma mark - IB_ACTION
 

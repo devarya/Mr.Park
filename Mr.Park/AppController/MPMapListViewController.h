@@ -29,13 +29,19 @@
     IBOutlet UISearchBar *searchBar;
     BOOL isMapView;
     
+    int countList;
     
     NSString *currentAddress;
     MKPlacemark *placemark;
     CLGeocoder *geocoder;
     
-    
-    
+    double d_start;
+    double d_end;
+    double r_start;
+    double r_end;
+    double c_time;
+    double s_start;
+    double s_end;
 }
 @property (nonatomic, retain) IBOutlet MKMapView *map_View;
 @property (nonatomic, retain) CLGeocoder *geocoder;
