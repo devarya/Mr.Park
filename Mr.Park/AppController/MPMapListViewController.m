@@ -97,7 +97,7 @@
     
 	if ((userLocation.coordinate.latitude != 0.0) && (userLocation.coordinate.longitude != 0.0)) {
 		dispatch_once(&centerMapFirstTime, ^{
-			[self.map_View setCenterCoordinate:userLocation.coordinate animated:YES];
+			[self.map_View setCenterCoordinate:userLocation.coordinate animated:NO];
 		});
         for(tempTable* tpObj in tempTableArray) {
             MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:tpObj.streetName Subtitle:tpObj.fullAddress Location:CLLocationCoordinate2DMake([tpObj.lat doubleValue], [tpObj.lon doubleValue])];
