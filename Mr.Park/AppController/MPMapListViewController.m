@@ -104,8 +104,8 @@
             [map_View addAnnotation:pin];
         }
     }
-    NSString * regionArr = [self checkCurrentRegion];
-    NSArray *part = [regionArr componentsSeparatedByString:@", "];
+//    NSString * regionArr = [self checkCurrentRegion];
+//    NSArray *part = [regionArr componentsSeparatedByString:@", "];
 }
 - (MKAnnotationView *) mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
     //[HUD hide];
