@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "MPSettingViewController.h"
 
-@interface MPNotificationViewController : MPSettingViewController
+@interface MPNotificationViewController : MPSettingViewController<UITableViewDataSource,UITableViewDelegate>
+@property (weak, nonatomic) IBOutlet UITableView *tv_myTableView;
 
 @end
