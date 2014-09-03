@@ -50,8 +50,7 @@
     NSString * dayString = [[dateFormatter stringFromDate:now] capitalizedString];
     weekday = dayString;
     
-    NSString * regionArr = [self checkCurrentRegion];
-    NSLog(@"%@", regionArr);
+    
 }
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation{
@@ -88,6 +87,9 @@
             [map_View addAnnotation:pin];
         }
     }
+    NSString * regionArr = [self checkCurrentRegion];
+    NSArray *part = [regionArr componentsSeparatedByString:@", "];
+    NSLog(@"part %d", part.count);
 }
 
 - (MKAnnotationView *) mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
@@ -500,9 +502,6 @@
     
     CoordinatePoint * cp = [CoordinatePoint new];
     
-
-    currentCoodinate.latitude = 37.784370;
-    currentCoodinate.longitude = -122.439611;
     cp.lat = [NSString stringWithFormat:@"%f", currentCoodinate.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", currentCoodinate.longitude];
     [point_arr addObject:cp];
@@ -551,9 +550,7 @@
              if ([region_arr rangeOfString:pm.subAdministrativeArea].location == NSNotFound) {
                  [region_arr appendString:pm.subAdministrativeArea];
                  [region_arr appendString:@", "];
-             }
-             else{
-                 NSLog(@"contains!");
+                 NSLog(@"%@", pm.subAdministrativeArea);
              }
          }];
     }
