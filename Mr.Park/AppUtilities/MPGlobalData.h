@@ -60,6 +60,11 @@ HolidayTable *holidayHolder;
 UpdateTable *updateHolder;
 FavoriteList *flistHolder;
 
+NSString *startTime;
+NSString *endTime;
+NSString *restrictStartTime;
+NSString *restrictEndTime;
+
 NSMutableArray *parkingArray;
 NSMutableArray *addressArray;
 NSMutableArray *regionArray;

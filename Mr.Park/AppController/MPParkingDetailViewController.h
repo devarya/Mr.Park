@@ -19,6 +19,7 @@
 @interface MPParkingDetailViewController : MPBottomBarViewController<UITableViewDataSource,UITableViewDelegate, UIAlertViewDelegate>{
     IBOutlet MKMapView *map_View;
     BOOL isMapView;
+    IBOutlet UIAlertView *alert;
 }
 @property (nonatomic, retain) IBOutlet MKMapView *map_View;
 @property (weak, nonatomic) IBOutlet UILabel *streetNameText;
