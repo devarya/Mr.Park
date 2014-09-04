@@ -29,6 +29,8 @@
     [super viewDidLoad];
     
     self.map_View.delegate = self;
+    self->searchBar.delegate = self;
+    
     [self createTempDB];
     MPBottomBarViewController *vc_bottomBar = [[MPBottomBarViewController alloc] initWithNibName:@"MPBottomBarViewController" bundle:nil];
     
@@ -158,7 +160,43 @@
         }
     }
 }
+-(void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
+    self->searchBar.text = @"";
+}
+-(void) searchBarSearchButtonClicked:(UISearchBar *)searchBar{
+    
 
+    [self->searchBar resignFirstResponder];
+    
+    MKCoordinateRegion zoomRegion = MKCoordinateRegionMakeWithDistance(currentCoordinate, 2000, 2000);
+    [self.map_View setRegion:zoomRegion animated:NO];
+    
+    //Instantiate geolocation
+    CLGeocoder *geocoder = [[CLGeocoder alloc]init];
+    [geocoder geocodeAddressString:self->searchBar.text completionHandler:^(NSArray *placemarks, NSError *error){
+        
+        //Mark location and center
+        CLPlacemark *placemark = [placemarks objectAtIndex:0];
+        
+        MKCoordinateRegion region;
+        CLLocationCoordinate2D newLocation = [placemark.location coordinate];
+        region.center = [(CLCircularRegion *)placemark.region center];
+        
+        //Drop pin
+        MKPointAnnotation *annotation = [[MKPointAnnotation alloc]init];
+        [annotation setCoordinate: newLocation];
+        [annotation setTitle:self->searchBar.text];  // you can set the subtitle, too
+//        [self.map_View addAnnotation:annotation];
+        
+        //scroll to search result
+        MKMapRect mr = [self.map_View visibleMapRect];
+        MKMapPoint pt = MKMapPointForCoordinate([annotation coordinate]);
+        mr.origin.x = pt.x - mr.size.width *0.5;
+        mr.origin.y = pt.y - mr.size.height *0.25;
+        [self.map_View setVisibleMapRect:mr animated:YES];
+    }];
+    
+}
 #pragma mark - IB_ACTION
 
 -(IBAction)btnFeedBackDidClicked:(id)sender{
