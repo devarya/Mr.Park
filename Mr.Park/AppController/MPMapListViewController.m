@@ -204,6 +204,23 @@
     }];
     
 }
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if([[segue identifier] isEqualToString:@"showDetails"]) {
+        //DetailViewController *dtv = [segue destinationViewController];
+        NSInteger tagIndex = [(UIButton *)sender tag];
+        tempTable* tpObj = tempTableArray[tagIndex];
+        destStreetName = tpObj.streetName;
+        destAddress = tpObj.fullAddress;
+        destParkingType = tpObj.parkingType;
+        [self getParkingFromDatabase:[tpObj.parkingID intValue]];
+        NSString *startTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][1]];
+        NSString *endTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][1]];
+        destParkingTime = [NSString stringWithFormat:@"%@ - %@", startTime, endTime];
+        NSString *restrictStartTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_restrict_time_start componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_restrict_time_start componentsSeparatedByString:@":"][1]];
+        NSString *restrictEndTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_restrict_time_end componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_restrict_time_end componentsSeparatedByString:@":"][1]];
+        destRestrictTime = [NSString stringWithFormat:@"%@ - %@", restrictStartTime, restrictEndTime];
+    }
+}
 #pragma mark - IB_ACTION
 
 -(IBAction)btnFeedBackDidClicked:(id)sender{
