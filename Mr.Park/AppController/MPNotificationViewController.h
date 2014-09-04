@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "MPSettingViewController.h"
+#import "MPAddTimerViewController.h"
 
 @interface MPNotificationViewController : MPSettingViewController<UITableViewDataSource,UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tv_myTableView;
