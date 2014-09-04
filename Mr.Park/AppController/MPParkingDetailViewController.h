@@ -16,7 +16,7 @@
 #import <MessageUI/MFMailComposeViewController.h>
 
 
-@interface MPParkingDetailViewController : MPBottomBarViewController<UITableViewDataSource,UITableViewDelegate>{
+@interface MPParkingDetailViewController : MPBottomBarViewController<UITableViewDataSource,UITableViewDelegate, UIAlertViewDelegate>{
     IBOutlet MKMapView *map_View;
     BOOL isMapView;
 }
