@@ -38,6 +38,7 @@ NSMutableArray *ary_ptmps;
 double destLatitude;
 double destLongitude;
 CLLocationCoordinate2D destCoordinate;
+
 double currentLatitude;
 double currentLongitude;
 CLLocationCoordinate2D currentCoordinate;
@@ -46,6 +47,9 @@ CLLocation *currentLocation;
 NSString *parkingType;
 NSString *destStreetName;
 NSString *destAddress;
+NSString *destParkingType;
+NSString *destParkingTime;
+NSString *destRestrictTime;
 FMDatabase *mrParkDB;
 AddressDB *addressHolder;
 Parking *parkingHolder;
@@ -61,6 +65,8 @@ NSMutableArray *holidayArray;
 NSMutableArray *addressControlArray;
 NSMutableArray *updateArray;
 
+NSString *destStreetName;
+NSString *destAddress;
 
 NSString *parkingTable_server_update_time;
 NSString *regionTable_server_update_time;

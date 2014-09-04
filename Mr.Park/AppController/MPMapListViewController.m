@@ -72,7 +72,6 @@
             [ary_ptmps addObject:tpObj];
         }
     }
-    NSLog(@"sss");
 }
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation{
@@ -165,6 +164,14 @@
         tempTable* tpObj = tempTableArray[tagIndex];
         destStreetName = tpObj.streetName;
         destAddress = tpObj.fullAddress;
+        destParkingType = tpObj.parkingType;
+        [self getParkingFromDatabase:[tpObj.parkingID intValue]];
+        NSString *startTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][1]];
+        NSString *endTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][1]];
+        destParkingTime = [NSString stringWithFormat:@"%@ - %@", startTime, endTime];
+        NSString *restrictStartTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_restrict_time_start componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_restrict_time_start componentsSeparatedByString:@":"][1]];
+        NSString *restrictEndTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_restrict_time_end componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_restrict_time_end componentsSeparatedByString:@":"][1]];
+        destRestrictTime = [NSString stringWithFormat:@"%@ - %@", restrictStartTime, restrictEndTime];
     }
 }
 
@@ -304,7 +311,6 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if(countList == 1) {
-        NSLog(@"111");
         NSString *identifier = nil;
         tempTable *temp =[ary_ptfp objectAtIndex:indexPath.row];
         NSString *streetName = temp.streetName;
@@ -470,10 +476,10 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 
 #pragma mark TABLE_VIEW DELEGATE AND DATASOURCE
 
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-    [self performSegueWithIdentifier:@"segue_tblDetail" sender:self];
-}
+//-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+//    
+//    [self performSegueWithIdentifier:@"segue_tblDetail" sender:self];
+//}
 
 - (void)didReceiveMemoryWarning
 {
