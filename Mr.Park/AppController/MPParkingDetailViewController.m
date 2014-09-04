@@ -39,6 +39,11 @@
     addressText.text = destAddress;
 }
 
+-(void) viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:YES];
+    [self viewDidLoad];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -165,9 +170,125 @@
     }
 }
 
+- (IBAction)btn_Facebook:(id)sender {
+    if([SLComposeViewController isAvailableForServiceType:SLServiceTypeFacebook])
+    {
+        SLComposeViewController *slComposerSheet = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeFacebook];
+        
+        [slComposerSheet addURL:[NSURL URLWithString:@"https://itunes.apple.com/us/app/eadbook/id790237067?ls=1&mt=8"]];
+        [slComposerSheet setInitialText:@"Please download this app."];
+        
+        [self presentViewController:slComposerSheet animated:YES completion:nil];
+        
+        [slComposerSheet setCompletionHandler:^(SLComposeViewControllerResult result) {
+            NSLog(@"start completion block");
+            NSString *output;
+            switch (result) {
+                case SLComposeViewControllerResultCancelled:
+                    output = @"Action Cancelled";
+                    break;
+                case SLComposeViewControllerResultDone:
+                    output = @"Link Post Successfull";
+                    break;
+                default:
+                    break;
+            }
+            if (result != SLComposeViewControllerResultCancelled)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^
+                               {
+                                   
+                                   UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Facebook Message" message:output delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+                                   [alert show];
+                               });
+            }
+        }];
+    }
+    else{
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Sorry"
+                                                            message:@"You can't share application link right now, make sure your device has an internet connection and you have to  login from setting."
+                                                           delegate:self
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+    }
+}
 - (IBAction)checkInButton:(UIButton *)sender {
-    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Parking Reminder" message:@"Alarm has added to the Notification." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Parking Time Set Up" message:@"Alarm has added to the Notification." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:@"30 Minutes", @"1 Hour", @"2 Hours", @"4Hours", @"Overnight", @"Default", nil];
     [alert show];
+}
+
+- (void)alertView: (UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if(buttonIndex == 1) {
+        NSLog(@"aaa");
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Thank you!" message:@"Your reminder is setted." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+    }
+}
+
+- (IBAction)btn_Twitter:(id)sender {
+    if([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter])
+    {
+        SLComposeViewController *slComposerSheet = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
+        [slComposerSheet addURL:[NSURL URLWithString:@"https://itunes.apple.com/us/app/eadbook/id790237067?ls=1&mt=8"]];
+        [slComposerSheet setInitialText:@"Please download this app."];
+        
+        [self presentViewController:slComposerSheet animated:YES completion:nil];
+        
+        [slComposerSheet setCompletionHandler:^(SLComposeViewControllerResult result) {
+            NSLog(@"start completion block");
+            NSString *output;
+            switch (result) {
+                case SLComposeViewControllerResultCancelled:
+                    output = @"Action Cancelled";
+                    break;
+                case SLComposeViewControllerResultDone:
+                    output = @"Application Post Successfull";
+                    break;
+                default:
+                    break;
+            }
+            if (result != SLComposeViewControllerResultCancelled)
+            {
+                dispatch_async(dispatch_get_main_queue(), ^
+                               {
+                                   
+                                   
+                                   UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Twitter Message" message:output delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+                                   [alert show];
+                                   
+                               });
+            }
+            
+            [self dismissViewControllerAnimated:YES completion:nil];
+        }];
+    }
+    else{
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Sorry"
+                                                            message:@"You can't share application link right now, make sure your device has an internet connection and you have to  login from setting."
+                                                           delegate:self
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+    }
+}
+
+- (IBAction)btn_Email:(id)sender {
+    // Email Subject
+    NSString *emailTitle = @"Test Email";
+    // Email Content
+    NSString *messageBody = @"iOS programming is so fun!";
+    // To address
+    NSArray *toRecipents = [NSArray arrayWithObject:@"support@appcoda.com"];
+    
+    MFMailComposeViewController *mc = [[MFMailComposeViewController alloc] init];
+    mc.mailComposeDelegate = self;
+    [mc setSubject:emailTitle];
+    [mc setMessageBody:messageBody isHTML:NO];
+    [mc setToRecipients:toRecipents];
+    
+    // Present mail view controller on screen
+    [self presentViewController:mc animated:YES completion:NULL];
 }
 
 @end

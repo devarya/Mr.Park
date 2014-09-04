@@ -209,6 +209,9 @@
         //DetailViewController *dtv = [segue destinationViewController];
         NSInteger tagIndex = [(UIButton *)sender tag];
         tempTable* tpObj = tempTableArray[tagIndex];
+        destCoordinate = CLLocationCoordinate2DMake([tpObj.lat doubleValue], [tpObj.lon doubleValue]);
+        destLatitude = destCoordinate.latitude;
+        destLongitude = destCoordinate.longitude;
         destStreetName = tpObj.streetName;
         destAddress = tpObj.fullAddress;
         destParkingType = tpObj.parkingType;
@@ -220,6 +223,7 @@
         NSString *restrictEndTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_restrict_time_end componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_restrict_time_end componentsSeparatedByString:@":"][1]];
         destRestrictTime = [NSString stringWithFormat:@"%@ - %@", restrictStartTime, restrictEndTime];
     }
+    NSLog(@"%@", destParkingType);
 }
 #pragma mark - IB_ACTION
 
