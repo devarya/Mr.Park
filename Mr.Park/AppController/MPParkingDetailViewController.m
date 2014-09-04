@@ -13,6 +13,7 @@
 @end
 
 @implementation MPParkingDetailViewController
+@synthesize  map_View, streetNameText, addressText;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -33,6 +34,8 @@
     MKCoordinateRegion zoomRegion = MKCoordinateRegionMakeWithDistance(destCoordinate, 2000, 2000);
     [self.map_View setRegion:zoomRegion animated:YES];
     [self.map_View setCenterCoordinate:destCoordinate animated:YES];
+    streetNameText.text = destStreetName;
+    addressText.text = destAddress;
 }
 
 - (void)didReceiveMemoryWarning
@@ -79,22 +82,39 @@
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     
-    return 3;
+    return 2;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    NSString *availableTime = @"12PM - 3PM";
-    NSString *parkingType = @"Free Parking";
-    
-    NSString *cellIdentifier = @"detailCell";
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    
-    UILabel *cellLabel;
-    cellLabel = (UILabel *)[cell viewWithTag:1];
-    cellLabel.text = availableTime;
-    cellLabel = (UILabel *)[cell viewWithTag:2];
-    cellLabel.text = parkingType;
-    return cell;
+    if(indexPath.row == 0) {
+        NSString *availableTime = destParkingTime;
+        NSString *parkingType = destParkingType;
+        
+        NSString *cellIdentifier = @"detailCell";
+        
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        
+        UILabel *cellLabel;
+        cellLabel = (UILabel *)[cell viewWithTag:1];
+        cellLabel.text = availableTime;
+        cellLabel = (UILabel *)[cell viewWithTag:2];
+        cellLabel.text = parkingType;
+        return cell;
+    }
+    else {
+        NSString *availableTime = destRestrictTime;
+        NSString *parkingType = @"No parking";
+        
+        NSString *cellIdentifier = @"detailCell";
+        
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        
+        UILabel *cellLabel;
+        cellLabel = (UILabel *)[cell viewWithTag:1];
+        cellLabel.text = availableTime;
+        cellLabel = (UILabel *)[cell viewWithTag:2];
+        cellLabel.text = parkingType;
+        return cell;
+    }
 }
 
 - (IBAction)navButton:(UIButton *)sender {

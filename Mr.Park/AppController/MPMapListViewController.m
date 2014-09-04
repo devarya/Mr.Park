@@ -128,15 +128,14 @@
 }
 
 - (void) mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
-    
     MPParkingDetailViewController *dvc = [[MPParkingDetailViewController alloc] initWithNibName:@"MPParkingDetailViewController" bundle:nil];
     destCoordinate = [[view annotation] coordinate];
     destLatitude = destCoordinate.latitude;
     destLongitude = destCoordinate.longitude;
     [self getDestInformationWithLatitude:[NSString stringWithFormat:@"%lf",destLatitude] Longitude:[NSString stringWithFormat:@"%lf",destLongitude]];
     [self.navigationController pushViewController:dvc animated:YES];
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main_Iphone" bundle:nil];
-    UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"detailViewController"];
+    //UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main_Iphone" bundle:nil];
+    UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"detailViewController"];
     [self presentViewController:vc animated:YES completion:NULL];
     
 }
@@ -156,6 +155,14 @@
         if([tpObj.lat isEqual: lat] && [tpObj.lon  isEqual: lon]) {
             destStreetName = tpObj.streetName;
             destAddress = tpObj.fullAddress;
+            destParkingType = tpObj.parkingType;
+            [self getParkingFromDatabase:[tpObj.parkingID intValue]];
+            NSString *startTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][1]];
+            NSString *endTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][1]];
+            destParkingTime = [NSString stringWithFormat:@"%@ - %@", startTime, endTime];
+            NSString *restrictStartTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_restrict_time_start componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_restrict_time_start componentsSeparatedByString:@":"][1]];
+            NSString *restrictEndTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_restrict_time_end componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_restrict_time_end componentsSeparatedByString:@":"][1]];
+            destRestrictTime = [NSString stringWithFormat:@"%@ - %@", restrictStartTime, restrictEndTime];
             break;
         }
     }
@@ -333,7 +340,6 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if(countList == 1) {
-        NSLog(@"111");
         NSString *identifier = nil;
         tempTable *temp =[ary_ptfp objectAtIndex:indexPath.row];
         NSString *streetName = temp.streetName;
@@ -499,10 +505,10 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 
 #pragma mark TABLE_VIEW DELEGATE AND DATASOURCE
 
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-    [self performSegueWithIdentifier:@"segue_tblDetail" sender:self];
-}
+//-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+//    
+//    [self performSegueWithIdentifier:@"segue_tblDetail" sender:self];
+//}
 
 - (void)didReceiveMemoryWarning
 {
@@ -514,10 +520,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 
 
 -(void)createTempDB{
-    
-    
-    //    NSString* currentTime = strTime;
-    //    NSString* currentDay = weekday;
+
     if (!mrParkDB)
     {
         NSString*path = [[MPDBIntraction databaseInteractionManager] getDatabasePathFromName:DBname];

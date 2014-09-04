@@ -20,6 +20,8 @@
     BOOL isMapView;
 }
 @property (nonatomic, retain) IBOutlet MKMapView *map_View;
+@property (weak, nonatomic) IBOutlet UILabel *streetNameText;
+@property (weak, nonatomic) IBOutlet UILabel *addressText;
 - (IBAction)navButton:(UIButton *)sender;
 
 - (IBAction)btn_Facebook:(id)sender;
