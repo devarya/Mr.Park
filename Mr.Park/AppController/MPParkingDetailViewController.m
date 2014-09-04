@@ -142,4 +142,9 @@
     }
 }
 
+- (IBAction)checkInButton:(UIButton *)sender {
+    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Parking Reminder" message:@"Alarm has added to the Notification." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [alert show];
+}
+
 @end

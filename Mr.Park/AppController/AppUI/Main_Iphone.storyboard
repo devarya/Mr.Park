@@ -311,6 +311,9 @@
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                         </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="checkInButton:" destination="ITB-QE-0ud" eventType="touchUpInside" id="33x-Sk-cmQ"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="kdl-UV-ULD" userLabel="Submit">
                                         <rect key="frame" x="235" y="33" width="74" height="25"/>
