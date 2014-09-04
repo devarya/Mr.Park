@@ -61,8 +61,21 @@
     UILocalNotification *localNotification = [localNotifications objectAtIndex:indexPath.row];
     
     // Display notification info
+    
     [cell.textLabel setText:localNotification.alertBody];
-    [cell.detailTextLabel setText:[localNotification.fireDate description]];
+   
+    NSDate *Date = localNotification.fireDate;
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    NSString * str_selectedDate  = [dateFormatter stringFromDate:Date];
+    
+    NSDateFormatter *dateFormatter1 = [[NSDateFormatter alloc]init];
+    [dateFormatter1 setDateFormat:@"yyyy/MM/dd hh:mm:ss"];
+    NSString *str_dateSelected = [dateFormatter1 stringFromDate: Date];
+    
+    [cell.detailTextLabel setText:str_dateSelected];
+
     
     return cell;
 }
@@ -82,16 +95,9 @@
 }
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-//    PCDataBaseData *dataHolder=(PCDataBaseData *)sender;
-//    if ([segue.identifier isEqualToString:@"MPAddTimer"])
-//    {
-//        PCAddNewReminderViewController *addReminder=(PCAddNewReminderViewController *)[segue destinationViewController];
-//        addReminder.isEditReminder=YES;
-//        addReminder.reminderHolder=dataHolder;
-//    }
 }
-#pragma mark - IB_ACTION
 
+#pragma mark - IB_ACTION
 -(IBAction)btnBackDidClicked:(id)sender{
     
     [self.navigationController popViewControllerAnimated:YES];

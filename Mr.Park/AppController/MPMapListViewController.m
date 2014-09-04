@@ -167,11 +167,10 @@
         }
     }
 }
--(void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
-    self->searchBar.text = @"";
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    [self->searchBar resignFirstResponder];    
 }
 -(void) searchBarSearchButtonClicked:(UISearchBar *)searchBar{
-    
 
     [self->searchBar resignFirstResponder];
     
