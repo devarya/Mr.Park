@@ -18,7 +18,7 @@
 //#import "tempTable.h"
 
 
-@interface MPMapListViewController : MPBottomBarViewController<UITableViewDataSource,UITableViewDelegate>{
+@interface MPMapListViewController : MPBottomBarViewController<UITableViewDataSource,UITableViewDelegate, UISearchBarDelegate, MKMapViewDelegate>{
     
     IBOutlet UIView *containerView;
     IBOutlet UIView *infoView;
@@ -46,8 +46,11 @@
 @property (nonatomic, retain) CLGeocoder *geocoder;
 @property (weak, nonatomic) IBOutlet UITableView *tbl_View;
 @property (nonatomic) CLLocationCoordinate2D destCoordinate;
--(IBAction)btnReminderDidClicked:(id)sender;
--(IBAction)btnSwitchToMapAndList:(id)sender;
+
+- (IBAction)btnReminderDidClicked:(id)sender;
+- (IBAction)btnSwitchToMapAndList:(id)sender;
+
+//=========== INFO_Btn ===========
 - (IBAction)btn_FreeParking:(id)sender;
 - (IBAction)btn_FreeParkingStructure:(id)sender;
 - (IBAction)btn_LimitParking:(id)sender;
