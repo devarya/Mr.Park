@@ -20,6 +20,8 @@
 		0AEE7D4019B64A7D005882D1 /* UpdateTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AEE7D3919B64A7D005882D1 /* UpdateTable.m */; };
 		0AEE7D4219B64B67005882D1 /* MrParkDataBase.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 0AEE7D4119B64B67005882D1 /* MrParkDataBase.sqlite */; };
 		0AEE7D9019B698FC005882D1 /* CoordinatePoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AEE7D8F19B698FC005882D1 /* CoordinatePoint.m */; };
+		0AFFDFE919B80ADB00664B21 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AFFDFE819B80ADB00664B21 /* Social.framework */; };
+		0AFFDFEB19B80E7100664B21 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AFFDFEA19B80E7100664B21 /* MessageUI.framework */; };
 		CE417F0B19B436D80080F25D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE417F0A19B436D80080F25D /* Foundation.framework */; };
 		CE417F0D19B436D80080F25D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE417F0C19B436D80080F25D /* CoreGraphics.framework */; };
 		CE417F0F19B436D80080F25D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE417F0E19B436D80080F25D /* UIKit.framework */; };
@@ -117,6 +119,8 @@
 		0AEE7D4119B64B67005882D1 /* MrParkDataBase.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = MrParkDataBase.sqlite; sourceTree = "<group>"; };
 		0AEE7D8E19B698FC005882D1 /* CoordinatePoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoordinatePoint.h; sourceTree = "<group>"; };
 		0AEE7D8F19B698FC005882D1 /* CoordinatePoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoordinatePoint.m; sourceTree = "<group>"; };
+		0AFFDFE819B80ADB00664B21 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		0AFFDFEA19B80E7100664B21 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		CE417F0719B436D80080F25D /* Mr.Park.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mr.Park.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE417F0A19B436D80080F25D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		CE417F0C19B436D80080F25D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -230,6 +234,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0AFFDFEB19B80E7100664B21 /* MessageUI.framework in Frameworks */,
+				0AFFDFE919B80ADB00664B21 /* Social.framework in Frameworks */,
 				CE77F14A19B59B4F006EF077 /* libsqlite3.dylib in Frameworks */,
 				CE77F13319B57E80006EF077 /* MapKit.framework in Frameworks */,
 				CE417F9119B468820080F25D /* QuartzCore.framework in Frameworks */,
@@ -287,6 +293,8 @@
 		CE417F0919B436D80080F25D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0AFFDFEA19B80E7100664B21 /* MessageUI.framework */,
+				0AFFDFE819B80ADB00664B21 /* Social.framework */,
 				CE77F14919B59B4F006EF077 /* libsqlite3.dylib */,
 				CE77F13219B57E80006EF077 /* MapKit.framework */,
 				CE417F9019B468820080F25D /* QuartzCore.framework */,

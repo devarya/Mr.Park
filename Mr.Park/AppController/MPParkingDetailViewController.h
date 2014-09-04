@@ -12,6 +12,7 @@
 #import "MPSettingViewController.h"
 #import <MapKit/MapKit.h>
 #import <Social/Social.h>
+#import <MessageUI/MessageUI.h>
 #import <MessageUI/MFMailComposeViewController.h>
 
 
