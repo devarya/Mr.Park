@@ -23,6 +23,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *streetNameText;
 @property (weak, nonatomic) IBOutlet UILabel *addressText;
 - (IBAction)navButton:(UIButton *)sender;
+- (IBAction)checkInButton:(UIButton *)sender;
 
 - (IBAction)btn_Facebook:(id)sender;
 - (IBAction)btn_Twitter:(id)sender;
