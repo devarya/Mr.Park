@@ -58,19 +58,19 @@
     ary_ptmp = [NSMutableArray new];
     ary_ptmps = [NSMutableArray new];
     for(tempTable* tpObj in tempTableArray) {
-        if([tpObj.parkingID isEqual:@"Free parking"]) {
+        if([tpObj.parkingType isEqual:@"Free parking"]) {
             [ary_ptfp addObject:tpObj];
         }
-        if([tpObj.parkingID isEqual:@"Free parking structure"]) {
+        if([tpObj.parkingType isEqual:@"Free parking structure"]) {
             [ary_ptfps addObject:tpObj];
         }
-        if([tpObj.parkingID isEqual:@"Limited time parking"]) {
+        if([tpObj.parkingType isEqual:@"Limited time parking"]) {
             [ary_ptlt addObject:tpObj];
         }
-        if([tpObj.parkingID isEqual:@"Metered parking"]) {
+        if([tpObj.parkingType isEqual:@"Metered parking"]) {
             [ary_ptmp addObject:tpObj];
         }
-        if([tpObj.parkingID isEqual:@"Metered parking structure"]) {
+        if([tpObj.parkingType isEqual:@"Metered parking structure"]) {
             [ary_ptmps addObject:tpObj];
         }
     }
@@ -157,11 +157,11 @@
             destAddress = tpObj.fullAddress;
             destParkingType = tpObj.parkingType;
             [self getParkingFromDatabase:[tpObj.parkingID intValue]];
-            NSString *startTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][1]];
-            NSString *endTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][1]];
+            startTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][1]];
+            endTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][1]];
             destParkingTime = [NSString stringWithFormat:@"%@ - %@", startTime, endTime];
-            NSString *restrictStartTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_restrict_time_start componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_restrict_time_start componentsSeparatedByString:@":"][1]];
-            NSString *restrictEndTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_restrict_time_end componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_restrict_time_end componentsSeparatedByString:@":"][1]];
+            restrictStartTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_restrict_time_start componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_restrict_time_start componentsSeparatedByString:@":"][1]];
+            restrictEndTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_restrict_time_end componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_restrict_time_end componentsSeparatedByString:@":"][1]];
             destRestrictTime = [NSString stringWithFormat:@"%@ - %@", restrictStartTime, restrictEndTime];
             break;
         }

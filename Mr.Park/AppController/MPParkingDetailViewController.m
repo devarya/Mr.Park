@@ -30,11 +30,11 @@
     self.map_View.delegate = self;
     [self.map_View setShowsUserLocation:YES];
     isMapView = YES;
-    MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:@"streetName" Subtitle:@"fullAddress" Location:destCoordinate];
+    MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:destStreetName Subtitle:destAddress Location:destCoordinate];
     [map_View addAnnotation:pin];
-    MKCoordinateRegion zoomRegion = MKCoordinateRegionMakeWithDistance(currentCoordinate, 2000, 2000);
+    MKCoordinateRegion zoomRegion = MKCoordinateRegionMakeWithDistance(destCoordinate, 2000, 2000);
     [self.map_View setRegion:zoomRegion animated:YES];
-    [self.map_View setCenterCoordinate:currentCoordinate animated:YES];
+    [self.map_View setCenterCoordinate:destCoordinate animated:YES];
     streetNameText.text = destStreetName;
     addressText.text = destAddress;
 }
@@ -214,15 +214,70 @@
     }
 }
 - (IBAction)checkInButton:(UIButton *)sender {
-    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Parking Time Set Up" message:@"Alarm has added to the Notification." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:@"30 Minutes", @"1 Hour", @"2 Hours", @"4Hours", @"Overnight", @"Default", nil];
+    alert = [[UIAlertView alloc]initWithTitle:@"Parking Time Set Up" message:@"Alarm has added to the Notification." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:@"30 Minutes", @"1 Hour", @"2 Hours", @"3Hours", @"4Hours", @"Overnight", nil];
     [alert show];
 }
 
 - (void)alertView: (UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if(buttonIndex == 1) {
-        NSLog(@"aaa");
-        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Thank you!" message:@"Your reminder is setted." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
+        if([currentHour intValue]*60 + [currentMinute intValue] + 30 > [restrictStartTime intValue] && [currentHour intValue]*60 + [currentMinute intValue] + 30 < [restrictEndTime intValue]) {
+            UIAlertView *subAlert = [[UIAlertView alloc]initWithTitle:@"Setting failed!" message:@"30 minutes later is swapping time." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [subAlert show];
+        }
+        else {
+            UIAlertView *subAlert = [[UIAlertView alloc]initWithTitle:@"Thank you!" message:@"Your reminder is setted." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [subAlert show];
+        }
+    }
+    if(buttonIndex == 2) {
+        if([currentHour intValue]*60 + [currentMinute intValue] + 60 > [restrictStartTime intValue] && [currentHour intValue]*60 + [currentMinute intValue] + 60 < [restrictEndTime intValue]) {
+            UIAlertView *subAlert = [[UIAlertView alloc]initWithTitle:@"Setting failed!" message:@"1 hour later is swapping time." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [subAlert show];
+        }
+        else {
+            UIAlertView *subAlert = [[UIAlertView alloc]initWithTitle:@"Thank you!" message:@"Your reminder is setted." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [subAlert show];
+        }
+    }
+    if(buttonIndex == 3) {
+        if([currentHour intValue]*60 + [currentMinute intValue] + 120 > [restrictStartTime intValue] && [currentHour intValue]*60 + [currentMinute intValue] + 120 < [restrictEndTime intValue]) {
+            UIAlertView *subAlert = [[UIAlertView alloc]initWithTitle:@"Setting failed!" message:@"2 hours later is swapping time." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [subAlert show];
+        }
+        else {
+            UIAlertView *subAlert = [[UIAlertView alloc]initWithTitle:@"Thank you!" message:@"Your reminder is setted." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [subAlert show];
+        }
+    }
+    if(buttonIndex == 4) {
+        if([currentHour intValue]*60 + [currentMinute intValue] + 180 > [restrictStartTime intValue] && [currentHour intValue]*60 + [currentMinute intValue] + 180 < [restrictEndTime intValue]) {
+            UIAlertView *subAlert = [[UIAlertView alloc]initWithTitle:@"Setting failed!" message:@"3 hours later is swapping time." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [subAlert show];
+        }
+        else {
+            UIAlertView *subAlert = [[UIAlertView alloc]initWithTitle:@"Thank you!" message:@"Your reminder is setted." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [subAlert show];
+        }
+    }
+    if(buttonIndex == 5) {
+        if([currentHour intValue]*60 + [currentMinute intValue] + 240 > [restrictStartTime intValue] && [currentHour intValue]*60 + [currentMinute intValue] + 240 < [restrictEndTime intValue]) {
+            UIAlertView *subAlert = [[UIAlertView alloc]initWithTitle:@"Setting failed!" message:@"4 hours later is swapping time." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [subAlert show];
+        }
+        else {
+            UIAlertView *subAlert = [[UIAlertView alloc]initWithTitle:@"Thank you!" message:@"Your reminder is setted." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [subAlert show];
+        }
+    }
+    if(buttonIndex == 6) {
+        if([currentHour intValue]*60 + [currentMinute intValue] + 120 > [restrictStartTime intValue] && [currentHour intValue]*60 + [currentMinute intValue] + 120 < [restrictEndTime intValue]) {
+            UIAlertView *subAlert = [[UIAlertView alloc]initWithTitle:@"Setting failed!" message:@"2 hour later is swapping time." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [subAlert show];
+        }
+        else {
+            UIAlertView *subAlert = [[UIAlertView alloc]initWithTitle:@"Thank you!" message:@"Your reminder is setted." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [subAlert show];
+        }
     }
 }
 
