@@ -28,12 +28,13 @@
 {
     [super viewDidLoad];
     self.map_View.delegate = self;
+    [self.map_View setShowsUserLocation:YES];
     isMapView = YES;
     MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:@"streetName" Subtitle:@"fullAddress" Location:destCoordinate];
     [map_View addAnnotation:pin];
-    MKCoordinateRegion zoomRegion = MKCoordinateRegionMakeWithDistance(destCoordinate, 2000, 2000);
+    MKCoordinateRegion zoomRegion = MKCoordinateRegionMakeWithDistance(currentCoordinate, 2000, 2000);
     [self.map_View setRegion:zoomRegion animated:YES];
-    [self.map_View setCenterCoordinate:destCoordinate animated:YES];
+    [self.map_View setCenterCoordinate:currentCoordinate animated:YES];
     streetNameText.text = destStreetName;
     addressText.text = destAddress;
 }
@@ -49,6 +50,37 @@
 -(IBAction)btnBackDidClicked:(id)sender{
     
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (MKAnnotationView *) mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
+    //[HUD hide];
+    if([annotation isKindOfClass:[MPCustomAnnotation class]]) {
+        MKPinAnnotationView *newAnnotation = [[MKPinAnnotationView alloc]     initWithAnnotation:annotation reuseIdentifier:@"MPCustomAnnotation"];
+        CLLocationCoordinate2D temp = [annotation coordinate];
+        newAnnotation.canShowCallout = YES;
+        newAnnotation.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+        newAnnotation.leftCalloutAccessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"twitter"]];
+        //newAnnotation.image = [UIImage imageNamed:@"fp"];
+        if([destParkingType isEqual: @"Free parking"]) {
+            newAnnotation.image = [UIImage imageNamed:@"fp"];
+        }
+        else if([destParkingType isEqual: @"Free parking structure"]) {
+            newAnnotation.image = [UIImage imageNamed:@"fps"];
+        }
+        else if([destParkingType isEqual: @"Limited time parking"]) {
+            newAnnotation.image = [UIImage imageNamed:@"lt"];
+        }
+        else if([destParkingType isEqual: @"Metered parking"]) {
+            newAnnotation.image = [UIImage imageNamed:@"mp"];
+        }
+        else if([destParkingType isEqual: @"Metered parking structure"]) {
+            newAnnotation.image = [UIImage imageNamed:@"mps"];
+        }
+        return newAnnotation;
+    }
+    else
+        return nil;
+    
 }
 
 #pragma mark TABLE_VIEW DELEGATE AND DATASOURCE
