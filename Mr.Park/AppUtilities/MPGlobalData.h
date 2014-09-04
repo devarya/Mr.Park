@@ -49,7 +49,9 @@ CLLocation *currentLocation;
 NSString *parkingType;
 NSString *destStreetName;
 NSString *destAddress;
-
+NSString *destParkingType;
+NSString *destParkingTime;
+NSString *destRestrictTime;
 AddressDB *addressHolder;
 Parking *parkingHolder;
 AddressUpdateControl *adUCHolder;
@@ -66,6 +68,9 @@ NSMutableArray *addressControlArray;
 NSMutableArray *updateArray;
 NSMutableArray *favoriteListArray;
 NSMutableArray *tempTableArray;
+
+NSString *destStreetName;
+NSString *destAddress;
 
 NSString *parkingTable_server_update_time;
 NSString *regionTable_server_update_time;

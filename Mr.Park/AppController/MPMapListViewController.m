@@ -157,7 +157,7 @@
             destStreetName = tpObj.streetName;
             destAddress = tpObj.fullAddress;
             destParkingType = tpObj.parkingType;
-            [self getParkingFromDatabase:[tpObj.parkingID intValue]];
+            [[MPDBIntraction databaseInteractionManager] getParkingFromDatabase:[tpObj.parkingID intValue]];
             NSString *startTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][1]];
             NSString *endTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][1]];
             destParkingTime = [NSString stringWithFormat:@"%@ - %@", startTime, endTime];
@@ -216,7 +216,7 @@
         destStreetName = tpObj.streetName;
         destAddress = tpObj.fullAddress;
         destParkingType = tpObj.parkingType;
-        [self getParkingFromDatabase:[tpObj.parkingID intValue]];
+        [[MPDBIntraction databaseInteractionManager] getParkingFromDatabase:[tpObj.parkingID intValue]];
         NSString *startTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][1]];
         NSString *endTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][1]];
         destParkingTime = [NSString stringWithFormat:@"%@ - %@", startTime, endTime];
@@ -628,7 +628,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (BOOL) isSwappingWithHour:(NSString *) currentHour andMinute:(NSString *) currentMinute andParkingType: (NSString *) parkingType {
-    double c_time =[currentHour integerValue]*60 + [currentMinute integerValue];
+    c_time =[currentHour integerValue]*60 + [currentMinute integerValue];
     [[MPDBIntraction databaseInteractionManager] getParkingFromDatabase:[parkingType intValue]];
     
     s_start =[[parkingHolder.str_parking_sweeping_time_start componentsSeparatedByString:@":"][0] integerValue]*60 + [[parkingHolder.str_parking_sweeping_time_start componentsSeparatedByString:@":"][0] integerValue];
@@ -691,42 +691,42 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     cp.lon = [NSString stringWithFormat:@"%f", currentCoordinate.longitude];
     [point_arr addObject:cp];
     cp = [CoordinatePoint new];
-    CLLocationCoordinate2D neCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude + MILEINCOORDINATE, currentCoodinate.longitude - MILEINCOORDINATE);
+    CLLocationCoordinate2D neCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude + MILEINCOORDINATE, currentCoordinate.longitude - MILEINCOORDINATE);
     cp.lat = [NSString stringWithFormat:@"%f", neCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", neCoord.longitude];
     [point_arr addObject:cp];
     cp = [CoordinatePoint new];
-    CLLocationCoordinate2D swCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude - MILEINCOORDINATE, currentCoodinate.longitude + MILEINCOORDINATE);
+    CLLocationCoordinate2D swCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude - MILEINCOORDINATE, currentCoordinate.longitude + MILEINCOORDINATE);
     cp.lat = [NSString stringWithFormat:@"%f", swCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", swCoord.longitude];
     [point_arr addObject:cp];
     cp = [CoordinatePoint new];
-    CLLocationCoordinate2D nwCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude + MILEINCOORDINATE, currentCoodinate.longitude + MILEINCOORDINATE);
+    CLLocationCoordinate2D nwCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude + MILEINCOORDINATE, currentCoordinate.longitude + MILEINCOORDINATE);
     cp.lat = [NSString stringWithFormat:@"%f", nwCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", nwCoord.longitude];
     [point_arr addObject:cp];
     cp = [CoordinatePoint new];
-    CLLocationCoordinate2D seCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude - MILEINCOORDINATE, currentCoodinate.longitude - MILEINCOORDINATE);
+    CLLocationCoordinate2D seCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude - MILEINCOORDINATE, currentCoordinate.longitude - MILEINCOORDINATE);
     cp.lat = [NSString stringWithFormat:@"%f", seCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", seCoord.longitude];
     [point_arr addObject:cp];
     cp = [CoordinatePoint new];
-    CLLocationCoordinate2D sCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude - MILEINCOORDINATE, currentCoodinate.longitude);
+    CLLocationCoordinate2D sCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude - MILEINCOORDINATE, currentCoordinate.longitude);
     cp.lat = [NSString stringWithFormat:@"%f", sCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", sCoord.longitude];
     [point_arr addObject:cp];
     cp = [CoordinatePoint new];
-    CLLocationCoordinate2D eCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude, currentCoodinate.longitude - MILEINCOORDINATE);
+    CLLocationCoordinate2D eCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude, currentCoordinate.longitude - MILEINCOORDINATE);
     cp.lat = [NSString stringWithFormat:@"%f", eCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", eCoord.longitude];
     [point_arr addObject:cp];
     cp = [CoordinatePoint new];
-    CLLocationCoordinate2D nCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude + MILEINCOORDINATE, currentCoodinate.longitude);
+    CLLocationCoordinate2D nCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude + MILEINCOORDINATE, currentCoordinate.longitude);
     cp.lat = [NSString stringWithFormat:@"%f", nCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", nCoord.longitude];
     [point_arr addObject:cp];
     cp = [CoordinatePoint new];
-    CLLocationCoordinate2D wCoord = CLLocationCoordinate2DMake(currentCoodinate.latitude, currentCoodinate.longitude + MILEINCOORDINATE);
+    CLLocationCoordinate2D wCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude, currentCoordinate.longitude + MILEINCOORDINATE);
     cp.lat = [NSString stringWithFormat:@"%f", wCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", wCoord.longitude];
     [point_arr addObject:cp];
@@ -748,7 +748,6 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 //         }
 //     }];
     //dispatch_semaphore_wait(fd_sema, DISPATCH_TIME_FOREVER);
-    int i = 0;
     for (CoordinatePoint *point in point_arr) {
         ceo = [[CLGeocoder alloc]init];
         loc = [[CLLocation alloc]initWithLatitude:[point.lat doubleValue] longitude:[point.lon doubleValue]];
@@ -756,14 +755,13 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
          ^(NSArray *placemarks, NSError *error) {
              CLPlacemark *pm = [placemarks objectAtIndex:0];
              if ([region_arr rangeOfString:pm.subAdministrativeArea].location == NSNotFound) {
-                 if(i != 0){
+                 if([region_arr length] !=0 ){
                      [region_arr appendString:@", "];
                  }
                  [region_arr appendString:pm.subAdministrativeArea];
                  NSLog(@"%@", region_arr);
              }
          }];
-        i++;
     }
 //
 //    dispatch_semaphore_signal(fd_sema);
@@ -773,7 +771,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 
 
 -(void)checkLocalDBforReigon: (NSString*) region_arr{
-    NSString *newRe = @"Orange, ";
+    NSString *newRe = @"Orange";
     NSArray *region_part = [newRe componentsSeparatedByString:@", "];
     NSString *query;
     NSMutableArray *region_id_arr = [NSMutableArray new];
