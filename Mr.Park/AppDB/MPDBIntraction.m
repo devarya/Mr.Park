@@ -27,7 +27,7 @@ MPDBIntraction *databaseManager = nil;
 {
     if (self = [super init])
     {
-        dBMrPark  = [[FMDatabase alloc] initWithPath:[self getDatabasePathFromName:DBname]];
+        mrParkDB  = [[FMDatabase alloc] initWithPath:[self getDatabasePathFromName:DBname]];
     }
     return self;
 }
@@ -197,20 +197,48 @@ MPDBIntraction *databaseManager = nil;
 
 -(void)insertAddresList:(NSMutableArray *)arrholder
 {
-    NSString* rName;
-    NSString* rID;
-    [mrParkDB open];
+    NSString *query = [NSString stringWithFormat:@"select count(*) from addressUpdate"];
+    AddressDB *dataHolder = [arrholder objectAtIndex:0];
+    NSString* rName = dataHolder.str_regionName;
+    
     double latitude;
     double longtitude;
-    for (int i=0; i<arrholder.count;i++)
+    int numberOfRegionStored;
+    int rID;
+    
+    @try
+    {   [mrParkDB open];
+        if ([mrParkDB executeQuery:query])
+        {
+            FMResultSet *dataArr = [mrParkDB executeQuery:query];
+            
+            [dataArr next];
+            numberOfRegionStored = [[dataArr stringForColumn:@"count(*)"] intValue];
+        }
+        else
+        {
+            NSLog(@"error in addressUpdate retrieving data");
+        }
+    }
+    @catch (NSException *e)
+    {
+        NSLog(@"%@",e);
+    }
+    @finally{
+        [mrParkDB close];
+    }
+
+    if (numberOfRegionStored == NUMBEROFROWREGIONSTORED) {
+        [self deleteAddressWithEarliestActivity];
+    }
+    
+    for (int i=0; i<arrholder.count-1;i++)
     {
         AddressDB *dataHolder=[arrholder objectAtIndex:i];
-        if(i==0){
-            rName = dataHolder.str_regionName;
-        }
         NSString *query=[NSString stringWithFormat:@"delete from addressTable where address_id = %@", dataHolder.str_addId];
         @try
         {
+            [mrParkDB open];
             if ([mrParkDB executeUpdate:query])
             {
                 NSLog(@"successfully delete one row with id = %@ in address table", dataHolder.str_addId);
@@ -219,6 +247,8 @@ MPDBIntraction *databaseManager = nil;
         @catch (NSException *e)
         {
             NSLog(@"%@",e);
+        }
+        @finally{
             [mrParkDB close];
         }
         if (i%2 == 0) {
@@ -243,12 +273,15 @@ MPDBIntraction *databaseManager = nil;
         @catch (NSException *e)
         {
             NSLog(@"%@",e);
+        }
+        @finally{
             [mrParkDB close];
         }
     }
-    NSString *query=[NSString stringWithFormat:@"update addressTable set updateAt = \"%@\"", addressTable_server_update_time];
+    query=[NSString stringWithFormat:@"update addressTable set updateAt = \"%@\"", addressTable_server_update_time];
     @try
     {
+        [mrParkDB open];
         if ([mrParkDB executeUpdate:query])
         {
             NSLog(@"successfully update the server_update_time address table");
@@ -257,20 +290,54 @@ MPDBIntraction *databaseManager = nil;
     @catch (NSException *e)
     {
         NSLog(@"%@",e);
+    }
+    @finally
+    {
         [mrParkDB close];
     }
-    for (AddressUpdateControl *ad in addressControlArray) {
-        if([ad.str_region_name isEqual:rName]){
-            rID = [NSString stringWithFormat:@"%@", ad.int_region_id];
-            break;
-        }
-    }
-    query=[NSString stringWithFormat:@"update addressUpdate set update_at = \"%@\" where region_id = \"%@\"", addressTable_server_update_time, rID];
+    query=[NSString stringWithFormat:@"select region_id from regionTable where region_name = \"%@\"", rName];
     @try
     {
+        [mrParkDB open];
+        if ([mrParkDB executeQuery:query])
+        {
+            FMResultSet *dataArr = [mrParkDB executeQuery:query];
+            [dataArr next];
+            rID = [[dataArr stringForColumn:@"region_id"] intValue];
+        }
+    }
+    @catch (NSException *e)
+    {
+        NSLog(@"%@",e);
+    }
+    @finally
+    {
+        [mrParkDB close];
+    }
+    query=[NSString stringWithFormat:@"insert into addressUpdate (region_id, region_name) values (%d, \"%@\")", rID, rName];
+    @try
+    {
+        [mrParkDB open];
         if ([mrParkDB executeUpdate:query])
         {
-            NSLog(@"region %@ is updated", rID);
+            NSLog(@"successfully insert to addressUpate");
+        }
+    }
+    @catch (NSException *e)
+    {
+        NSLog(@"213   %@",e);
+    }
+    @finally
+    {
+        [mrParkDB close];
+    }
+    query=[NSString stringWithFormat:@"update addressUpdate set update_at = \"%@\" where region_name = \"%@\"", addressTable_server_update_time, rName];
+    @try
+    {
+        [mrParkDB open];
+        if ([mrParkDB executeUpdate:query])
+        {
+            NSLog(@"%@ is updated", rName);
         }
     }
     @catch (NSException *e)
@@ -350,5 +417,286 @@ MPDBIntraction *databaseManager = nil;
     }
     
 }
+
+#pragma mark insert favoriteTable
+
+
+-(void)insertfList:(FavoriteList *)dataHolder
+{
+    NSString *query=[NSString stringWithFormat:@"insert into favoriteTable(address_id, city_name, created_at, houseFullAddress, houseLat, houseLong, houseNo, houseSide, regionName, stateName, status, streetName, updateAt, parking_ids) values(\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\", \"%@\")",dataHolder.str_addId, dataHolder.str_cityName, dataHolder.str_createdId, dataHolder.str_houseFullAddress, dataHolder.str_houseLat, dataHolder.str_houseLong, dataHolder.str_houseNo, dataHolder.str_houseSide, dataHolder.str_regionName, dataHolder.str_stateName, dataHolder.str_status, dataHolder.str_streetName, dataHolder.str_updatedAt, dataHolder.str_parking_ids];
+    @try
+    {
+        [mrParkDB open];
+        if ([mrParkDB executeUpdate:query])
+        {
+            NSLog(@"successfully inserted to favorite table");
+        }
+    }
+    @catch (NSException *e)
+    {
+        NSLog(@"%@",e);
+    }
+    @finally
+    {
+        [mrParkDB close];
+    }
+}
+
+#pragma mark get data for local database
+
+
+
+- (void)getFavoriteListFromDatabase{
+    if (!mrParkDB)
+    {
+        NSString*path = [[MPDBIntraction databaseInteractionManager] getDatabasePathFromName:DBname];
+        mrParkDB = [[FMDatabase alloc] initWithPath:path];
+    }
+    
+    NSString *query;
+    
+    query = [NSString stringWithFormat:@"Select * FROM favoriteTable"];
+    
+    @try
+    {
+        [mrParkDB open];
+        if ([mrParkDB executeQuery:query])
+        {
+            FMResultSet *dataArr = [mrParkDB executeQuery:query];
+            [dataArr next];
+            flistHolder = [FavoriteList new];
+            
+            flistHolder.str_addId = [NSNumber numberWithInt:[dataArr intForColumn:@"address_id"]];
+            flistHolder.str_cityName = [dataArr stringForColumn:@"city_name"];
+            flistHolder.str_createdId = [dataArr stringForColumn:@"created_at"];
+            flistHolder.str_houseFullAddress = [dataArr stringForColumn:@"houseFullAddress"];
+            flistHolder.str_houseLat = [dataArr stringForColumn:@"houseLat"];
+            flistHolder.str_houseLong = [dataArr stringForColumn:@"houseLong"];
+            flistHolder.str_houseNo = [dataArr stringForColumn:@"houseNo"];
+            flistHolder.str_houseSide = [dataArr stringForColumn:@"houseSide"];
+            flistHolder.str_regionName = [dataArr stringForColumn:@"regionName"];
+            flistHolder.str_stateName = [dataArr stringForColumn:@"stateName"];
+            flistHolder.str_status = [dataArr stringForColumn:@"status"];
+            flistHolder.str_streetName = [dataArr stringForColumn:@"streetName"];
+            flistHolder.str_updatedAt = [dataArr stringForColumn:@"updateAt"];
+            flistHolder.str_parking_ids = [dataArr stringForColumn:@"parking_ids"];
+            
+        }
+        else
+        {
+            NSLog(@"error in favoriteTable retrieving data");
+        }
+        [mrParkDB close];
+    }
+    @catch (NSException *e)
+    {
+        NSLog(@"%@",e);
+    }
+}
+
+//
+//- (void)getAddressFromDatabase{
+//    if (!mrParkDB)
+//    {
+//        NSString*path = [[MPDBIntraction databaseInteractionManager] getDatabasePathFromName:DBname];
+//        mrParkDB = [[FMDatabase alloc] initWithPath:path];
+//    }
+//    
+//    NSString *query;
+//    
+//    query = [NSString stringWithFormat:@"Select * FROM addressTable where houseLat = \"%lf\" AND houseLong = \"%lf\"", destLatitude, destLatitude];
+//    
+//    @try
+//    {
+//        [mrParkDB open];
+//        if ([mrParkDB executeQuery:query])
+//        {
+//            FMResultSet *dataArr = [mrParkDB executeQuery:query];
+//            [dataArr next];
+//            addressHolder = [AddressDB new];
+//            
+//            addressHolder.str_addId = [NSNumber numberWithInt:[dataArr intForColumn:@"address_id"]];
+//            addressHolder.str_cityName = [dataArr stringForColumn:@"city_name"];
+//            addressHolder.str_createdId = [dataArr stringForColumn:@"created_at"];
+//            addressHolder.str_houseFullAddress = [dataArr stringForColumn:@"houseFullAddress"];
+//            addressHolder.str_houseLat = [dataArr stringForColumn:@"houseLat"];
+//            addressHolder.str_houseLong = [dataArr stringForColumn:@"houseLong"];
+//            addressHolder.str_houseNo = [dataArr stringForColumn:@"houseNo"];
+//            addressHolder.str_houseSide = [dataArr stringForColumn:@"houseSide"];
+//            addressHolder.str_regionName = [dataArr stringForColumn:@"regionName"];
+//            addressHolder.str_stateName = [dataArr stringForColumn:@"stateName"];
+//            addressHolder.str_status = [dataArr stringForColumn:@"status"];
+//            addressHolder.str_streetName = [dataArr stringForColumn:@"streetName"];
+//            addressHolder.str_updatedAt = [dataArr stringForColumn:@"updateAt"];
+//            addressHolder.str_parking_ids = [dataArr stringForColumn:@"parking_ids"];
+//            
+//        }
+//        else
+//        {
+//            NSLog(@"error in address table retrieving data");
+//        }
+//        [mrParkDB close];
+//    }
+//    @catch (NSException *e)
+//    {
+//        NSLog(@"%@",e);
+//    }
+//}
+
+- (void)getParkingFromDatabase:(int) parkingID{
+    if (!mrParkDB)
+    {
+        NSString*path = [[MPDBIntraction databaseInteractionManager] getDatabasePathFromName:DBname];
+        mrParkDB = [[FMDatabase alloc] initWithPath:path];
+    }
+    
+    NSString *query;
+    
+    query = [NSString stringWithFormat:@"Select * FROM parkingTable where id  = \"%d\"", parkingID];
+    
+    @try
+    {
+        [mrParkDB open];
+        if ([mrParkDB executeQuery:query])
+        {
+            FMResultSet *dataArr = [mrParkDB executeQuery:query];
+            [dataArr next];
+            parkingHolder = [Parking new];
+            parkingHolder.str_id = [NSNumber numberWithInt:[dataArr intForColumn:@"id"]];
+            parkingHolder.str_parking_type = [dataArr stringForColumn:@"parking_type"];
+            parkingHolder.str_parking_free_limit = [NSNumber numberWithInt:[dataArr intForColumn:@"parking_limit"]];
+            parkingHolder.str_parking_default_time_start = [dataArr stringForColumn:@"parking_default_time_start"];
+            parkingHolder.str_parking_default_time_end = [dataArr stringForColumn:@"parking_default_time_end"];
+            parkingHolder.str_parking_default_days = [dataArr stringForColumn:@"parking_default_days"];
+            parkingHolder.str_parking_restrict_time_start = [dataArr stringForColumn:@"parking_restrict_time_start"];
+            parkingHolder.str_parking_restrict_time_end = [dataArr stringForColumn:@"parking_restrict_time_end"];
+            parkingHolder.str_parking_sweeping_time_start = [dataArr stringForColumn:@"parking_sweeping_time_start"];
+            parkingHolder.str_parking_sweeping_time_end = [dataArr stringForColumn:@"parking_sweeping_time_end"];
+            parkingHolder.str_notes = [dataArr stringForColumn:@"notes"];
+            parkingHolder.str_update_at = [dataArr stringForColumn:@"update_at"];
+        }
+        else
+        {
+            NSLog(@"error in parking table retrieving data");
+        }
+        [mrParkDB close];
+    }
+    @catch (NSException *e)
+    {
+        NSLog(@"%@",e);
+    }
+}
+
+//- (void) getRegionFromDatabase{
+//    if (!mrParkDB)
+//    {
+//        NSString*path = [[MPDBIntraction databaseInteractionManager] getDatabasePathFromName:DBname];
+//        mrParkDB = [[FMDatabase alloc] initWithPath:path];
+//    }
+//
+//    NSString *query;
+//
+//    query = [NSString stringWithFormat:@"Select * FROM regionTable"];
+//
+//    @try
+//    {
+//        [mrParkDB open];
+//        if ([mrParkDB executeQuery:query])
+//        {
+//            FMResultSet *dataArr = [mrParkDB executeQuery:query];
+//
+//            while([dataArr next])
+//            {
+//                Region *data = [Region new];
+//                data.str_region_id = [NSNumber numberWithInt:[dataArr intForColumn:@"region_id"]];
+//                data.str_state_id = [NSNumber numberWithInt: [dataArr intForColumn:@"state_id"]];
+//                data.str_region_name = [dataArr stringForColumn:@"region_name"];
+//                [arr_regionFromDB addObject:data];
+//            }
+//        }
+//        else
+//        {
+//            NSLog(@"error in region table retrieving data");
+//        }
+//        [mrParkDB close];
+//    }
+//    @catch (NSException *e)
+//    {
+//        NSLog(@"%@",e);
+//    }
+//}
+
+
+
+
+
+-(void)deleteAddressWithEarliestActivity{
+    NSString *earlistName;
+    [mrParkDB open];
+    NSString *query=[NSString stringWithFormat:@"select * from addressUpdate order by last_activity"];
+    @try
+    {
+        if ([mrParkDB executeUpdate:query])
+        {
+            FMResultSet *dataArr = [mrParkDB executeQuery:query];
+            [dataArr next];
+            earlistName = [dataArr stringForColumn:@"region_name"];
+        }
+    }
+    @catch (NSException *e)
+    {
+        NSLog(@"%@",e);
+        [mrParkDB close];
+    }
+    query=[NSString stringWithFormat:@"delete from addressUpdate where region_name = \"%@\"", earlistName];
+    @try
+    {
+        if ([mrParkDB executeUpdate:query])
+        {
+            NSLog(@"successfully delete %@ in addressUpdate", earlistName);
+        }
+    }
+    @catch (NSException *e)
+    {
+        NSLog(@"%@",e);
+        [mrParkDB close];
+    }
+    query=[NSString stringWithFormat:@"delete from addressTable where regionName = \"%@\"", earlistName];
+    @try
+    {
+        if ([mrParkDB executeUpdate:query])
+        {
+            NSLog(@"successfully delete %@ in addressTable", earlistName);
+        }
+    }
+    @catch (NSException *e)
+    {
+        NSLog(@"%@",e);
+    }
+    @finally{
+    [mrParkDB close];
+    }
+}
+
+
+-(void)setLastActivityWithTime:(NSString*)time andRegionName: (NSString*) rName{
+    [mrParkDB open];
+    NSString *query=[NSString stringWithFormat:@"update addressUpdate set last_activity = \"%@\" where region_name = \"%@\"", time, rName];
+    @try
+    {
+        if ([mrParkDB executeUpdate:query])
+        {
+            NSLog(@"successfully update %@ last activity time", rName);
+        }
+    }
+    @catch (NSException *e)
+    {
+        NSLog(@"%@",e);
+    }
+    @finally{
+        [mrParkDB close];
+    }
+}
+
 
 @end

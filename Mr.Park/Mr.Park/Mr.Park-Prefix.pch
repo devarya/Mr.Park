@@ -11,6 +11,8 @@
 #import "MPConstant.h"
 #import "Reachability.h"
 #import "MPGlobalFunction.h"
+#import "MPGlobalData.h"
+#import "MPUtils.h"
 #import "MPRestIntraction.h"
 #import "MPBottomBarViewController.h"
 

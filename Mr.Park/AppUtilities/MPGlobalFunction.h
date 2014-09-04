@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "FMDatabase.h"
 
-FMDatabase *dBMrPark;
+FMDatabase *mrParkDB;
 
 @interface MPGlobalFunction : NSObject{
     

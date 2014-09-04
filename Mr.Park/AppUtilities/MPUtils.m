@@ -23,5 +23,4 @@
     return !(networkStatus == NotReachable);
 }
 
-
 @end

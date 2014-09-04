@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0A5EC79019B693ED0097E555 /* 7f_in-a-hurry-song.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0A5EC78F19B693ED0097E555 /* 7f_in-a-hurry-song.mp3 */; };
 		0A851EDF19B78850001AF7E1 /* MPUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A851EDE19B78850001AF7E1 /* MPUtils.m */; };
+		0A851EE219B7AF16001AF7E1 /* FavoriteList.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A851EE119B7AF16001AF7E1 /* FavoriteList.m */; };
 		0A89D7C719B63EB100ABCB79 /* MPGlobalData.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A89D7C619B63EB100ABCB79 /* MPGlobalData.m */; };
 		0A89D7CA19B6485500ABCB79 /* MPCustomAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A89D7C919B6485500ABCB79 /* MPCustomAnnotation.m */; };
 		0AEE7D3A19B64A7D005882D1 /* AddressDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AEE7D2D19B64A7D005882D1 /* AddressDB.m */; };
@@ -98,6 +99,8 @@
 		0A5EC78F19B693ED0097E555 /* 7f_in-a-hurry-song.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "7f_in-a-hurry-song.mp3"; sourceTree = "<group>"; };
 		0A851EDD19B78850001AF7E1 /* MPUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPUtils.h; sourceTree = "<group>"; };
 		0A851EDE19B78850001AF7E1 /* MPUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPUtils.m; sourceTree = "<group>"; };
+		0A851EE019B7AF16001AF7E1 /* FavoriteList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FavoriteList.h; sourceTree = "<group>"; };
+		0A851EE119B7AF16001AF7E1 /* FavoriteList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FavoriteList.m; sourceTree = "<group>"; };
 		0A89D7C519B63EB100ABCB79 /* MPGlobalData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPGlobalData.h; sourceTree = "<group>"; };
 		0A89D7C619B63EB100ABCB79 /* MPGlobalData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPGlobalData.m; sourceTree = "<group>"; };
 		0A89D7C819B6485500ABCB79 /* MPCustomAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPCustomAnnotation.h; sourceTree = "<group>"; };
@@ -404,6 +407,8 @@
 				0AEE7D3919B64A7D005882D1 /* UpdateTable.m */,
 				0AEE7D8E19B698FC005882D1 /* CoordinatePoint.h */,
 				0AEE7D8F19B698FC005882D1 /* CoordinatePoint.m */,
+				0A851EE019B7AF16001AF7E1 /* FavoriteList.h */,
+				0A851EE119B7AF16001AF7E1 /* FavoriteList.m */,
 			);
 			path = AppModel;
 			sourceTree = "<group>";
@@ -713,6 +718,7 @@
 				CE77F14619B59B27006EF077 /* FMDatabasePool.m in Sources */,
 				CE77F14719B59B27006EF077 /* FMDatabaseQueue.m in Sources */,
 				0AEE7D3C19B64A7D005882D1 /* HolidayTable.m in Sources */,
+				0A851EE219B7AF16001AF7E1 /* FavoriteList.m in Sources */,
 				CE86433F19B5F1A600B7D713 /* MPGlobalFunction.m in Sources */,
 				CE417F7F19B446D00080F25D /* ASIFormDataRequest.m in Sources */,
 				CE417F7E19B446D00080F25D /* ASIDownloadCache.m in Sources */,

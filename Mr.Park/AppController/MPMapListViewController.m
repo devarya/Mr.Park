@@ -58,19 +58,19 @@
     ary_ptmp = [NSMutableArray new];
     ary_ptmps = [NSMutableArray new];
     for(tempTable* tpObj in tempTableArray) {
-        if([tpObj.parkingID isEqual:@"Free parking"]) {
+        if([tpObj.parkingType isEqual:@"Free parking"]) {
             [ary_ptfp addObject:tpObj];
         }
-        if([tpObj.parkingID isEqual:@"Free parking structure"]) {
+        if([tpObj.parkingType isEqual:@"Free parking structure"]) {
             [ary_ptfps addObject:tpObj];
         }
-        if([tpObj.parkingID isEqual:@"Limited time parking"]) {
+        if([tpObj.parkingType isEqual:@"Limited time parking"]) {
             [ary_ptlt addObject:tpObj];
         }
-        if([tpObj.parkingID isEqual:@"Metered parking"]) {
+        if([tpObj.parkingType isEqual:@"Metered parking"]) {
             [ary_ptmp addObject:tpObj];
         }
-        if([tpObj.parkingID isEqual:@"Metered parking structure"]) {
+        if([tpObj.parkingType isEqual:@"Metered parking structure"]) {
             [ary_ptmps addObject:tpObj];
         }
     }
@@ -94,6 +94,7 @@
             }
         }
     }
+    [self checkCurrentRegion];
 }
 
 - (MKAnnotationView *) mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
@@ -156,12 +157,12 @@
             destStreetName = tpObj.streetName;
             destAddress = tpObj.fullAddress;
             destParkingType = tpObj.parkingType;
-            [self getParkingFromDatabase:[tpObj.parkingID intValue]];
+            [[MPDBIntraction databaseInteractionManager] getParkingFromDatabase:[tpObj.parkingID intValue]];
             NSString *startTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][1]];
             NSString *endTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][1]];
             destParkingTime = [NSString stringWithFormat:@"%@ - %@", startTime, endTime];
-            NSString *restrictStartTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_restrict_time_start componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_restrict_time_start componentsSeparatedByString:@":"][1]];
-            NSString *restrictEndTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_restrict_time_end componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_restrict_time_end componentsSeparatedByString:@":"][1]];
+            restrictStartTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_restrict_time_start componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_restrict_time_start componentsSeparatedByString:@":"][1]];
+            restrictEndTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_restrict_time_end componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_restrict_time_end componentsSeparatedByString:@":"][1]];
             destRestrictTime = [NSString stringWithFormat:@"%@ - %@", restrictStartTime, restrictEndTime];
             break;
         }
@@ -214,7 +215,7 @@
         destStreetName = tpObj.streetName;
         destAddress = tpObj.fullAddress;
         destParkingType = tpObj.parkingType;
-        [self getParkingFromDatabase:[tpObj.parkingID intValue]];
+        [[MPDBIntraction databaseInteractionManager] getParkingFromDatabase:[tpObj.parkingID intValue]];
         NSString *startTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][1]];
         NSString *endTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][1]];
         destParkingTime = [NSString stringWithFormat:@"%@ - %@", startTime, endTime];
@@ -585,7 +586,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
         }
         else {
             NSString *str_type = [tp.parkingID componentsSeparatedByString:@","][0];
-            [self getParkingFromDatabase:[str_type intValue]];
+            [[MPDBIntraction databaseInteractionManager] getParkingFromDatabase:[str_type intValue]];
             if([self isSwappingWithHour:currentHour andMinute:currentMinute andParkingType:str_type]) {
                 tp.parkingType = @"No Parking";
             }
@@ -627,7 +628,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 
 - (BOOL) isSwappingWithHour:(NSString *) currentHour andMinute:(NSString *) currentMinute andParkingType: (NSString *) parkingType {
     c_time =[currentHour integerValue]*60 + [currentMinute integerValue];
-    [self getParkingFromDatabase:[parkingType intValue]];
+    [[MPDBIntraction databaseInteractionManager] getParkingFromDatabase:[parkingType intValue]];
     
     s_start =[[parkingHolder.str_parking_sweeping_time_start componentsSeparatedByString:@":"][0] integerValue]*60 + [[parkingHolder.str_parking_sweeping_time_start componentsSeparatedByString:@":"][0] integerValue];
     
@@ -638,136 +639,6 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
         return false;
 }
 
-- (void)getAddressFromDatabase{
-    if (!mrParkDB)
-    {
-        NSString*path = [[MPDBIntraction databaseInteractionManager] getDatabasePathFromName:DBname];
-        mrParkDB = [[FMDatabase alloc] initWithPath:path];
-    }
-    
-    NSString *query;
-    
-    query = [NSString stringWithFormat:@"Select * FROM addressTable where houseLat = \"%lf\" AND houseLong = \"%lf\"", destLatitude, destLatitude];
-    
-    @try
-    {
-        [mrParkDB open];
-        if ([mrParkDB executeQuery:query])
-        {
-            FMResultSet *dataArr = [mrParkDB executeQuery:query];
-            [dataArr next];
-            addressHolder = [AddressDB new];
-            
-            addressHolder.str_addId = [NSNumber numberWithInt:[dataArr intForColumn:@"address_id"]];
-            addressHolder.str_cityName = [dataArr stringForColumn:@"city_name"];
-            addressHolder.str_createdId = [dataArr stringForColumn:@"created_at"];
-            addressHolder.str_houseFullAddress = [dataArr stringForColumn:@"houseFullAddress"];
-            addressHolder.str_houseLat = [dataArr stringForColumn:@"houseLat"];
-            addressHolder.str_houseLong = [dataArr stringForColumn:@"houseLong"];
-            addressHolder.str_houseNo = [dataArr stringForColumn:@"houseNo"];
-            addressHolder.str_houseSide = [dataArr stringForColumn:@"houseSide"];
-            addressHolder.str_regionName = [dataArr stringForColumn:@"regionName"];
-            addressHolder.str_stateName = [dataArr stringForColumn:@"stateName"];
-            addressHolder.str_status = [dataArr stringForColumn:@"status"];
-            addressHolder.str_streetName = [dataArr stringForColumn:@"streetName"];
-            addressHolder.str_updatedAt = [dataArr stringForColumn:@"updateAt"];
-            addressHolder.str_parking_ids = [dataArr stringForColumn:@"parking_ids"];
-            
-        }
-        else
-        {
-            NSLog(@"error in address table retrieving data");
-        }
-        [mrParkDB close];
-    }
-    @catch (NSException *e)
-    {
-        NSLog(@"%@",e);
-    }
-}
-
-- (void)getParkingFromDatabase:(int) parkingID{
-    if (!mrParkDB)
-    {
-        NSString*path = [[MPDBIntraction databaseInteractionManager] getDatabasePathFromName:DBname];
-        mrParkDB = [[FMDatabase alloc] initWithPath:path];
-    }
-    
-    NSString *query;
-    
-    query = [NSString stringWithFormat:@"Select * FROM parkingTable where id  = \"%d\"", parkingID];
-    
-    @try
-    {
-        [mrParkDB open];
-        if ([mrParkDB executeQuery:query])
-        {
-            FMResultSet *dataArr = [mrParkDB executeQuery:query];
-            [dataArr next];
-            parkingHolder = [Parking new];
-            parkingHolder.str_id = [NSNumber numberWithInt:[dataArr intForColumn:@"id"]];
-            parkingHolder.str_parking_type = [dataArr stringForColumn:@"parking_type"];
-            parkingHolder.str_parking_free_limit = [NSNumber numberWithInt:[dataArr intForColumn:@"parking_limit"]];
-            parkingHolder.str_parking_default_time_start = [dataArr stringForColumn:@"parking_default_time_start"];
-            parkingHolder.str_parking_default_time_end = [dataArr stringForColumn:@"parking_default_time_end"];
-            parkingHolder.str_parking_default_days = [dataArr stringForColumn:@"parking_default_days"];
-            parkingHolder.str_parking_restrict_time_start = [dataArr stringForColumn:@"parking_restrict_time_start"];
-            parkingHolder.str_parking_restrict_time_end = [dataArr stringForColumn:@"parking_restrict_time_end"];
-            parkingHolder.str_parking_sweeping_time_start = [dataArr stringForColumn:@"parking_sweeping_time_start"];
-            parkingHolder.str_parking_sweeping_time_end = [dataArr stringForColumn:@"parking_sweeping_time_end"];
-            parkingHolder.str_notes = [dataArr stringForColumn:@"notes"];
-            parkingHolder.str_update_at = [dataArr stringForColumn:@"update_at"];
-        }
-        else
-        {
-            NSLog(@"error in parking table retrieving data");
-        }
-        [mrParkDB close];
-    }
-    @catch (NSException *e)
-    {
-        NSLog(@"%@",e);
-    }
-}
-
-//- (void) getRegionFromDatabase{
-//    if (!mrParkDB)
-//    {
-//        NSString*path = [[MPDBIntraction databaseInteractionManager] getDatabasePathFromName:DBname];
-//        mrParkDB = [[FMDatabase alloc] initWithPath:path];
-//    }
-//
-//    NSString *query;
-//
-//    query = [NSString stringWithFormat:@"Select * FROM regionTable"];
-//
-//    @try
-//    {
-//        [mrParkDB open];
-//        if ([mrParkDB executeQuery:query])
-//        {
-//            FMResultSet *dataArr = [mrParkDB executeQuery:query];
-//
-//            while([dataArr next])
-//            {
-//                Region *data = [Region new];
-//                data.str_region_id = [NSNumber numberWithInt:[dataArr intForColumn:@"region_id"]];
-//                data.str_state_id = [NSNumber numberWithInt: [dataArr intForColumn:@"state_id"]];
-//                data.str_region_name = [dataArr stringForColumn:@"region_name"];
-//                [arr_regionFromDB addObject:data];
-//            }
-//        }
-//        else
-//        {
-//            NSLog(@"error in region table retrieving data");
-//        }
-//        [mrParkDB close];
-//    }
-//    @catch (NSException *e)
-//    {
-//        NSLog(@"%@",e);
-//    }
-//}
 
 - (BOOL) isHolidayWithCurrentDate:(NSString*) date{
     if (!mrParkDB)
@@ -808,7 +679,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     }
 }
 
--(NSString* )checkCurrentRegion{
+-(void)checkCurrentRegion{
     
     NSMutableString * region_arr = [NSMutableString new];
     NSMutableArray * point_arr = [NSMutableArray new];
@@ -819,48 +690,63 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     cp.lon = [NSString stringWithFormat:@"%f", currentCoordinate.longitude];
     [point_arr addObject:cp];
     cp = [CoordinatePoint new];
-    CLLocationCoordinate2D neCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude - mileInCoordinate, currentCoordinate.longitude + mileInCoordinate);
+    CLLocationCoordinate2D neCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude + MILEINCOORDINATE, currentCoordinate.longitude - MILEINCOORDINATE);
     cp.lat = [NSString stringWithFormat:@"%f", neCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", neCoord.longitude];
     [point_arr addObject:cp];
     cp = [CoordinatePoint new];
-    CLLocationCoordinate2D swCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude - mileInCoordinate, currentCoordinate.longitude + mileInCoordinate);
+    CLLocationCoordinate2D swCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude - MILEINCOORDINATE, currentCoordinate.longitude + MILEINCOORDINATE);
     cp.lat = [NSString stringWithFormat:@"%f", swCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", swCoord.longitude];
     [point_arr addObject:cp];
     cp = [CoordinatePoint new];
-    CLLocationCoordinate2D nwCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude + mileInCoordinate, currentCoordinate.longitude + mileInCoordinate);
+    CLLocationCoordinate2D nwCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude + MILEINCOORDINATE, currentCoordinate.longitude + MILEINCOORDINATE);
     cp.lat = [NSString stringWithFormat:@"%f", nwCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", nwCoord.longitude];
     [point_arr addObject:cp];
     cp = [CoordinatePoint new];
-    CLLocationCoordinate2D seCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude - mileInCoordinate, currentCoordinate.longitude - mileInCoordinate);
+    CLLocationCoordinate2D seCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude - MILEINCOORDINATE, currentCoordinate.longitude - MILEINCOORDINATE);
     cp.lat = [NSString stringWithFormat:@"%f", seCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", seCoord.longitude];
     [point_arr addObject:cp];
     cp = [CoordinatePoint new];
-    CLLocationCoordinate2D sCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude - mileInCoordinate, currentCoordinate.longitude);
+    CLLocationCoordinate2D sCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude - MILEINCOORDINATE, currentCoordinate.longitude);
     cp.lat = [NSString stringWithFormat:@"%f", sCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", sCoord.longitude];
     [point_arr addObject:cp];
     cp = [CoordinatePoint new];
-    CLLocationCoordinate2D eCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude, currentCoordinate.longitude - mileInCoordinate);
+    CLLocationCoordinate2D eCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude, currentCoordinate.longitude - MILEINCOORDINATE);
     cp.lat = [NSString stringWithFormat:@"%f", eCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", eCoord.longitude];
     [point_arr addObject:cp];
     cp = [CoordinatePoint new];
-    CLLocationCoordinate2D nCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude + mileInCoordinate, currentCoordinate.longitude);
+    CLLocationCoordinate2D nCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude + MILEINCOORDINATE, currentCoordinate.longitude);
     cp.lat = [NSString stringWithFormat:@"%f", nCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", nCoord.longitude];
     [point_arr addObject:cp];
     cp = [CoordinatePoint new];
-    CLLocationCoordinate2D wCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude, currentCoordinate.longitude + mileInCoordinate);
+    CLLocationCoordinate2D wCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude, currentCoordinate.longitude + MILEINCOORDINATE);
     cp.lat = [NSString stringWithFormat:@"%f", wCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", wCoord.longitude];
     [point_arr addObject:cp];
-    
     CLGeocoder *ceo;
     CLLocation *loc;
+    //dispatch_semaphore_t fd_sema = dispatch_semaphore_create(0);
+//    CoordinatePoint *point = [point_arr objectAtIndex:0];
+//    CLGeocoder *ceo = [[CLGeocoder alloc]init];
+//    CLLocation *loc =[[CLLocation alloc]initWithLatitude:[point.lat doubleValue] longitude:[point.lon doubleValue]];;
+//        [ceo reverseGeocodeLocation: loc completionHandler:
+//     ^(NSArray *placemarks, NSError *error) {
+//         CLPlacemark *pm = [placemarks objectAtIndex:0];
+//        // dispatch_semaphore_signal(fd_sema);
+//         if ([region_arr rangeOfString:pm.subAdministrativeArea].location == NSNotFound) {
+//             [region_arr appendString:pm.subAdministrativeArea];
+//             [region_arr appendString:@", "];
+//             
+//             NSLog(@"%@", region_arr);
+//         }
+//     }];
+    //dispatch_semaphore_wait(fd_sema, DISPATCH_TIME_FOREVER);
     for (CoordinatePoint *point in point_arr) {
         ceo = [[CLGeocoder alloc]init];
         loc = [[CLLocation alloc]initWithLatitude:[point.lat doubleValue] longitude:[point.lon doubleValue]];
@@ -868,20 +754,90 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
          ^(NSArray *placemarks, NSError *error) {
              CLPlacemark *pm = [placemarks objectAtIndex:0];
              if ([region_arr rangeOfString:pm.subAdministrativeArea].location == NSNotFound) {
+                 if([region_arr length] !=0 ){
+                     [region_arr appendString:@", "];
+                 }
                  [region_arr appendString:pm.subAdministrativeArea];
-                 [region_arr appendString:@", "];
-                 //NSLog(@"%@", pm.subAdministrativeArea);
                  NSLog(@"%@", region_arr);
              }
          }];
     }
-    
-    return region_arr;
+//
+//    dispatch_semaphore_signal(fd_sema);
+    [self checkLocalDBforReigon:region_arr];
 }
 
--(void)chechLocalDBforReigon: (NSString*) region_arr{
+
+
+-(void)checkLocalDBforReigon: (NSString*) region_arr{
+    NSString *newRe = @"Orange";
+    NSArray *region_part = [newRe componentsSeparatedByString:@", "];
+    NSString *query;
+    NSMutableArray *region_id_arr = [NSMutableArray new];
+
+    if (!mrParkDB)
+    {
+        NSString*path = [[MPDBIntraction databaseInteractionManager] getDatabasePathFromName:DBname];
+        mrParkDB = [[FMDatabase alloc] initWithPath:path];
+    }
     
+    [mrParkDB open];
     
+    for (int i=0; i<region_part.count; i++) {
+        
+        query = [NSString stringWithFormat:@"select * from regionTable where region_name = \"%@\"", region_part[i]];
+        @try
+        {
+            if ([mrParkDB executeQuery:query])
+            {
+                FMResultSet *dataArr = [mrParkDB executeQuery:query];
+                [dataArr next];
+                NSNumber *rID = [NSNumber numberWithInt:[dataArr intForColumn:@"region_id"]];
+                if ([rID isEqualToNumber:[NSNumber numberWithInt:0]]) {
+                    dispatch_async(dispatch_get_main_queue(), ^
+                                   {
+                                       [MPGlobalFunction showAlert:MESSAGE_REGION_NOT_FOUND];
+                                   });
+                }else{
+                    [region_id_arr addObject:rID];
+                    query = [NSString stringWithFormat:@"select count(*) from addressUpdate where region_id = \"%@\"", rID];
+                    @try
+                    {
+                        if ([mrParkDB executeQuery:query])
+                        {
+                            FMResultSet *dataArr = [mrParkDB executeQuery:query];
+                            [dataArr next];
+                            int count = [dataArr intForColumn:@"count(*)"];
+                            if (count == 0) {
+                                NSMutableDictionary * Info = [NSMutableDictionary new];
+                                [[MPRestIntraction sharedManager] requestAddressCall:Info andRegionID:rID adUpdateTime:@"2000-01-01 00:00:00"];
+                            }
+                        }
+                        else
+                        {
+                            NSLog(@"error in select addressUpdate where region_id = %@", rID);
+                        }
+                    }
+                    @catch (NSException *e)
+                    {
+                        NSLog(@"%@",e);
+                    }
+                }
+                
+            }
+            else
+            {
+                NSLog(@"error in check regionTable");
+            }
+            
+        }
+        @catch (NSException *e)
+        {
+            NSLog(@"%@",e);
+            [mrParkDB close];
+        }
+    }
+    [mrParkDB close];
     
 }
 

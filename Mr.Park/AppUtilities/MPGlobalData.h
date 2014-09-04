@@ -8,8 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import <MapKit/MapKit.h>
-#import "MPConstant.h"
-#import "MPGlobalFunction.h"
 #import "AddressDB.h"
 #import "AddressUpdateControl.h"
 #import "HolidayTable.h"
@@ -18,6 +16,10 @@
 #import "tempTable.h"
 #import "UpdateTable.h"
 #import "CoordinatePoint.h"
+#import "FavoriteList.h"
+
+BOOL isSeverResponse;
+
 
 NSString *weekday;
 NSString *currentYear;
@@ -50,13 +52,18 @@ NSString *destAddress;
 NSString *destParkingType;
 NSString *destParkingTime;
 NSString *destRestrictTime;
-FMDatabase *mrParkDB;
 AddressDB *addressHolder;
 Parking *parkingHolder;
 AddressUpdateControl *adUCHolder;
 Region *regionHolder;
 HolidayTable *holidayHolder;
 UpdateTable *updateHolder;
+FavoriteList *flistHolder;
+
+NSString *startTime;
+NSString *endTime;
+NSString *restrictStartTime;
+NSString *restrictEndTime;
 
 NSMutableArray *parkingArray;
 NSMutableArray *addressArray;
@@ -64,6 +71,8 @@ NSMutableArray *regionArray;
 NSMutableArray *holidayArray;
 NSMutableArray *addressControlArray;
 NSMutableArray *updateArray;
+NSMutableArray *favoriteListArray;
+NSMutableArray *tempTableArray;
 
 NSString *destStreetName;
 NSString *destAddress;
@@ -72,8 +81,6 @@ NSString *parkingTable_server_update_time;
 NSString *regionTable_server_update_time;
 NSString *addressTable_server_update_time;
 NSString *holidayTable_server_update_time;
-
-NSMutableArray *tempTableArray;
 
 @interface MPGlobalData : NSObject
 
