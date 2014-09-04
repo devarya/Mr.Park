@@ -13,6 +13,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    isSeverResponse = YES;
     [self getCurrentDateAndTime];
     [self checkUpdate];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
@@ -108,16 +109,20 @@
     {
         NSLog(@"%@",e);
     }
-    
-    
-    NSMutableDictionary * parkingInfo = [NSMutableDictionary new];
-    [[MPRestIntraction sharedManager] requestParkingCall:parkingInfo withUpdate:[updateDic valueForKey: @"parkingTable"]];
-    NSMutableDictionary * regionInfo = [NSMutableDictionary new];
-    [[MPRestIntraction sharedManager] requestRegionCall:regionInfo withUpdate:[updateDic valueForKey: @"regionTable"]];
-    NSMutableDictionary * holidayInfo = [NSMutableDictionary new];
-    [[MPRestIntraction sharedManager] requestHolidayCall:holidayInfo withUpdate:[updateDic valueForKey: @"holidayTable"]];
-    NSMutableDictionary *info= [NSMutableDictionary new];
-    [[MPRestIntraction sharedManager] requestAddressControlCall:info];
+    if ([MPUtils isConnectedToHost]) {
+        NSMutableDictionary * parkingInfo = [NSMutableDictionary new];
+        [[MPRestIntraction sharedManager] requestParkingCall:parkingInfo withUpdate:[updateDic valueForKey: @"parkingTable"]];
+        NSMutableDictionary * regionInfo = [NSMutableDictionary new];
+        [[MPRestIntraction sharedManager] requestRegionCall:regionInfo withUpdate:[updateDic valueForKey: @"regionTable"]];
+        NSMutableDictionary * holidayInfo = [NSMutableDictionary new];
+        [[MPRestIntraction sharedManager] requestHolidayCall:holidayInfo withUpdate:[updateDic valueForKey: @"holidayTable"]];
+        NSMutableDictionary *info= [NSMutableDictionary new];
+        [[MPRestIntraction sharedManager] requestAddressControlCall:info];
+    }
+    else{
+        
+        [MPGlobalFunction showAlert:MESSAGE_NET_NOT_AVAILABLE];
+    }
 }
 
 - (void) getCurrentDateAndTime {

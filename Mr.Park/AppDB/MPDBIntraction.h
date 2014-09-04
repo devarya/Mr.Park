@@ -15,5 +15,12 @@
 - (void)insertAddresList:(NSMutableArray *)arrholder;
 - (void)insertParkingList:(NSMutableArray *)arrholder;
 - (void)insertHolidayList:(NSMutableArray *)arrholder;
+- (void)insertfList:(FavoriteList *)dataHolder;
 - (NSString *) getDatabasePathFromName:(NSString *)dbName;
+
+- (void)getParkingFromDatabase:(int) parkingID;
+- (void)getFavoriteListFromDatabase;
+
+- (void)setLastActivityWithTime:(NSString*)time andRegionName: (NSString*) rName;
+
 @end
