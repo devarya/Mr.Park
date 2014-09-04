@@ -132,9 +132,10 @@
     destLongitude = destCoordinate.longitude;
     [self getDestInformationWithLatitude:[NSString stringWithFormat:@"%lf",destLatitude] Longitude:[NSString stringWithFormat:@"%lf",destLongitude]];
     [self.navigationController pushViewController:dvc animated:YES];
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main_Iphone" bundle:nil];
+    //UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main_Iphone" bundle:nil];
     UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"detailViewController"];
     [self presentViewController:vc animated:YES completion:NULL];
+    
 }
 
 - (NSString *) getParkingTypeLatitude: (NSString *)lat Longitude: (NSString *) lon {
@@ -152,6 +153,14 @@
         if([tpObj.lat isEqual: lat] && [tpObj.lon  isEqual: lon]) {
             destStreetName = tpObj.streetName;
             destAddress = tpObj.fullAddress;
+            destParkingType = tpObj.parkingType;
+            [self getParkingFromDatabase:[tpObj.parkingID intValue]];
+            NSString *startTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][1]];
+            NSString *endTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][1]];
+            destParkingTime = [NSString stringWithFormat:@"%@ - %@", startTime, endTime];
+            NSString *restrictStartTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_restrict_time_start componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_restrict_time_start componentsSeparatedByString:@":"][1]];
+            NSString *restrictEndTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_restrict_time_end componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_restrict_time_end componentsSeparatedByString:@":"][1]];
+            destRestrictTime = [NSString stringWithFormat:@"%@ - %@", restrictStartTime, restrictEndTime];
             break;
         }
     }
