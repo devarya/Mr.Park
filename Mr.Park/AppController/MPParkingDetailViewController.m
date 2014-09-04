@@ -108,69 +108,8 @@
     }
     else
         return nil;
-    
 }
-
-#pragma mark TABLE_VIEW DELEGATE AND DATASOURCE
-
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-    return 32;
-}
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    
-    return 2;
-}
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if(indexPath.row == 0) {
-        NSString *availableTime = destParkingTime;
-        NSString *parkingType = destParkingType;
-        
-        NSString *cellIdentifier = @"detailCell";
-        
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-        
-        UILabel *cellLabel;
-        cellLabel = (UILabel *)[cell viewWithTag:1];
-        cellLabel.text = availableTime;
-        cellLabel = (UILabel *)[cell viewWithTag:2];
-        cellLabel.text = parkingType;
-        return cell;
-    }
-    else {
-        NSString *availableTime = destRestrictTime;
-        NSString *parkingType = @"No parking";
-        
-        NSString *cellIdentifier = @"detailCell";
-        
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-        
-        UILabel *cellLabel;
-        cellLabel = (UILabel *)[cell viewWithTag:1];
-        cellLabel.text = availableTime;
-        cellLabel = (UILabel *)[cell viewWithTag:2];
-        cellLabel.text = parkingType;
-        return cell;
-    }
-}
-
-- (IBAction)navButton:(UIButton *)sender {
-    NSLog(@"%lf", destLatitude);
-    Class mapItemClass = [MKMapItem class];
-    if (mapItemClass && [mapItemClass respondsToSelector:@selector(openMapsWithItems:launchOptions:)]) {
-        // Create an MKMapItem to pass to the Maps app
-        //CLLocation *ad = [[CLLocation alloc] initWithLatitude:mvc.destCoordinate.latitude longitude:mvc.destCoordinate.longitude];
-        CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(destLatitude, destLongitude);
-        MKPlacemark *placemarks = [[MKPlacemark alloc] initWithCoordinate:coordinate
-                                                        addressDictionary:nil];
-        MKMapItem *mapItem = [[MKMapItem alloc] initWithPlacemark:placemarks];
-        [mapItem setName: @"terminate"];
-        // Pass the map item to the Maps app
-        [mapItem openInMapsWithLaunchOptions:nil];
-    }
-}
-
-- (IBAction)btn_Facebook:(id)sender {
+- (IBAction)btn_Facebook:(id)sender{
     if([SLComposeViewController isAvailableForServiceType:SLServiceTypeFacebook])
     {
         SLComposeViewController *slComposerSheet = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeFacebook];
@@ -280,8 +219,7 @@
         }
     }
 }
-
-- (IBAction)btn_Twitter:(id)sender {
+- (IBAction)btn_Twitter:(id)sender{
     if([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter])
     {
         SLComposeViewController *slComposerSheet = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
@@ -327,8 +265,7 @@
         [alertView show];
     }
 }
-
-- (IBAction)btn_Email:(id)sender {
+- (IBAction)btn_Email:(id)sender{
     // Email Subject
     NSString *emailTitle = @"Test Email";
     // Email Content
@@ -345,5 +282,80 @@
     // Present mail view controller on screen
     [self presentViewController:mc animated:YES completion:NULL];
 }
+
+#pragma mark TABLE_VIEW DELEGATE AND DATASOURCE
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    return 32;
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    
+    return 2;
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if(indexPath.row == 0) {
+        NSString *availableTime = destParkingTime;
+        NSString *parkingType = destParkingType;
+        
+        NSString *cellIdentifier = @"detailCell";
+        
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        
+        UILabel *cellLabel;
+        cellLabel = (UILabel *)[cell viewWithTag:1];
+        cellLabel.text = availableTime;
+        cellLabel = (UILabel *)[cell viewWithTag:2];
+        cellLabel.text = parkingType;
+        return cell;
+    }
+    else {
+        NSString *availableTime = destRestrictTime;
+        NSString *parkingType = @"No parking";
+        
+        NSString *cellIdentifier = @"detailCell";
+        
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        
+        UILabel *cellLabel;
+        cellLabel = (UILabel *)[cell viewWithTag:1];
+        cellLabel.text = availableTime;
+        cellLabel = (UILabel *)[cell viewWithTag:2];
+        cellLabel.text = parkingType;
+        return cell;
+    }
+}
+
+- (IBAction)navButton:(UIButton *)sender {
+    NSLog(@"%lf", destLatitude);
+    Class mapItemClass = [MKMapItem class];
+    if (mapItemClass && [mapItemClass respondsToSelector:@selector(openMapsWithItems:launchOptions:)]) {
+        // Create an MKMapItem to pass to the Maps app
+        //CLLocation *ad = [[CLLocation alloc] initWithLatitude:mvc.destCoordinate.latitude longitude:mvc.destCoordinate.longitude];
+        CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(destLatitude, destLongitude);
+        MKPlacemark *placemarks = [[MKPlacemark alloc] initWithCoordinate:coordinate
+                                                        addressDictionary:nil];
+        MKMapItem *mapItem = [[MKMapItem alloc] initWithPlacemark:placemarks];
+        [mapItem setName: @"terminate"];
+        // Pass the map item to the Maps app
+        [mapItem openInMapsWithLaunchOptions:nil];
+    }
+}
+
+
+- (IBAction)checkInButton:(UIButton *)sender {
+    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Parking Time Set Up" message:@"Alarm has added to the Notification." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:@"30 Minutes", @"1 Hour", @"2 Hours", @"4Hours", @"Overnight", @"Default", nil];
+    [alert show];
+}
+
+- (void)alertView: (UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if(buttonIndex == 1) {
+        NSLog(@"aaa");
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Thank you!" message:@"Your reminder is setted." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+    }
+}
+
+
 
 @end
