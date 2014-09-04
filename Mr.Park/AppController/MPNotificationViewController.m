@@ -80,6 +80,16 @@
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
 }
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+//    PCDataBaseData *dataHolder=(PCDataBaseData *)sender;
+//    if ([segue.identifier isEqualToString:@"MPAddTimer"])
+//    {
+//        PCAddNewReminderViewController *addReminder=(PCAddNewReminderViewController *)[segue destinationViewController];
+//        addReminder.isEditReminder=YES;
+//        addReminder.reminderHolder=dataHolder;
+//    }
+}
 #pragma mark - IB_ACTION
 
 -(IBAction)btnBackDidClicked:(id)sender{

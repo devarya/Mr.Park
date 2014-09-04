@@ -36,8 +36,16 @@ NSMutableArray *ary_ptfps;
 NSMutableArray *ary_ptlt;
 NSMutableArray *ary_ptmp;
 NSMutableArray *ary_ptmps;
+
 double destLatitude;
 double destLongitude;
+CLLocationCoordinate2D destCoordinate;
+
+double currentLatitude;
+double currentLongitude;
+CLLocationCoordinate2D currentCoordinate;
+CLLocation *currentLocation;
+
 NSString *parkingType;
 NSString *destStreetName;
 NSString *destAddress;
