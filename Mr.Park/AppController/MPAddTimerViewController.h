@@ -26,5 +26,6 @@
 - (IBAction)btn_showPickerView:(id)sender;
 - (IBAction)btn_overnight:(id)sender;
 - (IBAction)btn_remindMe:(id)sender;
+- (IBAction)btn_CancelReminder:(id)sender;
 
 @end

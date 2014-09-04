@@ -145,6 +145,33 @@
         [self dismissViewControllerAnimated:YES completion:nil];
     }
 }
+
+- (IBAction)btn_CancelReminder:(id)sender {
+    UIAlertView * cancelAlert = [[UIAlertView alloc] initWithTitle:@"Message"
+                                       message:@"Do you want cancel remind in."
+                                      delegate:self
+                             cancelButtonTitle:@"NO"
+                             otherButtonTitles: @"YES", nil];
+    cancelAlert.tag=1;
+    [cancelAlert show];
+}
+- (void)alertView:(UIAlertView *)alert clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(alert.tag == 1)
+    {
+        if(buttonIndex == alert.cancelButtonIndex)
+        {
+            
+        }
+        else
+        {
+//            [[UIApplication sharedApplication] cancelLocalNotification:NSNotification];
+//            [self dismissViewControllerAnimated:YES completion:nil];
+            [self.navigationController popViewControllerAnimated: YES];
+        }
+    }
+}
+
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [self->tv_remindNote resignFirstResponder];
