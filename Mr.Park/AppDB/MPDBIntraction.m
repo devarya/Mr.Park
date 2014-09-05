@@ -251,16 +251,16 @@ MPDBIntraction *databaseManager = nil;
         @finally{
             [mrParkDB close];
         }
-        if (i%2 == 0) {
-            latitude = [dataHolder.str_houseLat doubleValue]+arc4random()%100/10000.0;
-            longtitude = [dataHolder.str_houseLong doubleValue]+arc4random()%100/10000.0;
-        }
-        else{
-            latitude = [dataHolder.str_houseLat doubleValue]-arc4random()%100/10000.0;
-            longtitude = [dataHolder.str_houseLong doubleValue]-arc4random()%100/10000.0;
-        }
-        dataHolder.str_houseLat = [NSString stringWithFormat:@"%lf", latitude];
-        dataHolder.str_houseLong = [NSString stringWithFormat:@"%lf", longtitude];
+//        if (i%2 == 0) {
+//            latitude = [dataHolder.str_houseLat doubleValue]+arc4random()%100/10000.0;
+//            longtitude = [dataHolder.str_houseLong doubleValue]+arc4random()%100/10000.0;
+//        }
+//        else{
+//            latitude = [dataHolder.str_houseLat doubleValue]-arc4random()%100/10000.0;
+//            longtitude = [dataHolder.str_houseLong doubleValue]-arc4random()%100/10000.0;
+//        }
+//        dataHolder.str_houseLat = [NSString stringWithFormat:@"%lf", latitude];
+//        dataHolder.str_houseLong = [NSString stringWithFormat:@"%lf", longtitude];
         query=[NSString stringWithFormat:@"insert into addressTable(address_id, city_name, created_at, houseFullAddress, houseLat, houseLong, houseNo, houseSide, regionName, stateName, status, streetName, updateAt, parking_ids) values(\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\", \"%@\")",dataHolder.str_addId, dataHolder.str_cityName, dataHolder.str_createdId, dataHolder.str_houseFullAddress, dataHolder.str_houseLat, dataHolder.str_houseLong, dataHolder.str_houseNo, dataHolder.str_houseSide, dataHolder.str_regionName, dataHolder.str_stateName, dataHolder.str_status, dataHolder.str_streetName, dataHolder.str_updatedAt, dataHolder.str_parking_ids];
         @try
         {

@@ -82,12 +82,15 @@
 }
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation{
-    [self checkCurrentRegion];
+    
     currentCoordinate = [userLocation coordinate];
     MKCoordinateRegion zoomRegion = MKCoordinateRegionMakeWithDistance(currentCoordinate, 2000, 2000);
     [self.map_View setRegion:zoomRegion animated:NO];
     currentLocation = userLocation.location;
 	static dispatch_once_t centerMapFirstTime;
+    
+    
+    [self createTempDBWithRegionName:@"Orange"];
     
 	if ((userLocation.coordinate.latitude != 0.0) && (userLocation.coordinate.longitude != 0.0)) {
 		dispatch_once(&centerMapFirstTime, ^{
@@ -100,7 +103,7 @@
             }
         }
     }
-    
+    [self checkCurrentRegion];
 }
 
 - (MKAnnotationView *) mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
@@ -546,7 +549,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 
 
 
--(void)createTempDB{
+-(void)createTempDBWithRegionName: (NSString*)region_arr{
     NSString* newR = @"Orange";
     NSArray *region_part = [newR componentsSeparatedByString:@", "];
     NSString *format = @"regionName = \"";
@@ -559,6 +562,8 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
             [queryName appendString:rName];
             [queryName appendString:@"\""];
     }
+
+    
     if (!mrParkDB)
     {
         NSString*path = [[MPDBIntraction databaseInteractionManager] getDatabasePathFromName:DBname];
@@ -568,6 +573,10 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSString *query;
     
     query = [NSString stringWithFormat:@"Select * FROM addressTable where %@", queryName];
+    //query = [NSString stringWithFormat:@"Select * FROM addressTable where houseLat in 33.8 between 33.85];
+
+    //query = [NSString stringWithFormat:@"Select * FROM addressTable where address_id < 22"];
+    
     
     @try
     {
@@ -769,12 +778,15 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 //                   {
                        CLGeocoder *ceo;
                        CLLocation *loc;
+    region_arr = [NSMutableString new];
     for (CoordinatePoint *point in point_arr) {
         ceo = [[CLGeocoder alloc]init];
         loc = [[CLLocation alloc]initWithLatitude:[point.lat doubleValue] longitude:[point.lon doubleValue]];
         [ceo reverseGeocodeLocation: loc completionHandler:
          ^(NSArray *placemarks, NSError *error) {
              CLPlacemark *pm = [placemarks objectAtIndex:0];
+             dispatch_async(dispatch_get_main_queue(), ^
+                                              {
              if ([region_arr rangeOfString:pm.subAdministrativeArea].location == NSNotFound) {
                  if([region_arr length] !=0 ){
                      [region_arr appendString:@", "];
@@ -782,6 +794,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
                  [region_arr appendString:pm.subAdministrativeArea];
                  NSLog(@"%@", region_arr);
              }
+                                              });
          }];
     }
 //                   }
@@ -791,7 +804,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 //
 //    dispatch_semaphore_signal(fd_sema);
     [self checkLocalDBforReigon:region_arr];
-    [self createTempDBWithRegionName:region_arr];
+//    [self createTempDBWithRegionName:region_arr];
 }
 
 
