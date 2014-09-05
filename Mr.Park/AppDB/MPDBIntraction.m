@@ -201,8 +201,8 @@ MPDBIntraction *databaseManager = nil;
     AddressDB *dataHolder = [arrholder objectAtIndex:0];
     NSString* rName = dataHolder.str_regionName;
     
-    double latitude;
-    double longtitude;
+//    double latitude;
+//    double longtitude;
     int numberOfRegionStored;
     int rID;
     
@@ -348,6 +348,7 @@ MPDBIntraction *databaseManager = nil;
     {
         [mrParkDB close];
     }
+    
 }
 
 #pragma insert parking

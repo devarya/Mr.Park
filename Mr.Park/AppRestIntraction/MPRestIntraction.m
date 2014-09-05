@@ -296,6 +296,9 @@
 
 #pragma mark Address Table
 - (void)requestAddressCall:(NSMutableDictionary*) info andRegionID:(NSNumber*) region_id adUpdateTime: (NSString*) time{
+    if (![time isEqualToString:@"2000-01-01 00:00:00"]) {
+        isUpdate = YES;
+    }
     [info setValue:[NSString stringWithFormat:@"%@", region_id] forKey:@"region_id"];
     [info setValue:time forKey:@"update_at"];
     [info setValue:@"get_address" forKey:@"cmd"];

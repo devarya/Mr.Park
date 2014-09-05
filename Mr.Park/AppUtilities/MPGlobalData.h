@@ -19,6 +19,7 @@
 #import "FavoriteList.h"
 
 BOOL isSeverResponse;
+BOOL isUpdate;
 
 Reachability *hostReachable;
 NSString *weekday;

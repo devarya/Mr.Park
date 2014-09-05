@@ -84,25 +84,14 @@
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation{
     
     currentCoordinate = [userLocation coordinate];
-    MKCoordinateRegion zoomRegion = MKCoordinateRegionMakeWithDistance(currentCoordinate, 2000, 2000);
+    MKCoordinateRegion zoomRegion = MKCoordinateRegionMakeWithDistance(currentCoordinate, 1000, 1000);
     [self.map_View setRegion:zoomRegion animated:NO];
     currentLocation = userLocation.location;
-	static dispatch_once_t centerMapFirstTime;
     
     
-    [self createTempDBWithRegionName:@"Orange"];
     
-	if ((userLocation.coordinate.latitude != 0.0) && (userLocation.coordinate.longitude != 0.0)) {
-		dispatch_once(&centerMapFirstTime, ^{
-			[self.map_View setCenterCoordinate:userLocation.coordinate animated:NO];
-		});
-        for(tempTable* tpObj in tempTableArray) {
-            if(![tpObj.parkingType isEqual:@"No Parking"]){
-                MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:tpObj.streetName Subtitle:tpObj.fullAddress Location:CLLocationCoordinate2DMake([tpObj.lat doubleValue], [tpObj.lon doubleValue])];
-                [map_View addAnnotation:pin];
-            }
-        }
-    }
+    
+	
     [self checkCurrentRegion];
 }
 
@@ -550,8 +539,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 
 
 -(void)createTempDBWithRegionName: (NSString*)region_arr{
-    NSString* newR = @"Orange";
-    NSArray *region_part = [newR componentsSeparatedByString:@", "];
+    NSArray *region_part = [region_arr componentsSeparatedByString:@", "];
     NSString *format = @"regionName = \"";
     NSMutableString *queryName = [NSMutableString new];
     for(NSString * rName in region_part){
@@ -649,7 +637,19 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
             }
         }
     }
-
+    if ((currentCoordinate.latitude != 0.0) && (currentCoordinate.longitude != 0.0)) {
+        static dispatch_once_t centerMapFirstTime;
+		dispatch_once(&centerMapFirstTime, ^{
+			[self.map_View setCenterCoordinate:currentCoordinate animated:NO];
+		});
+        for(tempTable* tpObj in tempTableArray) {
+            if(![tpObj.parkingType isEqual:@"No Parking"]){
+                MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:tpObj.streetName Subtitle:tpObj.fullAddress Location:CLLocationCoordinate2DMake([tpObj.lat doubleValue], [tpObj.lon doubleValue])];
+                [map_View addAnnotation:pin];
+            }
+        }
+    }
+    [hud hide];
 }
 
 - (BOOL) isSwappingWithHour:(NSString *) currentHour andMinute:(NSString *) currentMinute andParkingType: (NSString *) parkingType {
@@ -786,32 +786,33 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
          ^(NSArray *placemarks, NSError *error) {
              CLPlacemark *pm = [placemarks objectAtIndex:0];
              dispatch_async(dispatch_get_main_queue(), ^
-                                              {
-             if ([region_arr rangeOfString:pm.subAdministrativeArea].location == NSNotFound) {
-                 if([region_arr length] !=0 ){
-                     [region_arr appendString:@", "];
-                 }
-                 [region_arr appendString:pm.subAdministrativeArea];
-                 NSLog(@"%@", region_arr);
-             }
-                                              });
+                            {
+                                if ([region_arr rangeOfString:pm.subAdministrativeArea].location == NSNotFound) {
+                                    if([region_arr length] !=0 ){
+                                        [region_arr appendString:@", "];
+                                    }
+                                    [region_arr appendString:pm.subAdministrativeArea];
+                                    NSLog(@"%@", region_arr);
+                                    [self checkLocalDBforReigon:region_arr];
+                                }
+                            });
          }];
     }
-//                   }
-//                   );
+    //                   }
+    //                   );
 
-    [hud hide];
+    
 //
 //    dispatch_semaphore_signal(fd_sema);
-    [self checkLocalDBforReigon:region_arr];
+   // [self checkLocalDBforReigon:region_arr];
 //    [self createTempDBWithRegionName:region_arr];
 }
 
 
 
 -(void)checkLocalDBforReigon: (NSString*) region_arr{
-    NSString *newRe = @"Orange";
-    NSArray *region_part = [newRe componentsSeparatedByString:@", "];
+    //NSString *newRe = @"Orange";
+    NSArray *region_part = [region_arr componentsSeparatedByString:@", "];
     NSString *query;
     NSMutableArray *region_id_arr = [NSMutableArray new];
 
@@ -852,6 +853,8 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
                                 NSMutableDictionary * Info = [NSMutableDictionary new];
                                 [[MPRestIntraction sharedManager] requestAddressCall:Info andRegionID:rID adUpdateTime:@"2000-01-01 00:00:00"];
                             }
+                            [self createTempDBWithRegionName:region_arr];
+                            
                         }
                         else
                         {
@@ -892,5 +895,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     }
     
 }
+
+
 
 @end

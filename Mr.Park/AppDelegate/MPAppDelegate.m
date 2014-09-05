@@ -13,6 +13,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    isUpdate = NO;
     isSeverResponse = YES;
     [self getCurrentDateAndTime];
     [self checkUpdate];
@@ -32,7 +33,6 @@
     rootViewCtr.view.frame = [UIScreen mainScreen].bounds;
     [rootViewCtr.view addSubview:launchView];
     self.window.rootViewController = rootViewCtr;
-    [self performSelector:@selector(startMP) withObject:nil afterDelay:3];
     
     UILocalNotification *locationNotification = [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
     if (locationNotification) {
@@ -121,10 +121,14 @@
         [[MPRestIntraction sharedManager] requestHolidayCall:holidayInfo withUpdate:[updateDic valueForKey: @"holidayTable"]];
         NSMutableDictionary *info= [NSMutableDictionary new];
         [[MPRestIntraction sharedManager] requestAddressControlCall:info];
+        [self performSelector:@selector(startMP) withObject:nil afterDelay:1];
+
     }
     else{
         
         [MPGlobalFunction showAlert:MESSAGE_NET_NOT_AVAILABLE];
+        
+        [self performSelector:@selector(startMP) withObject:nil afterDelay:1];
     }
 }
 
