@@ -158,8 +158,8 @@
             destAddress = tpObj.fullAddress;
             destParkingType = tpObj.parkingType;
             [[MPDBIntraction databaseInteractionManager] getParkingFromDatabase:[tpObj.parkingID intValue]];
-            NSString *startTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][1]];
-            NSString *endTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][1]];
+            startTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][1]];
+            endTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][1]];
             destParkingTime = [NSString stringWithFormat:@"%@ - %@", startTime, endTime];
             restrictStartTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_restrict_time_start componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_restrict_time_start componentsSeparatedByString:@":"][1]];
             restrictEndTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_restrict_time_end componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_restrict_time_end componentsSeparatedByString:@":"][1]];
@@ -542,7 +542,18 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 
 
 -(void)createTempDB{
-
+    NSString* newR = @"Orange";
+    NSArray *region_part = [newR componentsSeparatedByString:@", "];
+    NSString *format = @"regionName = \"";
+    NSMutableString *queryName = [NSMutableString new];
+    for(NSString * rName in region_part){
+        if ([queryName length] !=0) {
+            [queryName appendString:@" and "];
+        }
+            [queryName appendString:format];
+            [queryName appendString:rName];
+            [queryName appendString:@"\""];
+    }
     if (!mrParkDB)
     {
         NSString*path = [[MPDBIntraction databaseInteractionManager] getDatabasePathFromName:DBname];

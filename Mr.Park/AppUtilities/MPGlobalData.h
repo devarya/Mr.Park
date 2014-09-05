@@ -20,7 +20,7 @@
 
 BOOL isSeverResponse;
 
-
+Rechability *histReachable;
 NSString *weekday;
 NSString *currentYear;
 NSString *currentMonth;
