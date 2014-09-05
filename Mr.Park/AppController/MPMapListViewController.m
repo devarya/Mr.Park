@@ -839,6 +839,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
                                    {
                                        [MPGlobalFunction showAlert:MESSAGE_REGION_NOT_FOUND];
                                    });
+                    [hud hide];
                 }else{
                     [region_id_arr addObject:rID];
                     query = [NSString stringWithFormat:@"select count(*) from addressUpdate where region_id = \"%@\"", rID];
