@@ -27,11 +27,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    hud = [AryaHUD new];
+    [self.view addSubview:hud];
     
     self.map_View.delegate = self;
     self->searchBar.delegate = self;
     
-    [self createTempDB];
     MPBottomBarViewController *vc_bottomBar = [[MPBottomBarViewController alloc] initWithNibName:@"MPBottomBarViewController" bundle:nil];
     
     if (IS_IPHONE_5) {
@@ -74,9 +75,14 @@
             [ary_ptmps addObject:tpObj];
         }
     }
+    [[NSNotificationCenter defaultCenter]addObserver:self
+                                            selector:@selector(reachabilityHomeStatusChange:)
+                                                name:kReachabilityChangedNotification
+                                              object:nil];
 }
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation{
+    [self checkCurrentRegion];
     currentCoordinate = [userLocation coordinate];
     MKCoordinateRegion zoomRegion = MKCoordinateRegionMakeWithDistance(currentCoordinate, 2000, 2000);
     [self.map_View setRegion:zoomRegion animated:NO];
@@ -94,7 +100,7 @@
             }
         }
     }
-    [self checkCurrentRegion];
+    
 }
 
 - (MKAnnotationView *) mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
@@ -168,11 +174,10 @@
         }
     }
 }
--(void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
-    self->searchBar.text = @"";
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    [self->searchBar resignFirstResponder];    
 }
 -(void) searchBarSearchButtonClicked:(UISearchBar *)searchBar{
-    
 
     [self->searchBar resignFirstResponder];
     
@@ -562,7 +567,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     NSString *query;
     
-    query = [NSString stringWithFormat:@"Select * FROM addressTable where address_id < 21"];
+    query = [NSString stringWithFormat:@"Select * FROM addressTable where %@", queryName];
     
     @try
     {
@@ -741,8 +746,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     cp.lat = [NSString stringWithFormat:@"%f", wCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", wCoord.longitude];
     [point_arr addObject:cp];
-    CLGeocoder *ceo;
-    CLLocation *loc;
+    
     //dispatch_semaphore_t fd_sema = dispatch_semaphore_create(0);
 //    CoordinatePoint *point = [point_arr objectAtIndex:0];
 //    CLGeocoder *ceo = [[CLGeocoder alloc]init];
@@ -759,6 +763,12 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 //         }
 //     }];
     //dispatch_semaphore_wait(fd_sema, DISPATCH_TIME_FOREVER);
+    [hud show];
+    [self.view bringSubviewToFront:hud];
+//    dispatch_sync(dispatch_get_main_queue(), ^
+//                   {
+                       CLGeocoder *ceo;
+                       CLLocation *loc;
     for (CoordinatePoint *point in point_arr) {
         ceo = [[CLGeocoder alloc]init];
         loc = [[CLLocation alloc]initWithLatitude:[point.lat doubleValue] longitude:[point.lon doubleValue]];
@@ -774,9 +784,14 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
              }
          }];
     }
+//                   }
+//                   );
+
+    [hud hide];
 //
 //    dispatch_semaphore_signal(fd_sema);
     [self checkLocalDBforReigon:region_arr];
+    [self createTempDBWithRegionName:region_arr];
 }
 
 
@@ -850,6 +865,18 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
         }
     }
     [mrParkDB close];
+    
+}
+
+-(void)reachabilityHomeStatusChange:(NSNotification*)notification{
+    
+    if([MPGlobalFunction isConnectedToInternet])
+    {
+        
+        
+    }else{
+        
+    }
     
 }
 

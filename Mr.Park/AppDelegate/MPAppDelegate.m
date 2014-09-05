@@ -39,6 +39,9 @@
         // Set icon badge number to zero
         application.applicationIconBadgeNumber = 0;
     }
+    
+    hostReachable = [Reachability reachabilityWithHostName: @"www.google.com"] ;
+    [hostReachable startNotifier];
     return YES;
 }
 -(void)startMP{
@@ -109,7 +112,7 @@
     {
         NSLog(@"%@",e);
     }
-    if ([MPUtils isConnectedToHost]) {
+    if ([MPUtils isConnectedToInternet]) {
         NSMutableDictionary * parkingInfo = [NSMutableDictionary new];
         [[MPRestIntraction sharedManager] requestParkingCall:parkingInfo withUpdate:[updateDic valueForKey: @"parkingTable"]];
         NSMutableDictionary * regionInfo = [NSMutableDictionary new];
