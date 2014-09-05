@@ -20,6 +20,7 @@
 
 @interface MPMapListViewController : MPBottomBarViewController<UITableViewDataSource,UITableViewDelegate, UISearchBarDelegate, MKMapViewDelegate>{
     
+    AryaHUD *hud;
     IBOutlet UIView *containerView;
     IBOutlet UIView *infoView;
     
