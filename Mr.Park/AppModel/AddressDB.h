@@ -9,12 +9,12 @@
 #import <Foundation/Foundation.h>
 
 @interface AddressDB : NSObject
-@property(nonatomic,strong)NSNumber *str_addId;
+@property(nonatomic,strong)NSNumber *int_addId;
 @property(nonatomic,strong)NSString *str_cityName;
 @property(nonatomic,strong)NSString *str_createdId;
 @property(nonatomic,strong)NSString *str_houseFullAddress ;
-@property(nonatomic,strong)NSString *str_houseLat;
-@property(nonatomic,strong)NSString *str_houseLong;
+@property(nonatomic,strong)NSNumber *double_houseLat;
+@property(nonatomic,strong)NSNumber *double_houseLong;
 @property(nonatomic,strong)NSString *str_houseNo;
 @property(nonatomic,strong)NSString *str_houseSide;
 @property(nonatomic,strong)NSString *str_regionName;
@@ -22,7 +22,7 @@
 @property(nonatomic,strong)NSString *str_status;
 @property(nonatomic,strong)NSString *str_streetName;
 @property(nonatomic,strong)NSString *str_updatedAt;
-@property(nonatomic,strong)NSString *str_parking_ids;
+@property(nonatomic,strong)NSNumber *int_parking_ids;
 
 @end
 

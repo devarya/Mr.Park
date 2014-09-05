@@ -10,9 +10,9 @@
 
 @interface tempTable : NSObject
 
-@property (strong, nonatomic) NSString *lat;
-@property (strong, nonatomic) NSString *lon;
-@property (strong, nonatomic) NSString *parkingID;
+@property (strong, nonatomic) NSNumber *lat;
+@property (strong, nonatomic) NSNumber *lon;
+@property (strong, nonatomic) NSNumber *parkingID;
 @property (strong, nonatomic) NSString *addressID;
 @property (strong, nonatomic) NSString *streetName;
 @property (strong, nonatomic) NSString *cityName;

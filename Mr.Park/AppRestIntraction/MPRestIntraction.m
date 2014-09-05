@@ -351,22 +351,22 @@
         for (int i=0; i<dataArray.count; i++) {
             NSMutableArray *dataArr=((NSMutableArray*)[dataArray objectForKey:[NSString stringWithFormat:@"%d", i]]);
             AddressDB *data = [AddressDB new];
-            data.str_addId = [dataArr valueForKey:@"address_id"];
+            data.int_addId = [dataArr valueForKey:@"address_id"];
             data.str_cityName = [dataArr valueForKey:@"city_name"];
             data.str_createdId = [dataArr valueForKey:@"created_at"];
             data.str_houseFullAddress = [dataArr valueForKey:@"house_full_address"];
-            data.str_houseLat = [dataArr valueForKey:@"house_latitude"];
-            data.str_houseLong = [dataArr valueForKey:@"house_longitude"];
+            NSString* latString = [dataArr valueForKey:@"house_latitude"];
+            data.double_houseLat = [NSNumber numberWithDouble:[latString doubleValue]];
+            NSString* longString = [dataArr valueForKey:@"house_longitude"];
+            data.double_houseLong = [NSNumber numberWithDouble:[longString doubleValue]];
             data.str_houseNo = [dataArr valueForKey:@"house_no"];
             data.str_houseSide = [dataArr valueForKey:@"house_side"];
             data.str_regionName = [dataArr valueForKey:@"region_name"];
             data.str_stateName = [dataArr valueForKey:@"state_name"];
             data.str_status = [dataArr valueForKey:@"status"];
             data.str_streetName = [dataArr valueForKey:@"street_name"];
-            data.str_updatedAt = [dataArr valueForKey:@"updated_at"];
-            NSString * parkingIDS = [dataArr valueForKey:@"parking_ids"];
-            NSCharacterSet * doNotWant = [NSCharacterSet characterSetWithCharactersInString:@"\"[]"];
-            data.str_parking_ids = [[parkingIDS componentsSeparatedByCharactersInSet:doNotWant] componentsJoinedByString:@""];
+            NSString * parkingIDS = [[dataArr valueForKey:@"parking_ids"] componentsSeparatedByString:@","][0];
+            data.int_parking_ids = [NSNumber numberWithInt:[parkingIDS intValue]];
             [addressArray addObject:data];
         }
     }

@@ -20,6 +20,7 @@
 
 BOOL isSeverResponse;
 BOOL isUpdate;
+BOOL isSupport;
 
 Reachability *hostReachable;
 NSString *weekday;

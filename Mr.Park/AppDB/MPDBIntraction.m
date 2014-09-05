@@ -201,8 +201,6 @@ MPDBIntraction *databaseManager = nil;
     AddressDB *dataHolder = [arrholder objectAtIndex:0];
     NSString* rName = dataHolder.str_regionName;
     
-//    double latitude;
-//    double longtitude;
     int numberOfRegionStored;
     int rID;
     
@@ -235,13 +233,13 @@ MPDBIntraction *databaseManager = nil;
     for (int i=0; i<arrholder.count-1;i++)
     {
         AddressDB *dataHolder=[arrholder objectAtIndex:i];
-        NSString *query=[NSString stringWithFormat:@"delete from addressTable where address_id = %@", dataHolder.str_addId];
+        NSString *query=[NSString stringWithFormat:@"delete from addressTable where address_id = %@", dataHolder.int_addId];
         @try
         {
             [mrParkDB open];
             if ([mrParkDB executeUpdate:query])
             {
-                NSLog(@"successfully delete one row with id = %@ in address table", dataHolder.str_addId);
+                NSLog(@"successfully delete one row with id = %@ in address table", dataHolder.int_addId);
             }
         }
         @catch (NSException *e)
@@ -252,16 +250,16 @@ MPDBIntraction *databaseManager = nil;
             [mrParkDB close];
         }
 //        if (i%2 == 0) {
-//            latitude = [dataHolder.str_houseLat doubleValue]+arc4random()%100/10000.0;
-//            longtitude = [dataHolder.str_houseLong doubleValue]+arc4random()%100/10000.0;
+//        latitude = [dataHolder.double_houseLat doubleValue];
+//        longtitude = [dataHolder.double_houseLong doubleValue];
 //        }
 //        else{
 //            latitude = [dataHolder.str_houseLat doubleValue]-arc4random()%100/10000.0;
 //            longtitude = [dataHolder.str_houseLong doubleValue]-arc4random()%100/10000.0;
-//        }
-//        dataHolder.str_houseLat = [NSString stringWithFormat:@"%lf", latitude];
-//        dataHolder.str_houseLong = [NSString stringWithFormat:@"%lf", longtitude];
-        query=[NSString stringWithFormat:@"insert into addressTable(address_id, city_name, created_at, houseFullAddress, houseLat, houseLong, houseNo, houseSide, regionName, stateName, status, streetName, updateAt, parking_ids) values(\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\", \"%@\")",dataHolder.str_addId, dataHolder.str_cityName, dataHolder.str_createdId, dataHolder.str_houseFullAddress, dataHolder.str_houseLat, dataHolder.str_houseLong, dataHolder.str_houseNo, dataHolder.str_houseSide, dataHolder.str_regionName, dataHolder.str_stateName, dataHolder.str_status, dataHolder.str_streetName, dataHolder.str_updatedAt, dataHolder.str_parking_ids];
+////        }
+//        dataHolder.double_houseLat = [NSString stringWithFormat:@"%lf", latitude];
+//        dataHolder.double_houseLong = [NSString stringWithFormat:@"%lf", longtitude];
+        query=[NSString stringWithFormat:@"insert into addressTable(address_id, city_name, created_at, houseFullAddress, houseLat, houseLong, houseNo, houseSide, regionName, stateName, status, streetName, parking_id) values(\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\", \"%@\")",dataHolder.int_addId, dataHolder.str_cityName, dataHolder.str_createdId, dataHolder.str_houseFullAddress, dataHolder.double_houseLat, dataHolder.double_houseLong, dataHolder.str_houseNo, dataHolder.str_houseSide, dataHolder.str_regionName, dataHolder.str_stateName, dataHolder.str_status, dataHolder.str_streetName, dataHolder.int_parking_ids];
         @try
         {
             [mrParkDB open];
@@ -277,23 +275,6 @@ MPDBIntraction *databaseManager = nil;
         @finally{
             [mrParkDB close];
         }
-    }
-    query=[NSString stringWithFormat:@"update addressTable set updateAt = \"%@\"", addressTable_server_update_time];
-    @try
-    {
-        [mrParkDB open];
-        if ([mrParkDB executeUpdate:query])
-        {
-            NSLog(@"successfully update the server_update_time address table");
-        }
-    }
-    @catch (NSException *e)
-    {
-        NSLog(@"%@",e);
-    }
-    @finally
-    {
-        [mrParkDB close];
     }
     query=[NSString stringWithFormat:@"select region_id from regionTable where region_name = \"%@\"", rName];
     @try

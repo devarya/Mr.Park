@@ -13,6 +13,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    isSupport = YES;
     isUpdate = NO;
     isSeverResponse = YES;
     [self getCurrentDateAndTime];

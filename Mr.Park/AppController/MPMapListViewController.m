@@ -104,19 +104,19 @@
         newAnnotation.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
         newAnnotation.leftCalloutAccessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"twitter"]];
         //newAnnotation.image = [UIImage imageNamed:@"fp"];
-        if([[self getParkingTypeLatitude:[NSString stringWithFormat:@"%lf",temp.latitude] Longitude:[NSString stringWithFormat:@"%lf",temp.longitude]]  isEqual: @"Free parking"]) {
+        if([[self getParkingTypeLatitude:temp.latitude Longitude:temp.longitude]  isEqual: @"Free parking"]) {
             newAnnotation.image = [UIImage imageNamed:@"fp"];
         }
-        else if([[self getParkingTypeLatitude:[NSString stringWithFormat:@"%lf",temp.latitude] Longitude:[NSString stringWithFormat:@"%lf",temp.longitude]]  isEqual: @"Free parking structure"]) {
+        else if([[self getParkingTypeLatitude:temp.latitude Longitude:temp.longitude]  isEqual: @"Free parking structure"]) {
             newAnnotation.image = [UIImage imageNamed:@"fps"];
         }
-        else if([[self getParkingTypeLatitude:[NSString stringWithFormat:@"%lf",temp.latitude] Longitude:[NSString stringWithFormat:@"%lf",temp.longitude]]  isEqual: @"Limited time parking"]) {
+        else if([[self getParkingTypeLatitude:temp.latitude Longitude:temp.longitude]  isEqual: @"Limited time parking"]) {
             newAnnotation.image = [UIImage imageNamed:@"lt"];
         }
-        else if([[self getParkingTypeLatitude:[NSString stringWithFormat:@"%lf",temp.latitude] Longitude:[NSString stringWithFormat:@"%lf",temp.longitude]]  isEqual: @"Metered parking"]) {
+        else if([[self getParkingTypeLatitude:temp.latitude Longitude:temp.longitude]  isEqual: @"Metered parking"]) {
             newAnnotation.image = [UIImage imageNamed:@"mp"];
         }
-        else if([[self getParkingTypeLatitude:[NSString stringWithFormat:@"%lf",temp.latitude] Longitude:[NSString stringWithFormat:@"%lf",temp.longitude]]  isEqual: @"Metered parking structure"]) {
+        else if([[self getParkingTypeLatitude:temp.latitude Longitude:temp.longitude]  isEqual: @"Metered parking structure"]) {
             newAnnotation.image = [UIImage imageNamed:@"mps"];
         }
         return newAnnotation;
@@ -139,9 +139,9 @@
     
 }
 
-- (NSString *) getParkingTypeLatitude: (NSString *)lat Longitude: (NSString *) lon {
+- (NSString *) getParkingTypeLatitude: (double)lat Longitude: (double) lon {
     for(tempTable* tpObj in tempTableArray) {
-        if([tpObj.lat isEqual: lat] && [tpObj.lon  isEqual: lon]) {
+        if([tpObj.lat doubleValue] == lat && [tpObj.lon doubleValue] == lon) {
             parkingType = tpObj.parkingType;
             break;
         }
@@ -363,7 +363,7 @@
         tempTable *temp =[ary_ptfp objectAtIndex:indexPath.row];
         NSString *streetName = temp.streetName;
         NSString *address = temp.fullAddress;
-        NSString *distance = temp.lat;
+        NSString *distance = [NSString stringWithFormat:@"%@",temp.lat];
         if (indexPath.row % 2 == 0) {
             identifier = @"cellDark";
         }
@@ -388,7 +388,7 @@
         tempTable *temp =[ary_ptfps objectAtIndex:indexPath.row];
         NSString *streetName = temp.streetName;
         NSString *address = temp.fullAddress;
-        NSString *distance = temp.lat;
+        NSString *distance = [NSString stringWithFormat:@"%@",temp.lat];
         if (indexPath.row % 2 == 0) {
             identifier = @"cellDark";
         }
@@ -413,7 +413,7 @@
         tempTable *temp =[ary_ptlt objectAtIndex:indexPath.row];
         NSString *streetName = temp.streetName;
         NSString *address = temp.fullAddress;
-        NSString *distance = temp.lat;
+        NSString *distance = [NSString stringWithFormat:@"%@",temp.lat];
         if (indexPath.row % 2 == 0) {
             identifier = @"cellDark";
         }
@@ -438,7 +438,7 @@
         tempTable *temp =[ary_ptmp objectAtIndex:indexPath.row];
         NSString *streetName = temp.streetName;
         NSString *address = temp.fullAddress;
-        NSString *distance = temp.lat;
+        NSString *distance = [NSString stringWithFormat:@"%@",temp.lat];
         if (indexPath.row % 2 == 0) {
             identifier = @"cellDark";
         }
@@ -463,7 +463,7 @@
         tempTable *temp =[ary_ptmps objectAtIndex:indexPath.row];
         NSString *streetName = temp.streetName;
         NSString *address = temp.fullAddress;
-        NSString *distance = temp.lat;
+        NSString *distance = [NSString stringWithFormat:@"%@",temp.lat];
         if (indexPath.row % 2 == 0) {
             identifier = @"cellDark";
         }
@@ -488,7 +488,7 @@
         tempTable *temp =[tempTableArray objectAtIndex:indexPath.row];
         NSString *streetName = temp.streetName;
         NSString *address = temp.fullAddress;
-        NSString *distance = temp.lat;
+        NSString *distance = [NSString stringWithFormat:@"%@",temp.lat];
         if (indexPath.row % 2 == 0) {
             identifier = @"cellDark";
         }
@@ -576,9 +576,10 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
             while([dataArr next]){
                 tempTable * tempObj = [tempTable new];
                 tempObj.addressID = [dataArr stringForColumn:@"address_id"];
-                tempObj.lat = [dataArr stringForColumn:@"houseLat"];
-                tempObj.lon = [dataArr stringForColumn:@"houseLong"];
-                tempObj.parkingID = [dataArr stringForColumn:@"parking_ids"];
+                tempObj.lat = [NSNumber numberWithDouble:[[dataArr stringForColumn:@"houseLat"] doubleValue]];
+                NSLog(@"%f", [tempObj.lat doubleValue]);
+                tempObj.lon = [NSNumber numberWithDouble:[[dataArr stringForColumn:@"houseLong"] doubleValue]];
+                tempObj.parkingID = [NSNumber numberWithInt:[dataArr intForColumn:@"parking_id"]];
                 tempObj.fullAddress  = [dataArr stringForColumn:@"houseFullAddress"];
                 tempObj.streetName = [dataArr stringForColumn:@"streetName"];
                 [tempTableArray addObject:tempObj];
@@ -599,9 +600,8 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
             tp.parkingType = @"Free parking";
         }
         else {
-            NSString *str_type = [tp.parkingID componentsSeparatedByString:@","][0];
-            [[MPDBIntraction databaseInteractionManager] getParkingFromDatabase:[str_type intValue]];
-            if([self isSwappingWithHour:currentHour andMinute:currentMinute andParkingType:str_type]) {
+            [[MPDBIntraction databaseInteractionManager] getParkingFromDatabase:[tp.parkingID intValue]];
+            if([self isSwappingWithHour:currentHour andMinute:currentMinute andParkingType:[tp.parkingID intValue]]) {
                 tp.parkingType = @"No Parking";
             }
             else {
@@ -631,8 +631,11 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
                         }
                     }
                     else {
-                        tp.parkingType = @"Free parking";
+                        tp.parkingType = parkingHolder.str_parking_type;
                     }
+                }
+                else{
+                    tp.parkingType = @"Free parking";
                 }
             }
         }
@@ -652,9 +655,9 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     [hud hide];
 }
 
-- (BOOL) isSwappingWithHour:(NSString *) currentHour andMinute:(NSString *) currentMinute andParkingType: (NSString *) parkingType {
+- (BOOL) isSwappingWithHour:(NSString *) currentHour andMinute:(NSString *) currentMinute andParkingType: (int) parkingType {
     c_time =[currentHour integerValue]*60 + [currentMinute integerValue];
-    [[MPDBIntraction databaseInteractionManager] getParkingFromDatabase:[parkingType intValue]];
+    [[MPDBIntraction databaseInteractionManager] getParkingFromDatabase:parkingType];
     
     s_start =[[parkingHolder.str_parking_sweeping_time_start componentsSeparatedByString:@":"][0] integerValue]*60 + [[parkingHolder.str_parking_sweeping_time_start componentsSeparatedByString:@":"][0] integerValue];
     
@@ -835,10 +838,13 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
                 [dataArr next];
                 NSNumber *rID = [NSNumber numberWithInt:[dataArr intForColumn:@"region_id"]];
                 if ([rID isEqualToNumber:[NSNumber numberWithInt:0]]) {
+                    if (isSupport == YES) {
+                        isSupport = NO;
                     dispatch_async(dispatch_get_main_queue(), ^
                                    {
                                        [MPGlobalFunction showAlert:MESSAGE_REGION_NOT_FOUND];
                                    });
+                    }
                     [hud hide];
                 }else{
                     [region_id_arr addObject:rID];
