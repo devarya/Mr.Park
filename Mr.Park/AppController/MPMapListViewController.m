@@ -53,28 +53,6 @@
     NSString * dayString = [[dateFormatter stringFromDate:now] capitalizedString];
     weekday = dayString;
     
-    ary_ptfp = [NSMutableArray new];
-    ary_ptfps = [NSMutableArray new];
-    ary_ptlt = [NSMutableArray new];
-    ary_ptmp = [NSMutableArray new];
-    ary_ptmps = [NSMutableArray new];
-    for(tempTable* tpObj in tempTableArray) {
-        if([tpObj.parkingType isEqual:@"Free parking"]) {
-            [ary_ptfp addObject:tpObj];
-        }
-        if([tpObj.parkingType isEqual:@"Free parking structure"]) {
-            [ary_ptfps addObject:tpObj];
-        }
-        if([tpObj.parkingType isEqual:@"Limited time parking"]) {
-            [ary_ptlt addObject:tpObj];
-        }
-        if([tpObj.parkingType isEqual:@"Metered parking"]) {
-            [ary_ptmp addObject:tpObj];
-        }
-        if([tpObj.parkingType isEqual:@"Metered parking structure"]) {
-            [ary_ptmps addObject:tpObj];
-        }
-    }
     [[NSNotificationCenter defaultCenter]addObserver:self
                                             selector:@selector(reachabilityHomeStatusChange:)
                                                 name:kReachabilityChangedNotification
@@ -92,7 +70,7 @@
     
     
 	
-    [self checkCurrentRegion];
+    [self checkRegionWithCoordinates:currentCoordinate];
 }
 
 - (MKAnnotationView *) mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
@@ -200,7 +178,7 @@
         mr.origin.y = pt.y - mr.size.height *0.25;
         [self.map_View setVisibleMapRect:mr animated:YES];
         [self removeAllPinsButUserLocation];
-        [self showPinWithMapCenter];
+        [self showPinWithMapCenter:newLocation andRegion:placemark.subAdministrativeArea];
     }];
     
     
@@ -277,7 +255,7 @@
         [containerView addSubview:infoView];
         
     }else{
-        [self showPinWithMapCenter];
+//        [self showPinWithMapCenter:];
         isMapView = YES;
         [btnToggleMapList setImage:[UIImage imageNamed:@"list.png"] forState:UIControlStateNormal];
         [self performCubeAnimation:@"cube" animSubType:kCATransitionFromLeft];
@@ -595,7 +573,6 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
                 tempTable * tempObj = [tempTable new];
                 tempObj.addressID = [dataArr stringForColumn:@"address_id"];
                 tempObj.lat = [NSNumber numberWithDouble:[[dataArr stringForColumn:@"houseLat"] doubleValue]];
-                NSLog(@"%f", [tempObj.lat doubleValue]);
                 tempObj.lon = [NSNumber numberWithDouble:[[dataArr stringForColumn:@"houseLong"] doubleValue]];
                 tempObj.parkingID = [NSNumber numberWithInt:[dataArr intForColumn:@"parking_id"]];
                 tempObj.fullAddress  = [dataArr stringForColumn:@"houseFullAddress"];
@@ -613,6 +590,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     {
         NSLog(@"%@",e);
     }
+    
     for (tempTable *tp in tempTableArray) {
         if([self isHolidayWithCurrentDate:strDate]) {
             tp.parkingType = @"Free parking";
@@ -658,8 +636,36 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
             }
         }
     }
+    [self setTheListContent:tempTableArray];
     [self addAnnotationPinToMap:tempTableArray];
     [hud hide];
+    
+}
+
+-(void)setTheListContent: (NSMutableArray*)array{
+    ary_ptfp = [NSMutableArray new];
+    ary_ptfps = [NSMutableArray new];
+    ary_ptlt = [NSMutableArray new];
+    ary_ptmp = [NSMutableArray new];
+    ary_ptmps = [NSMutableArray new];
+    for(tempTable* tpObj in array) {
+        if([tpObj.parkingType isEqual:@"Free parking"]) {
+            [ary_ptfp addObject:tpObj];
+        }
+        if([tpObj.parkingType isEqual:@"Free parking structure"]) {
+            [ary_ptfps addObject:tpObj];
+        }
+        if([tpObj.parkingType isEqual:@"Limited time parking"]) {
+            [ary_ptlt addObject:tpObj];
+        }
+        if([tpObj.parkingType isEqual:@"Metered parking"]) {
+            [ary_ptmp addObject:tpObj];
+        }
+        if([tpObj.parkingType isEqual:@"Metered parking structure"]) {
+            [ary_ptmps addObject:tpObj];
+        }
+    }
+
 }
 
 -(void)addAnnotationPinToMap:(NSMutableArray*)pin_arr{
@@ -731,53 +737,53 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     }
 }
 
--(void)checkCurrentRegion{
+-(void)checkRegionWithCoordinates:(CLLocationCoordinate2D)coord{
     
     NSMutableString * region_arr = [NSMutableString new];
     NSMutableArray * point_arr = [NSMutableArray new];
     
     CoordinatePoint * cp = [CoordinatePoint new];
     
-    cp.lat = [NSString stringWithFormat:@"%f", currentCoordinate.latitude];
-    cp.lon = [NSString stringWithFormat:@"%f", currentCoordinate.longitude];
+    cp.lat = [NSString stringWithFormat:@"%f", coord.latitude];
+    cp.lon = [NSString stringWithFormat:@"%f", coord.longitude];
     [point_arr addObject:cp];
     cp = [CoordinatePoint new];
-    CLLocationCoordinate2D neCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude + MILEINCOORDINATE, currentCoordinate.longitude - MILEINCOORDINATE);
+    CLLocationCoordinate2D neCoord = CLLocationCoordinate2DMake(coord.latitude + MILEINCOORDINATE, coord.longitude - MILEINCOORDINATE);
     cp.lat = [NSString stringWithFormat:@"%f", neCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", neCoord.longitude];
     [point_arr addObject:cp];
     cp = [CoordinatePoint new];
-    CLLocationCoordinate2D swCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude - MILEINCOORDINATE, currentCoordinate.longitude + MILEINCOORDINATE);
+    CLLocationCoordinate2D swCoord = CLLocationCoordinate2DMake(coord.latitude - MILEINCOORDINATE, coord.longitude + MILEINCOORDINATE);
     cp.lat = [NSString stringWithFormat:@"%f", swCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", swCoord.longitude];
     [point_arr addObject:cp];
     cp = [CoordinatePoint new];
-    CLLocationCoordinate2D nwCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude + MILEINCOORDINATE, currentCoordinate.longitude + MILEINCOORDINATE);
+    CLLocationCoordinate2D nwCoord = CLLocationCoordinate2DMake(coord.latitude + MILEINCOORDINATE, coord.longitude + MILEINCOORDINATE);
     cp.lat = [NSString stringWithFormat:@"%f", nwCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", nwCoord.longitude];
     [point_arr addObject:cp];
     cp = [CoordinatePoint new];
-    CLLocationCoordinate2D seCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude - MILEINCOORDINATE, currentCoordinate.longitude - MILEINCOORDINATE);
+    CLLocationCoordinate2D seCoord = CLLocationCoordinate2DMake(coord.latitude - MILEINCOORDINATE, coord.longitude - MILEINCOORDINATE);
     cp.lat = [NSString stringWithFormat:@"%f", seCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", seCoord.longitude];
     [point_arr addObject:cp];
     cp = [CoordinatePoint new];
-    CLLocationCoordinate2D sCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude - MILEINCOORDINATE, currentCoordinate.longitude);
+    CLLocationCoordinate2D sCoord = CLLocationCoordinate2DMake(coord.latitude - MILEINCOORDINATE, coord.longitude);
     cp.lat = [NSString stringWithFormat:@"%f", sCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", sCoord.longitude];
     [point_arr addObject:cp];
     cp = [CoordinatePoint new];
-    CLLocationCoordinate2D eCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude, currentCoordinate.longitude - MILEINCOORDINATE);
+    CLLocationCoordinate2D eCoord = CLLocationCoordinate2DMake(coord.latitude, coord.longitude - MILEINCOORDINATE);
     cp.lat = [NSString stringWithFormat:@"%f", eCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", eCoord.longitude];
     [point_arr addObject:cp];
     cp = [CoordinatePoint new];
-    CLLocationCoordinate2D nCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude + MILEINCOORDINATE, currentCoordinate.longitude);
+    CLLocationCoordinate2D nCoord = CLLocationCoordinate2DMake(coord.latitude + MILEINCOORDINATE, coord.longitude);
     cp.lat = [NSString stringWithFormat:@"%f", nCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", nCoord.longitude];
     [point_arr addObject:cp];
     cp = [CoordinatePoint new];
-    CLLocationCoordinate2D wCoord = CLLocationCoordinate2DMake(currentCoordinate.latitude, currentCoordinate.longitude + MILEINCOORDINATE);
+    CLLocationCoordinate2D wCoord = CLLocationCoordinate2DMake(coord.latitude, coord.longitude + MILEINCOORDINATE);
     cp.lat = [NSString stringWithFormat:@"%f", wCoord.latitude];
     cp.lon = [NSString stringWithFormat:@"%f", wCoord.longitude];
     [point_arr addObject:cp];
@@ -811,17 +817,13 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
         [ceo reverseGeocodeLocation: loc completionHandler:
          ^(NSArray *placemarks, NSError *error) {
              CLPlacemark *pm = [placemarks objectAtIndex:0];
-             dispatch_async(dispatch_get_main_queue(), ^
-                            {
                                 if ([region_arr rangeOfString:pm.subAdministrativeArea].location == NSNotFound) {
                                     if([region_arr length] !=0 ){
                                         [region_arr appendString:@", "];
                                     }
                                     [region_arr appendString:pm.subAdministrativeArea];
-                                    NSLog(@"%@", region_arr);
                                     [self checkLocalDBforReigon:region_arr];
                                 }
-                            });
          }];
     }
     //                   }
@@ -926,18 +928,27 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
 }
 
-- (void)showPinWithMapCenter{
-    CLLocationCoordinate2D center = [map_View centerCoordinate];
-    double minLat = center.latitude - MILEINCOORDINATE*2;
-    double maxLat = center.latitude + MILEINCOORDINATE*2;
-    double minLong = center.longitude - MILEINCOORDINATE*2;
-    double maxLong = center.longitude + MILEINCOORDINATE*2;
+- (void)showPinWithMapCenter:(CLLocationCoordinate2D)center andRegion:(NSString*) region_arr{
+    if (tempTableArray == nil) {
+        [self checkRegionWithCoordinates:center];
+    }
+//    if (center.latitude>0) {
+        double minLat = center.latitude - PIN_SHOW_WITH_DISTANCE;
+        double maxLat = center.latitude + PIN_SHOW_WITH_DISTANCE;
+//    }
+//    else{
+//        double minLat = center.latitude + PIN_SHOW_WITH_DISTANCE;
+//        double maxLat = center.latitude - PIN_SHOW_WITH_DISTANCE;
+//    }
+    double minLong = center.longitude - PIN_SHOW_WITH_DISTANCE;
+    double maxLong = center.longitude + PIN_SHOW_WITH_DISTANCE;
     NSMutableArray *pin_arr = [NSMutableArray new];
     for (tempTable *tp in tempTableArray) {
         if ([tp.lat doubleValue] >minLat && [tp.lat doubleValue] < maxLat && [tp.lon doubleValue]> minLong && [tp.lon doubleValue] < maxLong) {
             [pin_arr addObject:tp];
         }
     }
+    [self setTheListContent:pin_arr];
     [self addAnnotationPinToMap:pin_arr];
 }
 
