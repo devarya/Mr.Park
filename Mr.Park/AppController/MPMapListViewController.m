@@ -295,7 +295,7 @@
             [map_View addAnnotation:pin];
         }
     }
-    countList = 1;
+    countList = FREE_PARKING;
     [tbl_View reloadData];
 }
 - (IBAction)btn_FreeParkingStructure:(id)sender {
@@ -306,7 +306,7 @@
             [map_View addAnnotation:pin];
         }
     }
-    countList = 2;
+    countList = FREE_PARKING_STRUCTURE;
     [tbl_View reloadData];
 }
 - (IBAction)btn_LimitParking:(id)sender {
@@ -317,7 +317,7 @@
             [map_View addAnnotation:pin];
         }
     }
-    countList = 3;
+    countList = LIMITED_TIME_PARKING;
     [tbl_View reloadData];
 }
 - (IBAction)btn_MeterParking:(id)sender {
@@ -328,7 +328,7 @@
             [map_View addAnnotation:pin];
         }
     }
-    countList = 4;
+    countList = METERED_PARKING;
     [tbl_View reloadData];
 }
 - (IBAction)btn_MeterParkingStructure:(id)sender{
@@ -339,7 +339,7 @@
             [map_View addAnnotation:pin];
         }
     }
-    countList = 5;
+    countList = METERED_PARKING_STRUCTURE;
     [tbl_View reloadData];
 }
 -(void)performCubeAnimation:(NSString*)animType animSubType:(NSString*)animSubType{
@@ -361,22 +361,22 @@
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if(countList == 1){
+    if(countList == FREE_PARKING){
         return [ary_ptfp count];}
-    else if(countList == 2)
+    else if(countList == FREE_PARKING_STRUCTURE)
         return [ary_ptfps count];
-    else if(countList == 3)
+    else if(countList == LIMITED_TIME_PARKING)
         return [ary_ptlt count];
-    else if(countList == 4)
+    else if(countList == METERED_PARKING)
         return [ary_ptmp count];
-    else if(countList == 5)
+    else if(countList == METERED_PARKING_STRUCTURE)
         return [ary_ptmps count];
     else
         return [tempTableArray count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(countList == 1) {
+    if(countList == FREE_PARKING) {
         NSString *identifier = nil;
         tempTable *temp =[ary_ptfp objectAtIndex:indexPath.row];
         NSString *streetName = temp.streetName;
@@ -401,7 +401,7 @@
         }
         return cell;
     }
-    else if(countList == 2) {
+    else if(countList == FREE_PARKING_STRUCTURE) {
         NSString *identifier = nil;
         tempTable *temp =[ary_ptfps objectAtIndex:indexPath.row];
         NSString *streetName = temp.streetName;
@@ -414,7 +414,7 @@
             identifier = @"cellLight";
         }
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-        if([temp.parkingID isEqual:@"2"]) {
+        if([temp.parkingType isEqual:@"Free parking structure"]) {
             cell.imageView.image = [UIImage imageNamed:@"ic_fps@2x.png"];
             UILabel *cellLabel;
             cellLabel = (UILabel *)[cell viewWithTag:1];
@@ -426,7 +426,7 @@
         }
         return cell;
     }
-    else if(countList == 3) {
+    else if(countList == LIMITED_TIME_PARKING) {
         NSString *identifier = nil;
         tempTable *temp =[ary_ptlt objectAtIndex:indexPath.row];
         NSString *streetName = temp.streetName;
@@ -451,7 +451,7 @@
         }
         return cell;
     }
-    else if(countList == 4) {
+    else if(countList == METERED_PARKING) {
         NSString *identifier = nil;
         tempTable *temp =[ary_ptmp objectAtIndex:indexPath.row];
         NSString *streetName = temp.streetName;
@@ -476,7 +476,7 @@
         }
         return cell;
     }
-    else if(countList == 5) {
+    else if(countList == METERED_PARKING_STRUCTURE) {
         NSString *identifier = nil;
         tempTable *temp =[ary_ptmps objectAtIndex:indexPath.row];
         NSString *streetName = temp.streetName;
