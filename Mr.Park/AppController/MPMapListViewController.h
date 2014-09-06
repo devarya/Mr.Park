@@ -15,7 +15,6 @@
 #import "MPGlobalData.h"
 #import "MPCustomAnnotation.h"
 #import "MPConstant.h"
-//#import "tempTable.h"
 
 
 @interface MPMapListViewController : MPBottomBarViewController<UITableViewDataSource,UITableViewDelegate, UISearchBarDelegate, MKMapViewDelegate>{

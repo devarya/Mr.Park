@@ -199,8 +199,23 @@
         mr.origin.x = pt.x - mr.size.width *0.5;
         mr.origin.y = pt.y - mr.size.height *0.25;
         [self.map_View setVisibleMapRect:mr animated:YES];
+        [self removeAllPinsButUserLocation];
+        [self showPinWithMapCenter];
     }];
     
+    
+}
+
+- (void)removeAllPinsButUserLocation
+{
+    id userLocation = [map_View userLocation];
+    NSMutableArray *pins = [[NSMutableArray alloc] initWithArray:[map_View annotations]];
+    if ( userLocation != nil ) {
+        [pins removeObject:userLocation]; // avoid removing user location off the map
+    }
+    
+    [map_View removeAnnotations:pins];
+    pins = nil;
 }
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if([[segue identifier] isEqualToString:@"showDetails"]) {
@@ -252,6 +267,7 @@
 -(IBAction)btnSwitchToMapAndList:(id)sender{
     
     if (isMapView) {
+        [tbl_View reloadData];
         isMapView = NO;
         [btnToggleMapList setImage:[UIImage imageNamed:@"map.png"] forState:UIControlStateNormal];
         [self performCubeAnimation:@"cube" animSubType:kCATransitionFromRight];
@@ -259,7 +275,9 @@
         
         [containerView addSubview:tbl_View];
         [containerView addSubview:infoView];
+        
     }else{
+        [self showPinWithMapCenter];
         isMapView = YES;
         [btnToggleMapList setImage:[UIImage imageNamed:@"list.png"] forState:UIControlStateNormal];
         [self performCubeAnimation:@"cube" animSubType:kCATransitionFromLeft];
@@ -640,19 +658,24 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
             }
         }
     }
+    [self addAnnotationPinToMap:tempTableArray];
+    [hud hide];
+}
+
+-(void)addAnnotationPinToMap:(NSMutableArray*)pin_arr{
     if ((currentCoordinate.latitude != 0.0) && (currentCoordinate.longitude != 0.0)) {
         static dispatch_once_t centerMapFirstTime;
 		dispatch_once(&centerMapFirstTime, ^{
 			[self.map_View setCenterCoordinate:currentCoordinate animated:NO];
 		});
-        for(tempTable* tpObj in tempTableArray) {
+        for(tempTable* tpObj in pin_arr) {
             if(![tpObj.parkingType isEqual:@"No Parking"]){
                 MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:tpObj.streetName Subtitle:tpObj.fullAddress Location:CLLocationCoordinate2DMake([tpObj.lat doubleValue], [tpObj.lon doubleValue])];
                 [map_View addAnnotation:pin];
             }
         }
     }
-    [hud hide];
+
 }
 
 - (BOOL) isSwappingWithHour:(NSString *) currentHour andMinute:(NSString *) currentMinute andParkingType: (int) parkingType {
@@ -903,6 +926,20 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
 }
 
+- (void)showPinWithMapCenter{
+    CLLocationCoordinate2D center = [map_View centerCoordinate];
+    double minLat = center.latitude - MILEINCOORDINATE*2;
+    double maxLat = center.latitude + MILEINCOORDINATE*2;
+    double minLong = center.longitude - MILEINCOORDINATE*2;
+    double maxLong = center.longitude + MILEINCOORDINATE*2;
+    NSMutableArray *pin_arr = [NSMutableArray new];
+    for (tempTable *tp in tempTableArray) {
+        if ([tp.lat doubleValue] >minLat && [tp.lat doubleValue] < maxLat && [tp.lon doubleValue]> minLong && [tp.lon doubleValue] < maxLong) {
+            [pin_arr addObject:tp];
+        }
+    }
+    [self addAnnotationPinToMap:pin_arr];
+}
 
 
 @end
