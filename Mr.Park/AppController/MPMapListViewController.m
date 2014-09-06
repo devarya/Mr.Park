@@ -245,6 +245,7 @@
 -(IBAction)btnSwitchToMapAndList:(id)sender{
     
     if (isMapView) {
+        NSLog(@"%d, %d", ary_ptfp.count, countList);
         [tbl_View reloadData];
         isMapView = NO;
         [btnToggleMapList setImage:[UIImage imageNamed:@"map.png"] forState:UIControlStateNormal];
@@ -255,6 +256,7 @@
         [containerView addSubview:infoView];
         
     }else{
+         NSLog(@"%d, %d", ary_ptfp.count, countList);
 //        [self showPinWithMapCenter:];
         isMapView = YES;
         [btnToggleMapList setImage:[UIImage imageNamed:@"list.png"] forState:UIControlStateNormal];
@@ -359,7 +361,7 @@
         tempTable *temp =[ary_ptfp objectAtIndex:indexPath.row];
         NSString *streetName = temp.streetName;
         NSString *address = temp.fullAddress;
-        NSString *distance = [NSString stringWithFormat:@"%@",temp.lat];
+        NSString *distance = [NSString stringWithFormat:@"%.1f miles",[currentLocation distanceFromLocation:[[CLLocation alloc] initWithLatitude:[temp.lat doubleValue]  longitude:[temp.lon doubleValue]]] * METER_TO_MILE];
         if (indexPath.row % 2 == 0) {
             identifier = @"cellDark";
         }
@@ -384,7 +386,7 @@
         tempTable *temp =[ary_ptfps objectAtIndex:indexPath.row];
         NSString *streetName = temp.streetName;
         NSString *address = temp.fullAddress;
-        NSString *distance = [NSString stringWithFormat:@"%@",temp.lat];
+        NSString *distance = [NSString stringWithFormat:@"%.1f miles",[currentLocation distanceFromLocation:[[CLLocation alloc] initWithLatitude:[temp.lat doubleValue]  longitude:[temp.lon doubleValue]]] * METER_TO_MILE];
         if (indexPath.row % 2 == 0) {
             identifier = @"cellDark";
         }
@@ -409,7 +411,7 @@
         tempTable *temp =[ary_ptlt objectAtIndex:indexPath.row];
         NSString *streetName = temp.streetName;
         NSString *address = temp.fullAddress;
-        NSString *distance = [NSString stringWithFormat:@"%@",temp.lat];
+        NSString *distance = [NSString stringWithFormat:@"%.1f miles",[currentLocation distanceFromLocation:[[CLLocation alloc] initWithLatitude:[temp.lat doubleValue]  longitude:[temp.lon doubleValue]]] * METER_TO_MILE];
         if (indexPath.row % 2 == 0) {
             identifier = @"cellDark";
         }
@@ -433,7 +435,7 @@
         NSString *identifier = nil;
         tempTable *temp =[ary_ptmp objectAtIndex:indexPath.row];
         NSString *streetName = temp.streetName;
-        NSString *address = temp.fullAddress;
+        NSString *address = [NSString stringWithFormat:@"%.1f miles",[currentLocation distanceFromLocation:[[CLLocation alloc] initWithLatitude:[temp.lat doubleValue]  longitude:[temp.lon doubleValue]]] * METER_TO_MILE];
         NSString *distance = [NSString stringWithFormat:@"%@",temp.lat];
         if (indexPath.row % 2 == 0) {
             identifier = @"cellDark";
@@ -459,7 +461,7 @@
         tempTable *temp =[ary_ptmps objectAtIndex:indexPath.row];
         NSString *streetName = temp.streetName;
         NSString *address = temp.fullAddress;
-        NSString *distance = [NSString stringWithFormat:@"%@",temp.lat];
+        NSString *distance = [NSString stringWithFormat:@"%.1f miles",[currentLocation distanceFromLocation:[[CLLocation alloc] initWithLatitude:[temp.lat doubleValue]  longitude:[temp.lon doubleValue]]] * METER_TO_MILE];
         if (indexPath.row % 2 == 0) {
             identifier = @"cellDark";
         }
@@ -484,8 +486,7 @@
         tempTable *temp =[tempTableArray objectAtIndex:indexPath.row];
         NSString *streetName = temp.streetName;
         NSString *address = temp.fullAddress;
-        NSString *distance = [NSString stringWithFormat:@"%@",temp.lat];
-        if (indexPath.row % 2 == 0) {
+        NSString *distance = [NSString stringWithFormat:@"%.1f miles",[currentLocation distanceFromLocation:[[CLLocation alloc] initWithLatitude:[temp.lat doubleValue]  longitude:[temp.lon doubleValue]]] * METER_TO_MILE];        if (indexPath.row % 2 == 0) {
             identifier = @"cellDark";
         }
         else {
@@ -932,14 +933,8 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (tempTableArray == nil) {
         [self checkRegionWithCoordinates:center];
     }
-//    if (center.latitude>0) {
-        double minLat = center.latitude - PIN_SHOW_WITH_DISTANCE;
-        double maxLat = center.latitude + PIN_SHOW_WITH_DISTANCE;
-//    }
-//    else{
-//        double minLat = center.latitude + PIN_SHOW_WITH_DISTANCE;
-//        double maxLat = center.latitude - PIN_SHOW_WITH_DISTANCE;
-//    }
+    double minLat = center.latitude - PIN_SHOW_WITH_DISTANCE;
+    double maxLat = center.latitude + PIN_SHOW_WITH_DISTANCE;
     double minLong = center.longitude - PIN_SHOW_WITH_DISTANCE;
     double maxLong = center.longitude + PIN_SHOW_WITH_DISTANCE;
     NSMutableArray *pin_arr = [NSMutableArray new];

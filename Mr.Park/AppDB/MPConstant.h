@@ -20,6 +20,7 @@
 #define LIMITED_TIME_PARKING 3
 #define METERED_PARKING 4
 #define METERED_PARKING_STRUCTURE 5
+#define METER_TO_MILE 0.000621371
 //Api URL
 #define URL_MAIN @"http://122.176.45.15:8080/mrpark/api/"
 
