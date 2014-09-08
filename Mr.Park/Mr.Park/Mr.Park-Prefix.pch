@@ -15,6 +15,7 @@
 #import "MPUtils.h"
 #import "MPRestIntraction.h"
 #import "MPBottomBarViewController.h"
+#import "MPConstant.h"
 
 
 #ifndef __IPHONE_5_0

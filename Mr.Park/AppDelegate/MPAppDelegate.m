@@ -121,9 +121,7 @@
         NSMutableDictionary * holidayInfo = [NSMutableDictionary new];
         [[MPRestIntraction sharedManager] requestHolidayCall:holidayInfo withUpdate:[updateDic valueForKey: @"holidayTable"]];
         NSMutableDictionary *info= [NSMutableDictionary new];
-        [[MPRestIntraction sharedManager] requestAddressControlCall:info];
-        [self performSelector:@selector(startMP) withObject:nil afterDelay:1];
-
+        [self requestAddressControlCall:info];
     }
     else{
         
@@ -169,5 +167,136 @@
     
     // Set icon badge number to zero
     application.applicationIconBadgeNumber = 0;
+}
+
+- (void)requestAddressControlCall:(NSMutableDictionary*) info{
+    if (!mrParkDB)
+    {
+        NSString*path = [[MPDBIntraction databaseInteractionManager] getDatabasePathFromName:DBname];
+        mrParkDB = [[FMDatabase alloc] initWithPath:path];
+    }
+    NSString *query;
+    query = [NSString stringWithFormat:@"Select * from addressUpdate"];
+    @try
+    {
+        [mrParkDB open];
+        if ([mrParkDB executeQuery:query])
+        {
+            FMResultSet *dataArr = [mrParkDB executeQuery:query];
+            addressControlArray = [NSMutableArray new];
+            while ([dataArr next]){
+                adUCHolder = [AddressUpdateControl new];
+                adUCHolder.int_region_id = [NSNumber numberWithInt:[dataArr intForColumn:@"region_id"]];
+                adUCHolder.str_update_at = [dataArr stringForColumn:@"update_at"];
+                adUCHolder.str_region_name = [dataArr stringForColumn:@"region_name"];
+                [addressControlArray addObject:adUCHolder];
+            }
+        }
+        else
+        {
+            NSLog(@"error in select from addressUpdate");
+        }
+        [mrParkDB close];
+    }
+    @catch (NSException *e)
+    {
+        NSLog(@"%@",e);
+    }
+    if (addressControlArray.count == 0) {
+        [self requestAddressCall:info andRegionID:[NSNumber numberWithInt:20] adUpdateTime:@"2001-01-01 00:00:00"];
+    }
+    for (AddressUpdateControl* ad in addressControlArray) {
+        NSMutableDictionary* info = [NSMutableDictionary new];
+        [self requestAddressCall:info andRegionID:ad.int_region_id adUpdateTime:ad.str_update_at];
+    }
+}
+
+#pragma mark Address Table
+- (void)requestAddressCall:(NSMutableDictionary*) info andRegionID:(NSNumber*) region_id adUpdateTime: (NSString*) time{
+    if (![time isEqualToString:@"2000-01-01 00:00:00"]) {
+        isUpdate = YES;
+    }
+    [info setValue:[NSString stringWithFormat:@"%@", region_id] forKey:@"region_id"];
+    [info setValue:time forKey:@"update_at"];
+    [info setValue:@"get_address" forKey:@"cmd"];
+    [self requestForAddress:info];
+}
+- (void)requestForAddress: (NSMutableDictionary*)info{
+    NSError* error;
+    NSData* jsonData = [NSJSONSerialization dataWithJSONObject:info
+                                                       options:NSJSONWritingPrettyPrinted
+                                                         error:&error];
+    NSString* jsonStr=  [[NSString alloc] initWithData:jsonData
+                                              encoding:NSUTF8StringEncoding];
+    jsonStr = [jsonStr stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+    jsonStr = [jsonStr stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+    [self requestAddress:jsonStr];
+}
+
+- (void)requestAddress: (NSString*)info {
+    NSURL *urlMain = [[NSURL alloc] initWithString:URL_MAIN];
+    ASIFormDataRequest *request = [[ASIFormDataRequest alloc] initWithURL:urlMain];
+    
+    [request setPostValue:info forKey:@"data"];
+    
+    [request setDelegate:self];
+    [request setDidFailSelector:@selector(requestAddressFail:)];
+    [request setDidFinishSelector:@selector(requestAddressSuccess:)];
+    [request startAsynchronous];
+    
+}
+
+- (void)requestAddressFail:(ASIFormDataRequest*)request{
+    
+    dispatch_async(dispatch_get_main_queue(), ^
+                   {
+                       [MPGlobalFunction showAlert:MESSAGE_NOT_RESPOND];
+                   });
+    [self performSelector:@selector(startMP) withObject:nil afterDelay:1];
+}
+
+- (void)requestAddressSuccess:(ASIFormDataRequest*)request{
+    
+    NSString *responseString = [request responseString];
+    responseString = [[responseString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]] componentsJoinedByString:@""];
+    responseString = [responseString stringByReplacingOccurrencesOfString:@"\t" withString:@""];
+    
+    SBJSON *parser=[[SBJSON alloc]init];
+    NSDictionary *results = [parser objectWithString:responseString error:nil];
+    NSDictionary *dataArray = [results objectForKey:@"data"];
+    addressTable_server_update_time = [dataArray objectForKey:@"update_at"];
+    addressArray = [NSMutableArray new];
+    if (dataArray != nil) {
+        for (int i=0; i<dataArray.count; i++) {
+            NSMutableArray *dataArr=((NSMutableArray*)[dataArray objectForKey:[NSString stringWithFormat:@"%d", i]]);
+            AddressDB *data = [AddressDB new];
+            data.int_addId = [dataArr valueForKey:@"address_id"];
+            data.str_cityName = [dataArr valueForKey:@"city_name"];
+            data.str_createdId = [dataArr valueForKey:@"created_at"];
+            data.str_houseFullAddress = [dataArr valueForKey:@"house_full_address"];
+            NSString* latString = [dataArr valueForKey:@"house_latitude"];
+            data.double_houseLat = [NSNumber numberWithDouble:[latString doubleValue]];
+            NSString* longString = [dataArr valueForKey:@"house_longitude"];
+            data.double_houseLong = [NSNumber numberWithDouble:[longString doubleValue]];
+            data.str_houseNo = [dataArr valueForKey:@"house_no"];
+            data.str_houseSide = [dataArr valueForKey:@"house_side"];
+            data.str_regionName = [dataArr valueForKey:@"region_name"];
+            data.str_stateName = [dataArr valueForKey:@"state_name"];
+            data.str_status = [dataArr valueForKey:@"status"];
+            data.str_streetName = [dataArr valueForKey:@"street_name"];
+            NSString * parkingIDS = [[dataArr valueForKey:@"parking_ids"] componentsSeparatedByString:@","][0];
+            data.int_parking_ids = [NSNumber numberWithInt:[parkingIDS intValue]];
+            [addressArray addObject:data];
+        }
+    }
+    if (addressArray.count!= 0){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[MPDBIntraction databaseInteractionManager] insertAddresList:addressArray];
+        });
+    }
+    else{
+        NSLog(@"addressTable no need to update");
+    }
+    [self performSelector:@selector(startMP) withObject:nil afterDelay:3];
 }
 @end

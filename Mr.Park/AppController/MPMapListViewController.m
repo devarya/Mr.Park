@@ -871,6 +871,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
                                        [MPGlobalFunction showAlert:MESSAGE_REGION_NOT_FOUND];
                                    });
                     }
+                    [mrParkDB close];
                     [hud hide];
                 }else{
                     [region_id_arr addObject:rID];
