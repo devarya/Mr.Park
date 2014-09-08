@@ -201,6 +201,7 @@
         NSInteger tagIndex = [(UIButton *)sender tag];
         tempTable* tpObj = tempTableArray[tagIndex];
         destCoordinate = CLLocationCoordinate2DMake([tpObj.lat doubleValue], [tpObj.lon doubleValue]);
+        destAddressID = tpObj.addressID;
         destLatitude = destCoordinate.latitude;
         destLongitude = destCoordinate.longitude;
         destStreetName = tpObj.streetName;
