@@ -279,6 +279,9 @@
                                         <state key="normal" title="Favorite">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="btn_Favorite:" destination="ITB-QE-0ud" eventType="touchUpInside" id="ZPs-0D-AHO"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                             </view>
