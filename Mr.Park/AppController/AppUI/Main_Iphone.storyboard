@@ -273,6 +273,16 @@
                                             <action selector="btnBackDidClicked:" destination="ITB-QE-0ud" eventType="touchUpInside" id="7kD-Mz-pJJ"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="O5g-I0-p2m">
+                                        <rect key="frame" x="244" y="26" width="56" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Favorite">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="btn_Favorite:" destination="ITB-QE-0ud" eventType="touchUpInside" id="ZPs-0D-AHO"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                             </view>
                             <view contentMode="scaleToFill" id="y7n-Fy-stb">
