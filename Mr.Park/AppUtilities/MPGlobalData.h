@@ -49,6 +49,7 @@ CLLocationCoordinate2D currentCoordinate;
 CLLocation *currentLocation;
 
 NSString *parkingType;
+NSString *destAddressID;
 NSString *destStreetName;
 NSString *destAddress;
 NSString *destParkingType;
