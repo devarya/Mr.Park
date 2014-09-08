@@ -109,7 +109,7 @@
     destCoordinate = [[view annotation] coordinate];
     destLatitude = destCoordinate.latitude;
     destLongitude = destCoordinate.longitude;
-    [self getDestInformationWithLatitude:[NSString stringWithFormat:@"%lf",destLatitude] Longitude:[NSString stringWithFormat:@"%lf",destLongitude]];
+    [self getDestInformationWithLatitude:destLatitude Longitude:destLongitude];
     [self.navigationController pushViewController:dvc animated:YES];
     //UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main_Iphone" bundle:nil];
     UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"detailViewController"];
@@ -127,9 +127,10 @@
     return parkingType;
 }
 
-- (void) getDestInformationWithLatitude: (NSString *)lat Longitude: (NSString *) lon {
+- (void) getDestInformationWithLatitude: (double)lat Longitude: (double) lon {
     for(tempTable* tpObj in tempTableArray) {
-        if([tpObj.lat isEqual: lat] && [tpObj.lon  isEqual: lon]) {
+        if([tpObj.lat doubleValue] == lat && [tpObj.lon doubleValue] == lon) {
+            destAddressID = tpObj.addressID;
             destStreetName = tpObj.streetName;
             destAddress = tpObj.fullAddress;
             destParkingType = tpObj.parkingType;
@@ -819,13 +820,16 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
         [ceo reverseGeocodeLocation: loc completionHandler:
          ^(NSArray *placemarks, NSError *error) {
              CLPlacemark *pm = [placemarks objectAtIndex:0];
-                                if ([region_arr rangeOfString:pm.subAdministrativeArea].location == NSNotFound) {
-                                    if([region_arr length] !=0 ){
-                                        [region_arr appendString:@", "];
-                                    }
-                                    [region_arr appendString:pm.subAdministrativeArea];
-                                    [self checkLocalDBforReigon:region_arr];
-                                }
+             if (pm.subAdministrativeArea != nil) {
+                 if ([region_arr rangeOfString:pm.subAdministrativeArea].location == NSNotFound) {
+                     if([region_arr length] !=0 ){
+                         [region_arr appendString:@", "];
+                     }
+                     [region_arr appendString:pm.subAdministrativeArea];
+                     [self checkLocalDBforReigon:region_arr];
+                 }
+             }
+             
          }];
     }
     //                   }
