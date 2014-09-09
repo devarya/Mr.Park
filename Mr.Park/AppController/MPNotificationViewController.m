@@ -15,7 +15,7 @@
 @end
 
 @implementation MPNotificationViewController
-@synthesize scheduledLocalNotifications;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -94,9 +94,7 @@
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
 }
-//-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-//{
-//}
+
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Return NO if you do not want the specified item to be editable.
@@ -108,7 +106,10 @@
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         // Delete the row from the data source
         
-        [scheduledLocalNotifications removeObjectAtIndex:indexPath.row];
+        NSArray *notificationArray=[[UIApplication sharedApplication] scheduledLocalNotifications];
+        UILocalNotification *notificationToCancel= [notificationArray objectAtIndex:indexPath.row];
+        
+        [[UIApplication sharedApplication] cancelLocalNotification:notificationToCancel];
         [tableView reloadData];
         
     }
