@@ -430,7 +430,7 @@
         }
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
         if([temp.parkingType isEqual:@"Free parking structure"]) {
-            cell.imageView.image = [UIImage imageNamed:@"ic_fps"];
+            cell.imageView.image = [UIImage imageNamed:@"fps"];
             UILabel *cellLabel;
             cellLabel = (UILabel *)[cell viewWithTag:1];
             cellLabel.text = streetName;
