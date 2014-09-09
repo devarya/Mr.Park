@@ -27,8 +27,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-
+    userLocationShown = NO;
     UIPanGestureRecognizer* panRec = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(didDragMap:)];
     [panRec setDelegate:self];
     [self.map_View addGestureRecognizer:panRec];
@@ -87,12 +86,6 @@
 }
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation{
-    if (!userLocationShown) {
-        currentCoordinate = [userLocation coordinate];
-        MKCoordinateRegion zoomRegion = MKCoordinateRegionMakeWithDistance(currentCoordinate, 1000, 1000);
-        [self.map_View setRegion:zoomRegion animated:NO];
-        currentLocation = userLocation.location;
-    }
     
     if (tempTableArray.count == 0) {
         [self getRegionNameWithMapCenter:currentCoordinate];
@@ -121,7 +114,6 @@
         newAnnotation.canShowCallout = YES;
         newAnnotation.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
         newAnnotation.leftCalloutAccessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"twitter"]];
-        //newAnnotation.image = [UIImage imageNamed:@"fp"];
         if([[self getParkingTypeLatitude:temp.latitude Longitude:temp.longitude]  isEqual: @"Free parking"]) {
             newAnnotation.image = [UIImage imageNamed:@"fp"];
         }
@@ -173,7 +165,6 @@
 - (void) getDestInformationWithLatitude: (double)lat Longitude: (double) lon {
     for(tempTable* tpObj in tempTableArray) {
         if([tpObj.lat doubleValue] == lat && [tpObj.lon doubleValue] == lon) {
-            destHouseNo = tpObj.HouseNo;
             destAddressID = tpObj.addressID;
             destStreetName = tpObj.streetName;
             destAddress = tpObj.fullAddress;
@@ -229,7 +220,6 @@
         NSInteger tagIndex = [(UIButton *)sender tag];
         tempTable* tpObj = tempTableArray[tagIndex];
         destCoordinate = CLLocationCoordinate2DMake([tpObj.lat doubleValue], [tpObj.lon doubleValue]);
-        destHouseNo = tpObj.HouseNo;
         destAddressID = tpObj.addressID;
         destLatitude = destCoordinate.latitude;
         destLongitude = destCoordinate.longitude;
