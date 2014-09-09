@@ -44,7 +44,7 @@
 - (void)schedulLocalNotificationWithDate:(NSDate *)firedate{
     UILocalNotification *notification = [[UILocalNotification alloc]init];
     
-    notification.fireDate = [NSDate dateWithTimeIntervalSinceNow:60];;
+    notification.fireDate = [NSDate dateWithTimeIntervalSinceNow:10];;
     notification.alertBody = tv_remindNote.text;
     notification.soundName = @"7f_in-a-hurry-song.mp3";
     //    notification.soundName = @"alarm-clock-bell.caf";
