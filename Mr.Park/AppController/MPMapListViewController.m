@@ -191,23 +191,24 @@
 -(void) searchBarSearchButtonClicked:(UISearchBar *)search_Bar{
 
     [search_Bar resignFirstResponder];
-    geocoder = [[CLGeocoder alloc] init];
-    [geocoder geocodeAddressString:search_Bar.text completionHandler:^(NSArray *placemarks, NSError *error) {
+    geocoder_searchBar = [[CLGeocoder alloc] init];
+    [geocoder_searchBar geocodeAddressString:search_Bar.text completionHandler:^(NSArray *placemarks, NSError *error) {
         
         
-        placemark = [placemarks objectAtIndex:0];
+        placemark_searchBar = [placemarks objectAtIndex:0];
         MKCoordinateRegion region;
-        region.center = [(CLCircularRegion *)placemark.region center];
+        region.center = [(CLCircularRegion *)placemark_searchBar.region center];
         MKCoordinateSpan span;
-        double radius = [(CLCircularRegion *)placemark.region radius]/1000;
+        double radius = [(CLCircularRegion *)placemark_searchBar.region radius]/1000;
     
         span.latitudeDelta = radius / 112.0;
         
         region.span = span;
         
-        [map_View setRegion:region animated:YES];
-    }];}
-
+        [map_View setRegion:region animated:NO];
+    }];
+    //[self getRegionNameWithMapCenter:map_View.region.center];
+}
 - (void)removeAllPinsButUserLocation
 {
     id userLocation = [map_View userLocation];
@@ -869,18 +870,20 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
             {
                 FMResultSet *dataArr = [mrParkDB executeQuery:query];
                 [dataArr next];
-                NSNumber *rID = [NSNumber numberWithInt:[dataArr intForColumn:@"region_id"]];
-                if ([rID isEqualToNumber:[NSNumber numberWithInt:0]]) {
+                if (dataArr.columnCount == 0) {
+                    if (isSupport == YES) {
+                        isSupport = NO;
                     
                     dispatch_async(dispatch_get_main_queue(), ^
                                    {
                                        [MPGlobalFunction showAlert:[NSString stringWithFormat:@"%@, %@", MESSAGE_REGION_NOT_FOUND, region_part[i]]];
                                    });
-                    
+                    }
                     //[mrParkDB close];
                     [hud hide];
                 }else{
-                    //isSupport = YES;
+                    NSNumber *rID = [NSNumber numberWithInt:[dataArr intForColumn:@"region_id"]];
+                    isSupport = YES;
                     query = [NSString stringWithFormat:@"select count(*) from addressUpdate where region_id = \"%@\"", rID];
                     @try
                     {   [mrParkDB open];
@@ -898,7 +901,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
                                 }
                             }
                             [self createTempDBWithCoordinate:self.map_View.region.center];
-                            
+                            [hud hide];
                         }
                         else
                         {
@@ -943,23 +946,23 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
 }
 
-- (void)showPinWithMapCenter:(CLLocationCoordinate2D)center andRegion:(NSString*) region_arr{
-    if (tempTableArray == nil) {
-        [self checkRegionWithCoordinates:center];
-    }
-    double minLat = center.latitude - PIN_SHOW_WITH_DISTANCE;
-    double maxLat = center.latitude + PIN_SHOW_WITH_DISTANCE;
-    double minLong = center.longitude - PIN_SHOW_WITH_DISTANCE;
-    double maxLong = center.longitude + PIN_SHOW_WITH_DISTANCE;
-    NSMutableArray *pin_arr = [NSMutableArray new];
-    for (tempTable *tp in tempTableArray) {
-        if ([tp.lat doubleValue] >minLat && [tp.lat doubleValue] < maxLat && [tp.lon doubleValue]> minLong && [tp.lon doubleValue] < maxLong) {
-            [pin_arr addObject:tp];
-        }
-    }
-    [self setTheListContent:pin_arr];
-    [self addAnnotationPinToMap:pin_arr];
-}
+//- (void)showPinWithMapCenter:(CLLocationCoordinate2D)center andRegion:(NSString*) region_arr{
+//    if (tempTableArray == nil) {
+//        [self checkRegionWithCoordinates:center];
+//    }
+//    double minLat = center.latitude - PIN_SHOW_WITH_DISTANCE;
+//    double maxLat = center.latitude + PIN_SHOW_WITH_DISTANCE;
+//    double minLong = center.longitude - PIN_SHOW_WITH_DISTANCE;
+//    double maxLong = center.longitude + PIN_SHOW_WITH_DISTANCE;
+//    NSMutableArray *pin_arr = [NSMutableArray new];
+//    for (tempTable *tp in tempTableArray) {
+//        if ([tp.lat doubleValue] >minLat && [tp.lat doubleValue] < maxLat && [tp.lon doubleValue]> minLong && [tp.lon doubleValue] < maxLong) {
+//            [pin_arr addObject:tp];
+//        }
+//    }
+//    [self setTheListContent:pin_arr];
+//    [self addAnnotationPinToMap:pin_arr];
+//}
 
 - (void)getRegionNameWithMapCenter: (CLLocationCoordinate2D)center{
     NSMutableString *region_arr = [NSMutableString new];
@@ -983,16 +986,19 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
                     [region_arr appendString:rName];
                 }
             }
+            NSLog(@"%@", region_arr);
             [self checkLocalDBforReigon:region_arr];
         }
         else
         {
             NSLog(@"error in select the current range of coordinate from addressTable");
+            [hud hide];
         }
     }
     @catch (NSException *e)
     {
         NSLog(@"%@",e);
+        [hud hide];
     }
     @finally{
         [mrParkDB close];
@@ -1004,7 +1010,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     double maxLat = center.latitude + PIN_SHOW_WITH_DISTANCE;
     double minLong = center.longitude - PIN_SHOW_WITH_DISTANCE;
     double maxLong = center.longitude + PIN_SHOW_WITH_DISTANCE;
-    NSString *query = [NSString stringWithFormat:@"select * from addressTable where houseLat between %f and %f and houseLong between %f and - %f", minLat, maxLat, minLong, maxLong];
+    NSString *query = [NSString stringWithFormat:@"select * from addressTable where houseLat between %f and %f and houseLong between %f and - %f group by houseLat", minLat, maxLat, minLong, maxLong];
     [mrParkDB open];
     @try
     {
@@ -1083,7 +1089,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     }
     [self setTheListContent:tempTableArray];
     [self addAnnotationPinToMap:tempTableArray];
-    
+    [hud hide];
     
 }
 @end

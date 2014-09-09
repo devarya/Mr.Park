@@ -135,9 +135,8 @@
             {
                 dispatch_async(dispatch_get_main_queue(), ^
                                {
-                                   
-                                   UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Facebook Message" message:output delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-                                   [alert show];
+                                   UIAlertView *alert_fb = [[UIAlertView alloc] initWithTitle:@"Facebook Message" message:output delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+                                   [alert_fb show];
                                });
             }
         }];
@@ -277,8 +276,8 @@
                                {
                                    
                                    
-                                   UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Twitter Message" message:output delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-                                   [alert show];
+                                   UIAlertView *alert_tw = [[UIAlertView alloc] initWithTitle:@"Twitter Message" message:output delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+                                   [alert_tw show];
                                    
                                });
             }
@@ -362,15 +361,13 @@
         if ([mrParkDB executeUpdate:query])
         {
             NSLog(@"successfully inserted address_id: %@ into favorite table", destAddressID);
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Message" message:MESSAGE_ADD_FAVORITE delegate:nil cancelButtonTitle:@"Done" otherButtonTitles:nil];
-            [alert show];
+            [MPGlobalFunction showAlert:MESSAGE_ADD_FAVORITE];
         }
     }
     @catch (NSException *e)
     {
         NSLog(@"%@",e);
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Message" message:MESSAGE_ADD_FAVORITE_FAIL delegate:nil cancelButtonTitle:@"Done" otherButtonTitles:nil];
-        [alert show];
+        [MPGlobalFunction showAlert:MESSAGE_ADD_FAVORITE_FAIL];
     }
     @finally{
         [mrParkDB close];

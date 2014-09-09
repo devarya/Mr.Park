@@ -33,6 +33,9 @@
     MKPlacemark *placemark;
     CLGeocoder *geocoder;
     
+    MKPlacemark *placemark_searchBar;
+    CLGeocoder *geocoder_searchBar;
+    
     double d_start;
     double d_end;
     double r_start;
