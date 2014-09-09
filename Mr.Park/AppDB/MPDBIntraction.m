@@ -445,7 +445,9 @@ MPDBIntraction *databaseManager = nil;
         if ([mrParkDB executeQuery:query])
         {
             FMResultSet *dataArr = [mrParkDB executeQuery:query];
-            [dataArr next];
+            favoriteListArray = [NSMutableArray new];
+            while ([dataArr next]) {
+            
             flistHolder = [FavoriteList new];
             
             flistHolder.int_addId = [NSNumber numberWithInt:[dataArr intForColumn:@"address_id"]];
@@ -461,7 +463,8 @@ MPDBIntraction *databaseManager = nil;
             flistHolder.str_status = [dataArr stringForColumn:@"status"];
             flistHolder.str_streetName = [dataArr stringForColumn:@"streetName"];
             flistHolder.int_parking_id = [NSNumber numberWithInt:[dataArr intForColumn:@"parking_ids"]];
-            
+            [favoriteListArray addObject:flistHolder];
+            }
         }
         else
         {
@@ -567,7 +570,39 @@ MPDBIntraction *databaseManager = nil;
         NSLog(@"%@",e);
     }
 }
-
+- (NSString*)getParkingTypeWithID:(int) parkingID{
+    NSString *parkingType;
+    if (!mrParkDB)
+    {
+        NSString*path = [[MPDBIntraction databaseInteractionManager] getDatabasePathFromName:DBname];
+        mrParkDB = [[FMDatabase alloc] initWithPath:path];
+    }
+    
+    NSString *query;
+    
+    query = [NSString stringWithFormat:@"Select * FROM parkingTable where id  = \"%d\"", parkingID];
+    
+    @try
+    {
+        [mrParkDB open];
+        if ([mrParkDB executeQuery:query])
+        {
+            FMResultSet *dataArr = [mrParkDB executeQuery:query];
+            [dataArr next];
+            parkingType = [dataArr stringForColumn:@"parking_type"];
+        }
+        else
+        {
+            NSLog(@"error in parking table retrieving data");
+        }
+        [mrParkDB close];
+    }
+    @catch (NSException *e)
+    {
+        NSLog(@"%@",e);
+    }
+    return parkingType;
+}
 //- (void) getRegionFromDatabase{
 //    if (!mrParkDB)
 //    {
