@@ -163,6 +163,12 @@
             [subAlert show];
         }
         else {
+            UILocalNotification *notification = [[UILocalNotification alloc]init];
+            notification.fireDate = [NSDate dateWithTimeIntervalSinceNow:30*60];
+            notification.alertBody = [NSString stringWithFormat:@"%@", destAddress];
+            notification.soundName = @"7f_in-a-hurry-song.mp3";
+            [[UIApplication sharedApplication] scheduleLocalNotification:notification];
+
             UIAlertView *subAlert = [[UIAlertView alloc]initWithTitle:@"Thank you!" message:@"Your reminder is setted." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [subAlert show];
         }
@@ -173,6 +179,11 @@
             [subAlert show];
         }
         else {
+            UILocalNotification *notification = [[UILocalNotification alloc]init];
+            notification.fireDate = [NSDate dateWithTimeIntervalSinceNow:60*60];
+            notification.alertBody = [NSString stringWithFormat:@"%@", destAddress];
+            notification.soundName = @"7f_in-a-hurry-song.mp3";
+            [[UIApplication sharedApplication] scheduleLocalNotification:notification];
             UIAlertView *subAlert = [[UIAlertView alloc]initWithTitle:@"Thank you!" message:@"Your reminder is setted." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [subAlert show];
         }
@@ -183,6 +194,11 @@
             [subAlert show];
         }
         else {
+            UILocalNotification *notification = [[UILocalNotification alloc]init];
+            notification.fireDate = [NSDate dateWithTimeIntervalSinceNow:120*60];
+            notification.alertBody = [NSString stringWithFormat:@"%@", destAddress];
+            notification.soundName = @"7f_in-a-hurry-song.mp3";
+            [[UIApplication sharedApplication] scheduleLocalNotification:notification];
             UIAlertView *subAlert = [[UIAlertView alloc]initWithTitle:@"Thank you!" message:@"Your reminder is setted." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [subAlert show];
         }
@@ -193,6 +209,11 @@
             [subAlert show];
         }
         else {
+            UILocalNotification *notification = [[UILocalNotification alloc]init];
+            notification.fireDate = [NSDate dateWithTimeIntervalSinceNow:180*60];
+            notification.alertBody = [NSString stringWithFormat:@"%@", destAddress];
+            notification.soundName = @"7f_in-a-hurry-song.mp3";
+            [[UIApplication sharedApplication] scheduleLocalNotification:notification];
             UIAlertView *subAlert = [[UIAlertView alloc]initWithTitle:@"Thank you!" message:@"Your reminder is setted." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [subAlert show];
         }
@@ -203,16 +224,26 @@
             [subAlert show];
         }
         else {
+            UILocalNotification *notification = [[UILocalNotification alloc]init];
+            notification.fireDate = [NSDate dateWithTimeIntervalSinceNow:240*60];
+            notification.alertBody = [NSString stringWithFormat:@"%@", destAddress];
+            notification.soundName = @"7f_in-a-hurry-song.mp3";
+            [[UIApplication sharedApplication] scheduleLocalNotification:notification];
             UIAlertView *subAlert = [[UIAlertView alloc]initWithTitle:@"Thank you!" message:@"Your reminder is setted." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [subAlert show];
         }
     }
     if(buttonIndex == 6) {
-        if([currentHour intValue]*60 + [currentMinute intValue] + 120 > [restrictStartTime intValue] && [currentHour intValue]*60 + [currentMinute intValue] + 120 < [restrictEndTime intValue]) {
+        if([currentHour intValue]*60 + [currentMinute intValue] + 480 > [restrictStartTime intValue] && [currentHour intValue]*60 + [currentMinute intValue] + 480 < [restrictEndTime intValue]) {
             UIAlertView *subAlert = [[UIAlertView alloc]initWithTitle:@"Setting failed!" message:@"2 hour later is swapping time." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [subAlert show];
         }
         else {
+            UILocalNotification *notification = [[UILocalNotification alloc]init];
+            notification.fireDate = [NSDate dateWithTimeIntervalSinceNow:480*60];
+            notification.alertBody = [NSString stringWithFormat:@"%@", destAddress];
+            notification.soundName = @"7f_in-a-hurry-song.mp3";
+            [[UIApplication sharedApplication] scheduleLocalNotification:notification];
             UIAlertView *subAlert = [[UIAlertView alloc]initWithTitle:@"Thank you!" message:@"Your reminder is setted." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [subAlert show];
         }

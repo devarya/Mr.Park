@@ -52,6 +52,7 @@ CLLocation *currentLocation;
 
 NSString *parkingType;
 NSString *destAddressID;
+NSString *destHouseNo;
 NSString *destStreetName;
 NSString *destAddress;
 NSString *destParkingType;
@@ -78,9 +79,6 @@ NSMutableArray *addressControlArray;
 NSMutableArray *updateArray;
 NSMutableArray *favoriteListArray;
 NSMutableArray *tempTableArray;
-
-NSString *destStreetName;
-NSString *destAddress;
 
 NSString *parkingTable_server_update_time;
 NSString *regionTable_server_update_time;
