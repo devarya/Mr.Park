@@ -714,5 +714,26 @@ MPDBIntraction *databaseManager = nil;
     }
 }
 
+- (void)markLastActivityWithReigonName: (NSString*)rName {
+    NSString *query=[NSString stringWithFormat:@"update addressUpdate set last_activity = \"%@\" where region_name = \"%@\"", strDate, rName];
+    @try
+    {
+        [mrParkDB open];
+        if ([mrParkDB executeUpdate:query])
+        {
+            NSLog(@"successfully set the last activity for %@", rName);
+        }
+    }
+    @catch (NSException *e)
+    {
+        NSLog(@"%@",e);
+    }
+    @finally
+    {
+        [mrParkDB close];
+    }
+    
+}
+
 
 @end
