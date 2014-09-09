@@ -13,6 +13,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    haveInternet = [MPGlobalFunction isConnectedToInternet];
     isSupport = YES;
     isUpdate = NO;
     isSeverResponse = YES;

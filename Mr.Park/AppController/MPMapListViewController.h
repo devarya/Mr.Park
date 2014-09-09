@@ -25,7 +25,6 @@
     
     IBOutlet MKMapView *map_View;
     IBOutlet UIButton *btnToggleMapList;
-    IBOutlet UISearchBar *searchBar;
     BOOL isMapView;
     
     int countList;
@@ -42,6 +41,7 @@
     double s_start;
     double s_end;
 }
+@property (strong, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (nonatomic, retain) IBOutlet MKMapView *map_View;
 @property (nonatomic, retain) CLGeocoder *geocoder;
 @property (weak, nonatomic) IBOutlet UITableView *tbl_View;

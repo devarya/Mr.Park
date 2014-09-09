@@ -221,7 +221,7 @@
                         <outlet property="containerView" destination="fvM-Qx-heQ" id="NdR-F4-sPx"/>
                         <outlet property="infoView" destination="BR9-lO-zf1" id="jzf-e2-Aql"/>
                         <outlet property="map_View" destination="7dE-HI-gfx" id="OHF-cN-OkH"/>
-                        <outlet property="searchBar" destination="nx7-LB-3sz" id="Kxp-ME-0cK"/>
+                        <outlet property="searchBar" destination="nx7-LB-3sz" id="rQ4-qG-dkE"/>
                         <outlet property="tbl_View" destination="XHw-rK-BPw" id="FTA-Vo-IY3"/>
                         <segue destination="ywe-Pb-4qG" kind="push" identifier="segue_addTimer" id="3yJ-Xc-0MX"/>
                         <segue destination="ITB-QE-0ud" kind="push" identifier="Map_Detail" id="FMm-TB-Y2L"/>
@@ -889,7 +889,7 @@
                                 </subviews>
                             </view>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Remind In" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="hZD-gZ-3Cr">
-                                <rect key="frame" x="14" y="314.00000685156886" width="292" height="22"/>
+                                <rect key="frame" x="14" y="313.99999775413607" width="292" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <nil key="highlightedColor"/>
