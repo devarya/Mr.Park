@@ -851,7 +851,6 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 
 
 -(void)checkLocalDBforReigon: (NSString*) region_arr{
-    NSLog(@"check local %@", region_arr);
     if ([region_arr isEqualToString:@""]) {
         [self checkRegionWithCoordinates:self.map_View.region.center];
         return;
@@ -984,7 +983,6 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
                     [region_arr appendString:rName];
                 }
             }
-            NSLog(@"%@", region_arr);
             [self checkLocalDBforReigon:region_arr];
         }
         else
