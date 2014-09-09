@@ -158,6 +158,7 @@
 - (void) getDestInformationWithLatitude: (double)lat Longitude: (double) lon {
     for(tempTable* tpObj in tempTableArray) {
         if([tpObj.lat doubleValue] == lat && [tpObj.lon doubleValue] == lon) {
+            destHouseNo = tpObj.HouseNo;
             destAddressID = tpObj.addressID;
             destStreetName = tpObj.streetName;
             destAddress = tpObj.fullAddress;
@@ -230,6 +231,7 @@
         NSInteger tagIndex = [(UIButton *)sender tag];
         tempTable* tpObj = tempTableArray[tagIndex];
         destCoordinate = CLLocationCoordinate2DMake([tpObj.lat doubleValue], [tpObj.lon doubleValue]);
+        destHouseNo = tpObj.HouseNo;
         destAddressID = tpObj.addressID;
         destLatitude = destCoordinate.latitude;
         destLongitude = destCoordinate.longitude;
@@ -289,6 +291,7 @@
          NSLog(@"%d, %d", ary_ptfp.count, countList);
 //        [self showPinWithMapCenter:];
         isMapView = YES;
+        [tbl_View reloadData];
         [btnToggleMapList setImage:[UIImage imageNamed:@"list.png"] forState:UIControlStateNormal];
         [self performCubeAnimation:@"cube" animSubType:kCATransitionFromLeft];
         [tbl_View removeFromSuperview];
@@ -427,7 +430,7 @@
         }
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
         if([temp.parkingType isEqual:@"Free parking structure"]) {
-            cell.imageView.image = [UIImage imageNamed:@"ic_fps@2x.png"];
+            cell.imageView.image = [UIImage imageNamed:@"fps"];
             UILabel *cellLabel;
             cellLabel = (UILabel *)[cell viewWithTag:1];
             cellLabel.text = streetName;
