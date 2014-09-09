@@ -15,7 +15,7 @@
 @end
 
 @implementation MPNotificationViewController
-@synthesize scheduledLocalNotifications;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];

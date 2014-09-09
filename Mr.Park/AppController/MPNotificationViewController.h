@@ -14,6 +14,5 @@
 @interface MPNotificationViewController : MPSettingViewController<UITableViewDataSource,UITableViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tv_myTableView;
-@property(nonatomic,retain)  NSMutableArray  *scheduledLocalNotifications;
 
 @end
