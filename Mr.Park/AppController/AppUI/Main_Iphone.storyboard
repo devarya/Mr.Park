@@ -917,23 +917,6 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="     Overnight" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="8iO-Tz-vnD" userLabel="OvernightCheckBox">
-                                <rect key="frame" x="0.0" y="465" width="320" height="42"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinY="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="nhO-LL-kQf">
-                                <rect key="frame" x="278" y="471" width="30" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinY="YES" heightSizable="YES"/>
-                                <state key="normal" image="uncheck">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="btn_overnight:" destination="ywe-Pb-4qG" eventType="touchUpInside" id="74J-2J-Nrv"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Xpl-g9-m5d">
                                 <rect key="frame" x="0.0" y="394" width="162" height="50"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1032,7 +1015,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                     <connections>
                         <outlet property="btn_calender" destination="7Kv-b3-Z9W" id="4sE-1v-cIE"/>
                         <outlet property="l_dateAndTime" destination="ERK-ph-nPb" id="TLX-b2-BJu"/>
-                        <outlet property="overnight" destination="nhO-LL-kQf" id="wXs-GL-hNl"/>
                         <outlet property="pv_dateAndTime" destination="oYU-wS-OP8" id="Ilj-2q-gBj"/>
                         <outlet property="tv_remindNote" destination="MJo-sY-Mhn" id="blk-VO-g8V"/>
                         <outlet property="v_dateAndTime" destination="lpg-QF-5yC" id="aTG-dy-igQ"/>
@@ -1269,11 +1251,11 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" textLabel="SyQ-8S-UrG" detailTextLabel="wHa-Ok-5PX" rowHeight="65" style="IBUITableViewCellStyleSubtitle" id="EL2-Yd-IUh">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" textLabel="SyQ-8S-UrG" detailTextLabel="wHa-Ok-5PX" rowHeight="65" style="IBUITableViewCellStyleSubtitle" id="EL2-Yd-IUh">
                                         <rect key="frame" x="0.0" y="22" width="320" height="65"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="EL2-Yd-IUh" id="Heh-ko-EOV">
-                                            <rect key="frame" x="0.0" y="0.0" width="287" height="64"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="64"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="SyQ-8S-UrG">
@@ -1338,7 +1320,6 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
         <image name="reminder" width="22" height="22"/>
         <image name="set_profile" width="22" height="22"/>
         <image name="twitter" width="22" height="22"/>
-        <image name="uncheck" width="22" height="22"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
