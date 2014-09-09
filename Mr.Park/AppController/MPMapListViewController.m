@@ -27,6 +27,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+
     UIPanGestureRecognizer* panRec = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(didDragMap:)];
     [panRec setDelegate:self];
     [self.map_View addGestureRecognizer:panRec];
@@ -44,9 +46,12 @@
         vc_bottomBar.view.frame = CGRectMake(0, 432, TAB_BAR_WIDTH, TAB_BAR_HEIGHT);
     }
     [self.view addSubview:[vc_bottomBar view]];
-    
+    [containerView addSubview:map_View];
+    [containerView addSubview:tbl_View];
+    [containerView addSubview:infoView];
     isMapView = YES;
-    
+    tbl_View.hidden = YES;
+
     self.automaticallyAdjustsScrollViewInsets = NO;
     
     [self.map_View setShowsUserLocation:YES];
@@ -274,87 +279,77 @@
     [self performSegueWithIdentifier:@"segue_addTimer" sender:nil];
     
 }
+
 -(IBAction)btnSwitchToMapAndList:(id)sender{
     
     if (isMapView) {
         NSLog(@"%d, %d", ary_ptfp.count, countList);
         [tbl_View reloadData];
+        tbl_View.hidden = NO;
         isMapView = NO;
         [btnToggleMapList setImage:[UIImage imageNamed:@"map.png"] forState:UIControlStateNormal];
         [self performCubeAnimation:@"cube" animSubType:kCATransitionFromRight];
-        [map_View removeFromSuperview];
         
-        [containerView addSubview:tbl_View];
-        [containerView addSubview:infoView];
-        
-    }else{
+    }
+    else {
          NSLog(@"%d, %d", ary_ptfp.count, countList);
-//        [self showPinWithMapCenter:];
         isMapView = YES;
-        [tbl_View reloadData];
+        tbl_View.hidden = YES;
         [btnToggleMapList setImage:[UIImage imageNamed:@"list.png"] forState:UIControlStateNormal];
         [self performCubeAnimation:@"cube" animSubType:kCATransitionFromLeft];
-        [tbl_View removeFromSuperview];
-        
-        [containerView addSubview:map_View];
-        [containerView addSubview:infoView];
     }
 }
+
 - (IBAction)btn_FreeParking:(id)sender {
     [self.map_View removeAnnotations:[self.map_View annotations]];
-    for(tempTable* tpObj in tempTableArray) {
-        if([tpObj.parkingType isEqual:@"Free parking"]) {
-            MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:tpObj.streetName Subtitle:tpObj.fullAddress Location:CLLocationCoordinate2DMake([tpObj.lat doubleValue], [tpObj.lon doubleValue])];
-            [map_View addAnnotation:pin];
-        }
+    for(tempTable* tpObj in ary_ptfp) {
+        MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:tpObj.streetName Subtitle:tpObj.fullAddress Location:CLLocationCoordinate2DMake([tpObj.lat doubleValue], [tpObj.lon doubleValue])];
+        [map_View addAnnotation:pin];
     }
     countList = FREE_PARKING;
     [tbl_View reloadData];
 }
+
 - (IBAction)btn_FreeParkingStructure:(id)sender {
     [self.map_View removeAnnotations:[self.map_View annotations]];
-    for(tempTable* tpObj in tempTableArray) {
-        if([tpObj.parkingType isEqual:@"Free parking structure"]) {
-            MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:tpObj.streetName Subtitle:tpObj.fullAddress Location:CLLocationCoordinate2DMake([tpObj.lat doubleValue], [tpObj.lon doubleValue])];
-            [map_View addAnnotation:pin];
-        }
+    for(tempTable* tpObj in ary_ptfps) {
+        MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:tpObj.streetName Subtitle:tpObj.fullAddress Location:CLLocationCoordinate2DMake([tpObj.lat doubleValue], [tpObj.lon doubleValue])];
+        [map_View addAnnotation:pin];
     }
     countList = FREE_PARKING_STRUCTURE;
     [tbl_View reloadData];
 }
+
 - (IBAction)btn_LimitParking:(id)sender {
     [self.map_View removeAnnotations:[self.map_View annotations]];
-    for(tempTable* tpObj in tempTableArray) {
-        if([tpObj.parkingType isEqual:@"Limited time parking"]) {
-            MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:tpObj.streetName Subtitle:tpObj.fullAddress Location:CLLocationCoordinate2DMake([tpObj.lat doubleValue], [tpObj.lon doubleValue])];
-            [map_View addAnnotation:pin];
-        }
+    for(tempTable* tpObj in ary_ptlt) {
+        MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:tpObj.streetName Subtitle:tpObj.fullAddress Location:CLLocationCoordinate2DMake([tpObj.lat doubleValue], [tpObj.lon doubleValue])];
+        [map_View addAnnotation:pin];
     }
     countList = LIMITED_TIME_PARKING;
     [tbl_View reloadData];
 }
+
 - (IBAction)btn_MeterParking:(id)sender {
     [self.map_View removeAnnotations:[self.map_View annotations]];
-    for(tempTable* tpObj in tempTableArray) {
-        if([tpObj.parkingType isEqual:@"Metered parking"]) {
-            MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:tpObj.streetName Subtitle:tpObj.fullAddress Location:CLLocationCoordinate2DMake([tpObj.lat doubleValue], [tpObj.lon doubleValue])];
-            [map_View addAnnotation:pin];
-        }
+    for(tempTable* tpObj in ary_ptmp) {
+        MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:tpObj.streetName Subtitle:tpObj.fullAddress Location:CLLocationCoordinate2DMake([tpObj.lat doubleValue], [tpObj.lon doubleValue])];
+        [map_View addAnnotation:pin];
     }
     countList = METERED_PARKING;
     [tbl_View reloadData];
 }
+
 - (IBAction)btn_MeterParkingStructure:(id)sender{
     [self.map_View removeAnnotations:[self.map_View annotations]];
-    for(tempTable* tpObj in tempTableArray) {
-        if([tpObj.parkingType isEqual:@"Metered parking structure"]) {
-            MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:tpObj.streetName Subtitle:tpObj.fullAddress Location:CLLocationCoordinate2DMake([tpObj.lat doubleValue], [tpObj.lon doubleValue])];
-            [map_View addAnnotation:pin];
-        }
+    for(tempTable* tpObj in ary_ptmps) {
+        MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:tpObj.streetName Subtitle:tpObj.fullAddress Location:CLLocationCoordinate2DMake([tpObj.lat doubleValue], [tpObj.lon doubleValue])];
+        [map_View addAnnotation:pin];
     }
     countList = METERED_PARKING_STRUCTURE;
     [tbl_View reloadData];
 }
+
 -(void)performCubeAnimation:(NSString*)animType animSubType:(NSString*)animSubType{
     
     CATransition *transition = [CATransition animation];
