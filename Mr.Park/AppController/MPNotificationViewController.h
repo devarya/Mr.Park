@@ -9,8 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "MPSettingViewController.h"
 #import "MPAddTimerViewController.h"
+#import <Foundation/NSObject.h>
 
 @interface MPNotificationViewController : MPSettingViewController<UITableViewDataSource,UITableViewDelegate>
+
 @property (weak, nonatomic) IBOutlet UITableView *tv_myTableView;
+@property(nonatomic,retain)  NSMutableArray  *scheduledLocalNotifications;
 
 @end

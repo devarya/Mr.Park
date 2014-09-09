@@ -7,6 +7,7 @@
 //
 
 #import "MPNotificationViewController.h"
+#import <Foundation/NSObject.h>
 
 @interface MPNotificationViewController ()
 - (void)reloadTable;
@@ -14,7 +15,7 @@
 @end
 
 @implementation MPNotificationViewController
-
+@synthesize scheduledLocalNotifications;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -93,10 +94,25 @@
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
 }
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+//-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+//{
+//}
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    // Return NO if you do not want the specified item to be editable.
+    return YES;
+    
 }
-
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        // Delete the row from the data source
+        
+        [scheduledLocalNotifications removeObjectAtIndex:indexPath.row];
+        [tableView reloadData];
+        
+    }
+}
 #pragma mark - IB_ACTION
 -(IBAction)btnBackDidClicked:(id)sender{
     

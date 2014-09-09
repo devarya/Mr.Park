@@ -196,8 +196,8 @@
         
         //Drop pin
         MKPointAnnotation *annotation = [[MKPointAnnotation alloc]init];
-        [annotation setCoordinate: newLocation];
-        [annotation setTitle:self->searchBar.text];  // you can set the subtitle, too
+//        [annotation setCoordinate: newLocation];
+//        [annotation setTitle:self->searchBar.text];  // you can set the subtitle, too
 //        [self.map_View addAnnotation:annotation];
         
         //scroll to search result
