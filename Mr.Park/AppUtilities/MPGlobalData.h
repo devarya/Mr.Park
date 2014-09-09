@@ -52,7 +52,6 @@ CLLocation *currentLocation;
 
 NSString *parkingType;
 NSString *destAddressID;
-NSString *destHouseNo;
 NSString *destStreetName;
 NSString *destAddress;
 NSString *destParkingType;
