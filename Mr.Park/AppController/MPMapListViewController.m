@@ -67,7 +67,7 @@
     return YES;
 }
 
-
+#pragma mark - MAPVIEW_DELEGATE AND DATA_SOURCE
 - (void)didDragMap:(UIGestureRecognizer*)gestureRecognizer {
     if (gestureRecognizer.state == UIGestureRecognizerStateEnded){
         //[self removeAllPinsButUserLocation];
@@ -130,15 +130,18 @@
 }
 
 - (void) mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
-    MPParkingDetailViewController *dvc = [[MPParkingDetailViewController alloc] initWithNibName:@"MPParkingDetailViewController" bundle:nil];
-    destCoordinate = [[view annotation] coordinate];
-    destLatitude = destCoordinate.latitude;
-    destLongitude = destCoordinate.longitude;
-    [self getDestInformationWithLatitude:destLatitude Longitude:destLongitude];
-    [self.navigationController pushViewController:dvc animated:YES];
-    //UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main_Iphone" bundle:nil];
-    UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"detailViewController"];
-    [self presentViewController:vc animated:YES completion:NULL];
+//    MPParkingDetailViewController *dvc = [[MPParkingDetailViewController alloc] initWithNibName:@"MPParkingDetailViewController" bundle:nil];
+//    destCoordinate = [[view annotation] coordinate];
+//    destLatitude = destCoordinate.latitude;
+//    destLongitude = destCoordinate.longitude;
+//    [self getDestInformationWithLatitude:destLatitude Longitude:destLongitude];
+//    [self.navigationController pushViewController:dvc animated:YES];
+//    //UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main_Iphone" bundle:nil];
+//    UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"detailViewController"];
+//    [self presentViewController:vc animated:YES completion:NULL];
+    
+    [self performSegueWithIdentifier:@"Map_Detail" sender:nil];
+    
     
 }
 
@@ -222,7 +225,7 @@
     pins = nil;
 }
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if([[segue identifier] isEqualToString:@"showDetails"]) {
+    if([[segue identifier] isEqualToString:@"Map_Detail"]) {
         //DetailViewController *dtv = [segue destinationViewController];
         NSInteger tagIndex = [(UIButton *)sender tag];
         tempTable* tpObj = tempTableArray[tagIndex];
@@ -361,6 +364,8 @@
     [[[self view] layer] addAnimation: transition forKey: nil];
     
 }
+
+#pragma mark - TABLE_VIEW DELEGATE AND DATASOURCE
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -541,12 +546,17 @@
     }
 }
 
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    
+    [self performSegueWithIdentifier:@"Map_Detail" sender:nil];
+    
+}
+
 - (CGFloat)tableView:(UITableView *)tableView
 heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 70;
 }
-
-#pragma mark TABLE_VIEW DELEGATE AND DATASOURCE
 
 //-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
 //    

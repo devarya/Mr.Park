@@ -66,9 +66,6 @@
                                                     </subviews>
                                                 </tableViewCellContentView>
                                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                                <connections>
-                                                    <segue destination="ITB-QE-0ud" kind="push" identifier="showDetails" id="DN4-8b-cAC"/>
-                                                </connections>
                                             </tableViewCell>
                                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="cellLight" rowHeight="70" id="tAo-5d-YeP">
                                                 <rect key="frame" x="0.0" y="92" width="320" height="70"/>
@@ -97,9 +94,6 @@
                                                         </label>
                                                     </subviews>
                                                 </tableViewCellContentView>
-                                                <connections>
-                                                    <segue destination="ITB-QE-0ud" kind="push" identifier="showDetails" id="8Cd-Wo-oDX"/>
-                                                </connections>
                                             </tableViewCell>
                                         </prototypes>
                                         <connections>
@@ -230,6 +224,7 @@
                         <outlet property="searchBar" destination="nx7-LB-3sz" id="Kxp-ME-0cK"/>
                         <outlet property="tbl_View" destination="XHw-rK-BPw" id="FTA-Vo-IY3"/>
                         <segue destination="ywe-Pb-4qG" kind="push" identifier="segue_addTimer" id="3yJ-Xc-0MX"/>
+                        <segue destination="ITB-QE-0ud" kind="push" identifier="Map_Detail" id="FMm-TB-Y2L"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VZD-Vn-hCC" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -451,7 +446,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4gN-Xr-ELm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3692" y="-2403"/>
+            <point key="canvasLocation" x="-3455" y="-1168"/>
         </scene>
         <!--Feed Back View Controller-->
         <scene sceneID="D0v-ZT-CUj">
@@ -894,7 +889,7 @@
                                 </subviews>
                             </view>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Remind In" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="hZD-gZ-3Cr">
-                                <rect key="frame" x="14" y="314.00000742297004" width="292" height="22"/>
+                                <rect key="frame" x="14" y="314.00000685156886" width="292" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <nil key="highlightedColor"/>
@@ -1354,7 +1349,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="zzX-Yj-5Fo"/>
         <segue reference="3yJ-Xc-0MX"/>
+        <segue reference="zzX-Yj-5Fo"/>
     </inferredMetricsTieBreakers>
 </document>
