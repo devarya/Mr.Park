@@ -29,6 +29,8 @@
 #define MESSAGE_NOT_RESPOND @"Server not responding"
 #define MESSAGE_REGION_NOT_FOUND @"Not support for this area yet"
 #define MESSAGE_NET_NOT_AVAILABLE @"APP will work on no internet mode"
+#define MESSAGE_ADD_FAVORITE @"Add to favorite List"
+#define MESSAGE_ADD_FAVORITE_FAIL @"Already in favorite List"
 
 
 

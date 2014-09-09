@@ -26,8 +26,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    _aryaInfo2014 = [[NSMutableArray alloc]initWithObjects:@"Rashmi",
-                @"Aditi",@"Rajeshs",@"Zac",@"Sean",@"Brian", nil];
+    [[MPDBIntraction databaseInteractionManager] getFavoriteListFromDatabase];
 }
 
 - (void)didReceiveMemoryWarning
@@ -43,8 +42,7 @@
     return 62;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    
-    return _aryaInfo2014.count;
+    return favoriteListArray.count;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
@@ -58,8 +56,10 @@
                 initWithStyle:UITableViewCellStyleDefault
                 reuseIdentifier:cellIdentifier];
     }
-    
-    cell.textLabel.text = [_aryaInfo2014 objectAtIndex:indexPath.row];
+    FavoriteList *flist = [FavoriteList new];
+        flist = [favoriteListArray objectAtIndex:indexPath.row];
+    NSString *fullAddress = [NSString stringWithFormat:@"%@ %@, %@", flist.str_houseNo, flist.str_houseFullAddress, flist.str_cityName];
+    cell.textLabel.text = fullAddress;
     
     return cell;
 }
@@ -75,6 +75,29 @@
     
 //    [numbers removeObjectAtIndex:indexPath.row];
 //    [favoritesTableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimation];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if([[segue identifier] isEqualToString:@"showDetails"]) {
+        //DetailViewController *dtv = [segue destinationViewController];
+        NSInteger tagIndex = [(UIButton *)sender tag];
+        FavoriteList *flObj = favoriteListArray[tagIndex];
+        destCoordinate = CLLocationCoordinate2DMake([flObj.double_houseLat doubleValue], [flObj.double_houseLong doubleValue]);
+        destAddressID = [NSString stringWithFormat:@"%@", flObj.int_addId];
+        destLatitude = destCoordinate.latitude;
+        destLongitude = destCoordinate.longitude;
+        destStreetName = flObj.str_streetName;
+        destAddress = flObj.str_houseFullAddress;
+        destParkingType = [[MPDBIntraction databaseInteractionManager] getParkingTypeWithID:[flObj.int_addId integerValue]];
+        [[MPDBIntraction databaseInteractionManager] getParkingFromDatabase:[flObj.int_parking_id integerValue]];
+        NSString *startTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][1]];
+        NSString *endTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][1]];
+        destParkingTime = [NSString stringWithFormat:@"%@ - %@", startTime, endTime];
+        NSString *restrictStartTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_restrict_time_start componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_restrict_time_start componentsSeparatedByString:@":"][1]];
+        NSString *restrictEndTime = [NSString stringWithFormat:@"%@:%@", [parkingHolder.str_parking_restrict_time_end componentsSeparatedByString:@":"][0], [parkingHolder.str_parking_restrict_time_end componentsSeparatedByString:@":"][1]];
+        destRestrictTime = [NSString stringWithFormat:@"%@ - %@", restrictStartTime, restrictEndTime];
+    }
+    NSLog(@"%@", destParkingType);
 }
 
 

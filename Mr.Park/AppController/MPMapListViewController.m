@@ -27,6 +27,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    UIPanGestureRecognizer* panRec = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(didDragMap:)];
+    [panRec setDelegate:self];
+    [self.map_View addGestureRecognizer:panRec];
     hud = [AryaHUD new];
     [self.view addSubview:hud];
     
@@ -57,6 +60,19 @@
                                             selector:@selector(reachabilityHomeStatusChange:)
                                                 name:kReachabilityChangedNotification
                                               object:nil];
+    
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    return YES;
+}
+
+
+- (void)didDragMap:(UIGestureRecognizer*)gestureRecognizer {
+    if (gestureRecognizer.state == UIGestureRecognizerStateEnded){
+        //[self removeAllPinsButUserLocation];
+        [self checkRegionWithCoordinates:currentCoordinate];
+    }
 }
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation{
@@ -65,13 +81,22 @@
     MKCoordinateRegion zoomRegion = MKCoordinateRegionMakeWithDistance(currentCoordinate, 1000, 1000);
     [self.map_View setRegion:zoomRegion animated:NO];
     currentLocation = userLocation.location;
+    if (tempTableArray.count == 0) {
+        [self checkRegionWithCoordinates:currentCoordinate];
+    }
     
-    
-    
-    
-	
-    [self checkRegionWithCoordinates:currentCoordinate];
 }
+
+//- (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated{
+//    
+//    [self checkRegionWithCoordinates:currentCoordinate];
+//
+//}
+//- (void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated{
+//    
+//    [self checkRegionWithCoordinates:currentCoordinate];
+//    
+//}
 
 - (MKAnnotationView *) mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
     //[HUD hide];
@@ -109,7 +134,7 @@
     destCoordinate = [[view annotation] coordinate];
     destLatitude = destCoordinate.latitude;
     destLongitude = destCoordinate.longitude;
-    [self getDestInformationWithLatitude:[NSString stringWithFormat:@"%lf",destLatitude] Longitude:[NSString stringWithFormat:@"%lf",destLongitude]];
+    [self getDestInformationWithLatitude:destLatitude Longitude:destLongitude];
     [self.navigationController pushViewController:dvc animated:YES];
     //UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main_Iphone" bundle:nil];
     UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"detailViewController"];
@@ -127,9 +152,10 @@
     return parkingType;
 }
 
-- (void) getDestInformationWithLatitude: (NSString *)lat Longitude: (NSString *) lon {
+- (void) getDestInformationWithLatitude: (double)lat Longitude: (double) lon {
     for(tempTable* tpObj in tempTableArray) {
-        if([tpObj.lat isEqual: lat] && [tpObj.lon  isEqual: lon]) {
+        if([tpObj.lat doubleValue] == lat && [tpObj.lon doubleValue] == lon) {
+            destAddressID = tpObj.addressID;
             destStreetName = tpObj.streetName;
             destAddress = tpObj.fullAddress;
             destParkingType = tpObj.parkingType;
@@ -201,6 +227,7 @@
         NSInteger tagIndex = [(UIButton *)sender tag];
         tempTable* tpObj = tempTableArray[tagIndex];
         destCoordinate = CLLocationCoordinate2DMake([tpObj.lat doubleValue], [tpObj.lon doubleValue]);
+        destAddressID = tpObj.addressID;
         destLatitude = destCoordinate.latitude;
         destLongitude = destCoordinate.longitude;
         destStreetName = tpObj.streetName;
@@ -639,7 +666,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     }
     [self setTheListContent:tempTableArray];
     [self addAnnotationPinToMap:tempTableArray];
-    [hud hide];
+    //[hud hide];
     
 }
 
@@ -805,7 +832,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 //         }
 //     }];
     //dispatch_semaphore_wait(fd_sema, DISPATCH_TIME_FOREVER);
-    [hud show];
+    //[hud show];
     [self.view bringSubviewToFront:hud];
 //    dispatch_sync(dispatch_get_main_queue(), ^
 //                   {
@@ -818,13 +845,16 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
         [ceo reverseGeocodeLocation: loc completionHandler:
          ^(NSArray *placemarks, NSError *error) {
              CLPlacemark *pm = [placemarks objectAtIndex:0];
-                                if ([region_arr rangeOfString:pm.subAdministrativeArea].location == NSNotFound) {
-                                    if([region_arr length] !=0 ){
-                                        [region_arr appendString:@", "];
-                                    }
-                                    [region_arr appendString:pm.subAdministrativeArea];
-                                    [self checkLocalDBforReigon:region_arr];
-                                }
+             if (pm.subAdministrativeArea != nil) {
+                 if ([region_arr rangeOfString:pm.subAdministrativeArea].location == NSNotFound) {
+                     if([region_arr length] !=0 ){
+                         [region_arr appendString:@", "];
+                     }
+                     [region_arr appendString:pm.subAdministrativeArea];
+                     [self checkLocalDBforReigon:region_arr];
+                 }
+             }
+             
          }];
     }
     //                   }
@@ -893,6 +923,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
                         else
                         {
                             NSLog(@"error in select addressUpdate where region_id = %@", rID);
+                            [hud hide];
                         }
                     }
                     @catch (NSException *e)

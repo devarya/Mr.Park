@@ -10,6 +10,6 @@
 
 @implementation FavoriteList
 
-@synthesize str_addId, str_cityName, str_createdId, str_houseFullAddress, str_houseLat, str_houseLong, str_houseNo, str_houseSide, str_regionName,str_stateName, str_status,str_streetName, str_updatedAt,str_parking_ids;
+@synthesize int_addId, str_cityName, str_createdId, str_houseFullAddress, double_houseLat, double_houseLong, str_houseNo, str_houseSide, str_regionName,str_stateName, str_status,str_streetName, int_parking_id;
 
 @end

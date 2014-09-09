@@ -23,4 +23,5 @@
 
 - (void)setLastActivityWithTime:(NSString*)time andRegionName: (NSString*) rName;
 
+- (NSString*)getParkingTypeWithID:(int) parkingID;
 @end

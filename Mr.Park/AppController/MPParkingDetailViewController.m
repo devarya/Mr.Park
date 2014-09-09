@@ -84,7 +84,6 @@
     //[HUD hide];
     if([annotation isKindOfClass:[MPCustomAnnotation class]]) {
         MKPinAnnotationView *newAnnotation = [[MKPinAnnotationView alloc]     initWithAnnotation:annotation reuseIdentifier:@"MPCustomAnnotation"];
-        CLLocationCoordinate2D temp = [annotation coordinate];
         newAnnotation.canShowCallout = YES;
         newAnnotation.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
         newAnnotation.leftCalloutAccessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"twitter"]];
@@ -284,7 +283,68 @@
 }
 
 - (IBAction)btn_Favorite:(id)sender {
-    
+    if (!mrParkDB)
+    {
+        NSString*path = [[MPDBIntraction databaseInteractionManager] getDatabasePathFromName:DBname];
+        mrParkDB = [[FMDatabase alloc] initWithPath:path];
+    }
+    NSString *query;
+    query = [NSString stringWithFormat:@"Select * from addressTable where address_id = %@", destAddressID];
+    @try
+    {
+        [mrParkDB open];
+        if ([mrParkDB executeQuery:query])
+        {
+            FMResultSet *dataArr = [mrParkDB executeQuery:query];
+            [dataArr next];
+            flistHolder = [FavoriteList new];
+            addressHolder = [AddressDB new];
+            
+            flistHolder.int_addId = [NSNumber numberWithInt:[dataArr intForColumn:@"address_id"]];
+            flistHolder.str_cityName = [dataArr stringForColumn:@"city_name"];
+            flistHolder.str_createdId = [dataArr stringForColumn:@"created_at"];
+            flistHolder.str_houseFullAddress = [dataArr stringForColumn:@"houseFullAddress"];
+            flistHolder.double_houseLat = [NSNumber numberWithDouble:[dataArr doubleForColumn:@"houseLat"]];
+            flistHolder.double_houseLong = [NSNumber numberWithDouble:[dataArr doubleForColumn:@"houseLong"]];
+            flistHolder.str_houseNo = [dataArr stringForColumn:@"houseNo"];
+            flistHolder.str_houseSide = [dataArr stringForColumn:@"houseSide"];
+            flistHolder.str_regionName = [dataArr stringForColumn:@"regionName"];
+            flistHolder.str_stateName = [dataArr stringForColumn:@"stateName"];
+            flistHolder.str_status = [dataArr stringForColumn:@"status"];
+            flistHolder.str_streetName = [dataArr stringForColumn:@"streetName"];
+            flistHolder.int_parking_id = [NSNumber numberWithInt:[dataArr intForColumn:@"parking_id"]];
+        }
+        else
+        {
+            NSLog(@"error in selection from address table to favorite list");
+        }
+        [mrParkDB close];
+    }
+    @catch (NSException *e)
+    {
+        NSLog(@"%@",e);
+    }
+    query=[NSString stringWithFormat:@"insert into favoriteTable(address_id, city_name, created_at, houseFullAddress, houseLat, houseLong, houseNo, houseSide, regionName, stateName, status, streetName, parking_ids) values(\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\",\"%@\", \"%@\")",flistHolder.int_addId, flistHolder.str_cityName, flistHolder.str_createdId, flistHolder.str_houseFullAddress, flistHolder.double_houseLat, flistHolder.double_houseLong, flistHolder.str_houseNo, flistHolder.str_houseSide, flistHolder.str_regionName, flistHolder.str_stateName, flistHolder.str_status, flistHolder.str_streetName, flistHolder.int_parking_id];
+    @try
+    {
+        [mrParkDB open];
+        if ([mrParkDB executeUpdate:query])
+        {
+            NSLog(@"successfully inserted address_id: %@ into favorite table", destAddressID);
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Message" message:MESSAGE_ADD_FAVORITE delegate:nil cancelButtonTitle:@"Done" otherButtonTitles:nil];
+            [alert show];
+        }
+    }
+    @catch (NSException *e)
+    {
+        NSLog(@"%@",e);
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Message" message:MESSAGE_ADD_FAVORITE_FAIL delegate:nil cancelButtonTitle:@"Done" otherButtonTitles:nil];
+        [alert show];
+    }
+    @finally{
+        [mrParkDB close];
+    }
+
 }
 
 #pragma mark TABLE_VIEW DELEGATE AND DATASOURCE
