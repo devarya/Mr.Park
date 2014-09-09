@@ -84,7 +84,6 @@
     //[HUD hide];
     if([annotation isKindOfClass:[MPCustomAnnotation class]]) {
         MKPinAnnotationView *newAnnotation = [[MKPinAnnotationView alloc]     initWithAnnotation:annotation reuseIdentifier:@"MPCustomAnnotation"];
-        CLLocationCoordinate2D temp = [annotation coordinate];
         newAnnotation.canShowCallout = YES;
         newAnnotation.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
         newAnnotation.leftCalloutAccessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"twitter"]];
@@ -332,11 +331,15 @@
         if ([mrParkDB executeUpdate:query])
         {
             NSLog(@"successfully inserted address_id: %@ into favorite table", destAddressID);
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Message" message:MESSAGE_ADD_FAVORITE delegate:nil cancelButtonTitle:@"Done" otherButtonTitles:nil];
+            [alert show];
         }
     }
     @catch (NSException *e)
     {
         NSLog(@"%@",e);
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Message" message:MESSAGE_ADD_FAVORITE_FAIL delegate:nil cancelButtonTitle:@"Done" otherButtonTitles:nil];
+        [alert show];
     }
     @finally{
         [mrParkDB close];

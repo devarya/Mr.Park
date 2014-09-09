@@ -27,6 +27,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    UIPanGestureRecognizer* panRec = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(didDragMap:)];
+    [panRec setDelegate:self];
+    [self.map_View addGestureRecognizer:panRec];
     hud = [AryaHUD new];
     [self.view addSubview:hud];
     
@@ -57,6 +60,19 @@
                                             selector:@selector(reachabilityHomeStatusChange:)
                                                 name:kReachabilityChangedNotification
                                               object:nil];
+    
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    return YES;
+}
+
+
+- (void)didDragMap:(UIGestureRecognizer*)gestureRecognizer {
+    if (gestureRecognizer.state == UIGestureRecognizerStateEnded){
+        //[self removeAllPinsButUserLocation];
+        [self checkRegionWithCoordinates:currentCoordinate];
+    }
 }
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation{
@@ -65,13 +81,22 @@
     MKCoordinateRegion zoomRegion = MKCoordinateRegionMakeWithDistance(currentCoordinate, 1000, 1000);
     [self.map_View setRegion:zoomRegion animated:NO];
     currentLocation = userLocation.location;
+    if (tempTableArray.count == 0) {
+        [self checkRegionWithCoordinates:currentCoordinate];
+    }
     
-    
-    
-    
-	
-    [self checkRegionWithCoordinates:currentCoordinate];
 }
+
+//- (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated{
+//    
+//    [self checkRegionWithCoordinates:currentCoordinate];
+//
+//}
+//- (void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated{
+//    
+//    [self checkRegionWithCoordinates:currentCoordinate];
+//    
+//}
 
 - (MKAnnotationView *) mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
     //[HUD hide];
@@ -641,7 +666,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     }
     [self setTheListContent:tempTableArray];
     [self addAnnotationPinToMap:tempTableArray];
-    [hud hide];
+    //[hud hide];
     
 }
 
@@ -807,7 +832,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 //         }
 //     }];
     //dispatch_semaphore_wait(fd_sema, DISPATCH_TIME_FOREVER);
-    [hud show];
+    //[hud show];
     [self.view bringSubviewToFront:hud];
 //    dispatch_sync(dispatch_get_main_queue(), ^
 //                   {
@@ -898,6 +923,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
                         else
                         {
                             NSLog(@"error in select addressUpdate where region_id = %@", rID);
+                            [hud hide];
                         }
                     }
                     @catch (NSException *e)

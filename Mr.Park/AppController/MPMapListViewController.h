@@ -17,7 +17,7 @@
 #import "MPConstant.h"
 
 
-@interface MPMapListViewController : MPBottomBarViewController<UITableViewDataSource,UITableViewDelegate, UISearchBarDelegate, MKMapViewDelegate>{
+@interface MPMapListViewController : MPBottomBarViewController<UITableViewDataSource,UITableViewDelegate, UISearchBarDelegate, MKMapViewDelegate, UIGestureRecognizerDelegate>{
     
     AryaHUD *hud;
     IBOutlet UIView *containerView;
