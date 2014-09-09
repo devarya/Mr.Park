@@ -7,6 +7,7 @@
 //
 
 #import "MPNotificationViewController.h"
+#import <Foundation/NSObject.h>
 
 @interface MPNotificationViewController ()
 - (void)reloadTable;
@@ -93,10 +94,26 @@
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
 }
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-}
 
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // Return NO if you do not want the specified item to be editable.
+    return YES;
+    
+}
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        // Delete the row from the data source
+        
+        NSArray *notificationArray=[[UIApplication sharedApplication] scheduledLocalNotifications];
+        UILocalNotification *notificationToCancel= [notificationArray objectAtIndex:indexPath.row];
+        
+        [[UIApplication sharedApplication] cancelLocalNotification:notificationToCancel];
+        [tableView reloadData];
+        
+    }
+}
 #pragma mark - IB_ACTION
 -(IBAction)btnBackDidClicked:(id)sender{
     

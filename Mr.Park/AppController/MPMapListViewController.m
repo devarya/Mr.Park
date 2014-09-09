@@ -14,7 +14,7 @@
 @end
 
 @implementation MPMapListViewController
-@synthesize map_View, geocoder, tbl_View;
+@synthesize map_View, geocoder, tbl_View, searchBar;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -75,20 +75,30 @@
 #pragma mark - MAPVIEW_DELEGATE AND DATA_SOURCE
 - (void)didDragMap:(UIGestureRecognizer*)gestureRecognizer {
     if (gestureRecognizer.state == UIGestureRecognizerStateEnded){
-        //[self removeAllPinsButUserLocation];
-        [self checkRegionWithCoordinates:currentCoordinate];
+        [hud show];
+        [self removeAllPinsButUserLocation];
+        [self getRegionNameWithMapCenter:self.map_View.region.center];
     }
 }
 
-- (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation{
+
+- (void)mapViewWillStartLocatingUser:(MKMapView *)mapView{
     
-    currentCoordinate = [userLocation coordinate];
-    MKCoordinateRegion zoomRegion = MKCoordinateRegionMakeWithDistance(currentCoordinate, 1000, 1000);
-    [self.map_View setRegion:zoomRegion animated:NO];
-    currentLocation = userLocation.location;
-    if (tempTableArray.count == 0) {
-        [self checkRegionWithCoordinates:currentCoordinate];
+}
+
+- (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation{
+    if (!userLocationShown) {
+        currentCoordinate = [userLocation coordinate];
+        MKCoordinateRegion zoomRegion = MKCoordinateRegionMakeWithDistance(currentCoordinate, 1000, 1000);
+        [self.map_View setRegion:zoomRegion animated:NO];
+        currentLocation = userLocation.location;
     }
+    
+    if (tempTableArray.count == 0) {
+        [self getRegionNameWithMapCenter:currentCoordinate];
+        //[self checkRegionWithCoordinates:currentCoordinate];
+    }
+    userLocationShown = YES;
     
 }
 
@@ -182,42 +192,25 @@
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     [self->searchBar resignFirstResponder];    
 }
--(void) searchBarSearchButtonClicked:(UISearchBar *)searchBar{
+-(void) searchBarSearchButtonClicked:(UISearchBar *)search_Bar{
 
-    [self->searchBar resignFirstResponder];
-    
-    MKCoordinateRegion zoomRegion = MKCoordinateRegionMakeWithDistance(currentCoordinate, 2000, 2000);
-    [self.map_View setRegion:zoomRegion animated:NO];
-    
-    //Instantiate geolocation
-    CLGeocoder *geocoder = [[CLGeocoder alloc]init];
-    [geocoder geocodeAddressString:self->searchBar.text completionHandler:^(NSArray *placemarks, NSError *error){
+    [search_Bar resignFirstResponder];
+    geocoder = [[CLGeocoder alloc] init];
+    [geocoder geocodeAddressString:search_Bar.text completionHandler:^(NSArray *placemarks, NSError *error) {
         
-        //Mark location and center
-        CLPlacemark *placemark = [placemarks objectAtIndex:0];
         
+        placemark = [placemarks objectAtIndex:0];
         MKCoordinateRegion region;
-        CLLocationCoordinate2D newLocation = [placemark.location coordinate];
         region.center = [(CLCircularRegion *)placemark.region center];
-        
-        //Drop pin
-        MKPointAnnotation *annotation = [[MKPointAnnotation alloc]init];
-        [annotation setCoordinate: newLocation];
-        [annotation setTitle:self->searchBar.text];  // you can set the subtitle, too
-//        [self.map_View addAnnotation:annotation];
-        
-        //scroll to search result
-        MKMapRect mr = [self.map_View visibleMapRect];
-        MKMapPoint pt = MKMapPointForCoordinate([annotation coordinate]);
-        mr.origin.x = pt.x - mr.size.width *0.5;
-        mr.origin.y = pt.y - mr.size.height *0.25;
-        [self.map_View setVisibleMapRect:mr animated:YES];
-        [self removeAllPinsButUserLocation];
-        [self showPinWithMapCenter:newLocation andRegion:placemark.subAdministrativeArea];
-    }];
+        MKCoordinateSpan span;
+        double radius = [(CLCircularRegion *)placemark.region radius]/1000;
     
-    
-}
+        span.latitudeDelta = radius / 112.0;
+        
+        region.span = span;
+        
+        [map_View setRegion:region animated:YES];
+    }];}
 
 - (void)removeAllPinsButUserLocation
 {
@@ -283,7 +276,7 @@
 -(IBAction)btnSwitchToMapAndList:(id)sender{
     
     if (isMapView) {
-        NSLog(@"%d, %d", ary_ptfp.count, countList);
+        NSLog(@"%lu, %d", (unsigned long)ary_ptfp.count, countList);
         [tbl_View reloadData];
         tbl_View.hidden = NO;
         isMapView = NO;
@@ -717,6 +710,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
             }
         }
     }
+    [hud hide];
 
 }
 
@@ -824,28 +818,9 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     cp.lon = [NSString stringWithFormat:@"%f", wCoord.longitude];
     [point_arr addObject:cp];
     
-    //dispatch_semaphore_t fd_sema = dispatch_semaphore_create(0);
-//    CoordinatePoint *point = [point_arr objectAtIndex:0];
-//    CLGeocoder *ceo = [[CLGeocoder alloc]init];
-//    CLLocation *loc =[[CLLocation alloc]initWithLatitude:[point.lat doubleValue] longitude:[point.lon doubleValue]];;
-//        [ceo reverseGeocodeLocation: loc completionHandler:
-//     ^(NSArray *placemarks, NSError *error) {
-//         CLPlacemark *pm = [placemarks objectAtIndex:0];
-//        // dispatch_semaphore_signal(fd_sema);
-//         if ([region_arr rangeOfString:pm.subAdministrativeArea].location == NSNotFound) {
-//             [region_arr appendString:pm.subAdministrativeArea];
-//             [region_arr appendString:@", "];
-//             
-//             NSLog(@"%@", region_arr);
-//         }
-//     }];
-    //dispatch_semaphore_wait(fd_sema, DISPATCH_TIME_FOREVER);
-    //[hud show];
     [self.view bringSubviewToFront:hud];
-//    dispatch_sync(dispatch_get_main_queue(), ^
-//                   {
-                       CLGeocoder *ceo;
-                       CLLocation *loc;
+    CLGeocoder *ceo;
+    CLLocation *loc;
     region_arr = [NSMutableString new];
     for (CoordinatePoint *point in point_arr) {
         ceo = [[CLGeocoder alloc]init];
@@ -865,67 +840,58 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
              
          }];
     }
-    //                   }
-    //                   );
-
-    
-//
-//    dispatch_semaphore_signal(fd_sema);
-   // [self checkLocalDBforReigon:region_arr];
-//    [self createTempDBWithRegionName:region_arr];
 }
 
 
 
 -(void)checkLocalDBforReigon: (NSString*) region_arr{
-    //NSString *newRe = @"Orange";
+    if ([region_arr isEqualToString:@""]) {
+        [self checkRegionWithCoordinates:self.map_View.region.center];
+        return;
+    }
     NSArray *region_part = [region_arr componentsSeparatedByString:@", "];
     NSString *query;
-    NSMutableArray *region_id_arr = [NSMutableArray new];
-
-    if (!mrParkDB)
-    {
-        NSString*path = [[MPDBIntraction databaseInteractionManager] getDatabasePathFromName:DBname];
-        mrParkDB = [[FMDatabase alloc] initWithPath:path];
-    }
     
-    [mrParkDB open];
+    
     
     for (int i=0; i<region_part.count; i++) {
         
         query = [NSString stringWithFormat:@"select * from regionTable where region_name = \"%@\"", region_part[i]];
         @try
-        {
+        {   [mrParkDB open];
             if ([mrParkDB executeQuery:query])
             {
                 FMResultSet *dataArr = [mrParkDB executeQuery:query];
                 [dataArr next];
                 NSNumber *rID = [NSNumber numberWithInt:[dataArr intForColumn:@"region_id"]];
                 if ([rID isEqualToNumber:[NSNumber numberWithInt:0]]) {
-                    if (isSupport == YES) {
-                        isSupport = NO;
+                    
                     dispatch_async(dispatch_get_main_queue(), ^
                                    {
-                                       [MPGlobalFunction showAlert:MESSAGE_REGION_NOT_FOUND];
+                                       [MPGlobalFunction showAlert:[NSString stringWithFormat:@"%@, %@", MESSAGE_REGION_NOT_FOUND, region_part[i]]];
                                    });
-                    }
-                    [mrParkDB close];
+                    
+                    //[mrParkDB close];
                     [hud hide];
                 }else{
-                    [region_id_arr addObject:rID];
+                    //isSupport = YES;
                     query = [NSString stringWithFormat:@"select count(*) from addressUpdate where region_id = \"%@\"", rID];
                     @try
-                    {
+                    {   [mrParkDB open];
                         if ([mrParkDB executeQuery:query])
                         {
                             FMResultSet *dataArr = [mrParkDB executeQuery:query];
                             [dataArr next];
                             int count = [dataArr intForColumn:@"count(*)"];
                             if (count == 0) {
+                                if (haveInternet == NO) {
+                                    [MPGlobalFunction showAlert:MESSAGE_NEED_INTERNET];
+                                }else{
                                 NSMutableDictionary * Info = [NSMutableDictionary new];
                                 [[MPRestIntraction sharedManager] requestAddressCall:Info andRegionID:rID adUpdateTime:@"2000-01-01 00:00:00"];
+                                }
                             }
-                            [self createTempDBWithRegionName:region_arr];
+                            [self createTempDBWithCoordinate:self.map_View.region.center];
                             
                         }
                         else
@@ -937,6 +903,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
                     @catch (NSException *e)
                     {
                         NSLog(@"%@",e);
+                        [mrParkDB close];
                     }
                 }
                 
@@ -954,6 +921,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
         }
     }
     [mrParkDB close];
+    [hud hide];
     
 }
 
@@ -987,5 +955,129 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     [self addAnnotationPinToMap:pin_arr];
 }
 
+- (void)getRegionNameWithMapCenter: (CLLocationCoordinate2D)center{
+    NSMutableString *region_arr = [NSMutableString new];
+    double minLat = center.latitude - PIN_SHOW_WITH_DISTANCE;
+    double maxLat = center.latitude + PIN_SHOW_WITH_DISTANCE;
+    double minLong = center.longitude - PIN_SHOW_WITH_DISTANCE;
+    double maxLong = center.longitude + PIN_SHOW_WITH_DISTANCE;
+    NSString *query = [NSString stringWithFormat:@"select regionName from addressTable where houseLat between %f and %f and houseLong between %f and - %f", minLat, maxLat, minLong, maxLong];
+    [mrParkDB open];
+    @try
+    {
+        if ([mrParkDB executeQuery:query])
+        {
+            FMResultSet *dataArr = [mrParkDB executeQuery:query];
+            while ([dataArr next]) {
+                NSString* rName = [dataArr stringForColumn:@"regionName"];
+                if ([region_arr rangeOfString:rName].location == NSNotFound) {
+                    if([region_arr length] !=0 ){
+                        [region_arr appendString:@", "];
+                    }
+                    [region_arr appendString:rName];
+                }
+            }
+            [self checkLocalDBforReigon:region_arr];
+        }
+        else
+        {
+            NSLog(@"error in select the current range of coordinate from addressTable");
+        }
+    }
+    @catch (NSException *e)
+    {
+        NSLog(@"%@",e);
+    }
+    @finally{
+        [mrParkDB close];
+    }
+}
 
+-(void)createTempDBWithCoordinate: (CLLocationCoordinate2D)center{
+    double minLat = center.latitude - PIN_SHOW_WITH_DISTANCE;
+    double maxLat = center.latitude + PIN_SHOW_WITH_DISTANCE;
+    double minLong = center.longitude - PIN_SHOW_WITH_DISTANCE;
+    double maxLong = center.longitude + PIN_SHOW_WITH_DISTANCE;
+    NSString *query = [NSString stringWithFormat:@"select * from addressTable where houseLat between %f and %f and houseLong between %f and - %f", minLat, maxLat, minLong, maxLong];
+    [mrParkDB open];
+    @try
+    {
+        if ([mrParkDB executeQuery:query])
+        {
+            FMResultSet *dataArr = [mrParkDB executeQuery:query];
+            tempTableArray = [NSMutableArray new];
+            while([dataArr next]){
+                tempTable * tempObj = [tempTable new];
+                tempObj.addressID = [dataArr stringForColumn:@"address_id"];
+                tempObj.lat = [NSNumber numberWithDouble:[[dataArr stringForColumn:@"houseLat"] doubleValue]];
+                tempObj.lon = [NSNumber numberWithDouble:[[dataArr stringForColumn:@"houseLong"] doubleValue]];
+                tempObj.parkingID = [NSNumber numberWithInt:[dataArr intForColumn:@"parking_id"]];
+                tempObj.fullAddress  = [dataArr stringForColumn:@"houseFullAddress"];
+                tempObj.streetName = [dataArr stringForColumn:@"streetName"];
+                [tempTableArray addObject:tempObj];
+            }
+        }
+        else
+        {
+            NSLog(@"error in select the current range of coordinate from addressTable");
+        }
+    }
+    @catch (NSException *e)
+    {
+        NSLog(@"%@",e);
+    }
+    @finally{
+        [mrParkDB close];
+    }
+    
+    for (tempTable *tp in tempTableArray) {
+        if([self isHolidayWithCurrentDate:strDate]) {
+            tp.parkingType = @"Free parking";
+        }
+        else {
+            [[MPDBIntraction databaseInteractionManager] getParkingFromDatabase:[tp.parkingID intValue]];
+            if([self isSwappingWithHour:currentHour andMinute:currentMinute andParkingType:[tp.parkingID intValue]]) {
+                tp.parkingType = @"No Parking";
+            }
+            else {
+                BOOL isDefaultDay = false;
+                NSArray *arr_days = [parkingHolder.str_parking_default_days componentsSeparatedByString:@","];
+                for(NSString *day in arr_days) {
+                    if([weekday isEqual:day]) {
+                        isDefaultDay = true;
+                        break;
+                    }
+                }
+                if (isDefaultDay) {
+                    d_start =[[parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][0] integerValue]*60 + [[parkingHolder.str_parking_default_time_start componentsSeparatedByString:@":"][0] integerValue];
+                    
+                    d_end =[[parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][0] integerValue]*60 + [[parkingHolder.str_parking_default_time_end componentsSeparatedByString:@":"][0] integerValue];
+                    
+                    r_start =[[parkingHolder.str_parking_restrict_time_start componentsSeparatedByString:@":"][0] integerValue]*60 + [[parkingHolder.str_parking_restrict_time_start componentsSeparatedByString:@":"][0] integerValue];
+                    
+                    r_end =[[parkingHolder.str_parking_restrict_time_end componentsSeparatedByString:@":"][0] integerValue]*60 + [[parkingHolder.str_parking_restrict_time_end componentsSeparatedByString:@":"][0] integerValue];
+                    
+                    if(([currentHour integerValue]*60+[currentMinute integerValue])> d_start && ([currentHour integerValue]*60+[currentMinute integerValue]) < d_end) {
+                        if(([currentHour integerValue]*60+[currentMinute integerValue]) > r_start && ([currentHour integerValue]*60+[currentMinute integerValue]) < r_end) {
+                            tp.parkingType = @"No Parking";
+                        }
+                        else {
+                            tp.parkingType = parkingHolder.str_parking_type;
+                        }
+                    }
+                    else {
+                        tp.parkingType = parkingHolder.str_parking_type;
+                    }
+                }
+                else{
+                    tp.parkingType = @"Free parking";
+                }
+            }
+        }
+    }
+    [self setTheListContent:tempTableArray];
+    [self addAnnotationPinToMap:tempTableArray];
+    
+    
+}
 @end

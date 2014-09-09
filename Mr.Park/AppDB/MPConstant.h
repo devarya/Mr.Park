@@ -31,6 +31,7 @@
 #define MESSAGE_NET_NOT_AVAILABLE @"APP will work on no internet mode"
 #define MESSAGE_ADD_FAVORITE @"Add to favorite List"
 #define MESSAGE_ADD_FAVORITE_FAIL @"Already in favorite List"
+#define MESSAGE_NEED_INTERNET @"Need internet connection to receieve data"
 
 
 
