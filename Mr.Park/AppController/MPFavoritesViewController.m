@@ -64,6 +64,18 @@
     return cell;
 }
 
+
+//-(BOOL) tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
+//    return YES;
+//}
+//
+//-(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
+//    if(editingStyle == UITableViewCellEditingStyleDelete){
+//        [self deleteFavWith:indexPath.row];
+//        [favoriteListArray removeObjectAtIndex:indexPath.row];
+//        [tableView reloadData];
+//    }
+//}
 #pragma mark - IB_ACTION
 
 -(IBAction)btnBackDidClicked:(id)sender{
@@ -99,6 +111,27 @@
     }
     NSLog(@"%@", destParkingType);
 }
+
+//-(void)deleteFavWith:(int)row{
+//    
+//    FavoriteList *deleteItem = [favoriteListArray objectAtIndex:row];
+//    NSString* query=[NSString stringWithFormat:@"delete from favoriteTable where address_id = %@", deleteItem.int_addId];
+//    @try
+//    {
+//        [mrParkDB open];
+//        if ([mrParkDB executeQuery:query])
+//        {
+//            NSLog(@"successfully delete address_id: %@ from favorite table", deleteItem.int_addId);
+//        }
+//    }
+//    @catch (NSException *e)
+//    {
+//        NSLog(@"%@",e);
+//    }
+//    @finally{
+//        [mrParkDB close];
+//    }
+//}
 
 
 @end

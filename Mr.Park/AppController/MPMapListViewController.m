@@ -82,10 +82,6 @@
 }
 
 
-- (void)mapViewWillStartLocatingUser:(MKMapView *)mapView{
-    
-}
-
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation{
     if (!userLocationShown) {
         currentCoordinate = [userLocation coordinate];
@@ -204,14 +200,12 @@
         region.center = [(CLCircularRegion *)placemark_searchBar.region center];
         MKCoordinateSpan span;
         double radius = [(CLCircularRegion *)placemark_searchBar.region radius]/1000;
-    
         span.latitudeDelta = radius / 112.0;
-        
         region.span = span;
-        
-        [map_View setRegion:region animated:NO];
+        [map_View setRegion:region animated:YES];
+        [self getRegionNameWithMapCenter:map_View.region.center];
     }];
-    //[self getRegionNameWithMapCenter:map_View.region.center];
+    
 }
 - (void)removeAllPinsButUserLocation
 {
@@ -700,10 +694,6 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 
 -(void)addAnnotationPinToMap:(NSMutableArray*)pin_arr{
     if ((currentCoordinate.latitude != 0.0) && (currentCoordinate.longitude != 0.0)) {
-        static dispatch_once_t centerMapFirstTime;
-		dispatch_once(&centerMapFirstTime, ^{
-			[self.map_View setCenterCoordinate:currentCoordinate animated:NO];
-		});
         for(tempTable* tpObj in pin_arr) {
             if(![tpObj.parkingType isEqual:@"No Parking"]){
                 MPCustomAnnotation *pin = [[MPCustomAnnotation alloc] initWithTitle:tpObj.streetName Subtitle:tpObj.fullAddress Location:CLLocationCoordinate2DMake([tpObj.lat doubleValue], [tpObj.lon doubleValue])];
@@ -838,7 +828,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
                      [self checkLocalDBforReigon:region_arr];
                  }
              }
-             
+             [hud hide];
          }];
     }
 }
@@ -892,6 +882,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
                                 }else{
                                 NSMutableDictionary * Info = [NSMutableDictionary new];
                                 [[MPRestIntraction sharedManager] requestAddressCall:Info andRegionID:rID adUpdateTime:@"2000-01-01 00:00:00"];
+                                [hud hide];
                                 }
                             }
                             [self createTempDBWithCoordinate:self.map_View.region.center];
@@ -907,6 +898,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
                     {
                         NSLog(@"%@",e);
                         [mrParkDB close];
+                        [hud hide];
                     }
                 }
                 
@@ -980,7 +972,6 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath {
                     [region_arr appendString:rName];
                 }
             }
-            NSLog(@"%@", region_arr);
             [self checkLocalDBforReigon:region_arr];
         }
         else
